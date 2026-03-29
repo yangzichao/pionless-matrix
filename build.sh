@@ -6,6 +6,7 @@ ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
 CLAUDE_DIST="$DIST_DIR/claude-plugin"
 CODEX_DIST="$DIST_DIR/codex-plugin"
+REPO_PLUGIN_DIR="$ROOT_DIR/plugins/gluon-agent"
 
 rm -rf "$CLAUDE_DIST" "$CODEX_DIST"
 
@@ -84,3 +85,10 @@ print("Built:")
 print(f"  Claude Code: {codex_root.parent / 'claude-plugin'}")
 print(f"  Codex:       {codex_root}")
 PYTHON
+
+rm -rf "$REPO_PLUGIN_DIR"
+mkdir -p "$ROOT_DIR/plugins"
+mkdir -p "$REPO_PLUGIN_DIR"
+cp -R "$CODEX_DIST"/. "$REPO_PLUGIN_DIR"/
+
+echo "  Repo plugin: $REPO_PLUGIN_DIR"

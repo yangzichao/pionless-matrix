@@ -1,0 +1,20 @@
+{
+  "name": "gluon-agent",
+  "interface": {
+    "displayName": "gluon-agent"
+  },
+  "plugins": [
+    {
+      "name": "gluon-agent",
+      "source": {
+        "source": "local",
+        "path": "./plugins/gluon-agent"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
