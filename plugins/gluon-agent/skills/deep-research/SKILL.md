@@ -1,7 +1,6 @@
 ---
 name: deep-research
 description: Run a deep research workflow using orchestrator-worker task decomposition, Ralph-loop iteration, workspace reconstruction, evidence verification, and answer-first report synthesis.
-allowed-tools: Read, Write, Bash, WebSearch, WebFetch, Agent
 ---
 
 # Deep Research
@@ -75,7 +74,7 @@ Turn the problem into a compact task board with:
 - priority for each subquestion
 - expected evidence type for each subquestion
 - blocking dependencies
-- subagent assignment (mark which tasks can run in parallel via subagents)
+- execution mode (parallel via subagent when available, otherwise sequential in the orchestrator)
 
 Pick the next task by expected information gain, not by convenience. Prefer tasks that:
 
@@ -96,7 +95,7 @@ Each worker pass should return:
 - confidence level
 - whether the result changes the overall thesis
 
-Keep worker contexts isolated. Use the Agent tool to spawn subagents for independent tracks. Do not drag the entire prior transcript into each subtask.
+Keep worker contexts isolated. Use the Agent tool to spawn subagents for independent tracks when available; otherwise run the same worker-style passes sequentially in the orchestrator. Do not drag the entire prior transcript into each subtask.
 
 ### 4. Reconstruct the workspace after each step
 
@@ -121,8 +120,8 @@ Do not keep full raw history in the reasoning workspace. Full history can exist 
 Repeat this loop until done:
 
 1. Inspect the current workspace.
-2. Choose the highest-value open task (or batch independent tasks for parallel subagents).
-3. Gather or verify evidence (directly or via subagent workers).
+2. Choose the highest-value open task (or batch independent tasks for parallel subagents when available).
+3. Gather or verify evidence (directly, or via subagent workers when supported).
 4. Update the evolving report.
 5. Run quality checks.
 6. Reconstruct the workspace.

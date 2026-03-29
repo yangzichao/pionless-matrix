@@ -1,7 +1,7 @@
 {
   "name": "gluon-agent",
   "version": "0.2.0",
-  "description": "Cross-platform Claude Code and Codex plugin with shared skills, including a deep-research workflow built on orchestrator-worker planning and bounded context reconstruction.",
+  "description": "Cross-platform Claude Code and Codex plugin with a tiered research system (quick-research, deep-research, deep-research-pro) sharing common research rules, MCP configs, and composable subagent patterns.",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "author": {
@@ -20,8 +20,8 @@
   ],
   "interface": {
     "displayName": "gluon-agent",
-    "shortDescription": "Shared toolkit with deep research workflow",
-    "longDescription": "Install shared Claude Code and Codex skills, including a deep-research workflow that uses orchestrator-worker planning, Ralph-loop iteration, and workspace reconstruction.",
+    "shortDescription": "Tiered research system: quick, deep, and pro",
+    "longDescription": "A three-tier research system (quick-research, deep-research, deep-research-pro) with shared research rules, workspace reconstruction, and composable subagent patterns. Quick-research is designed to be absorbed as a subagent by other workflows.",
     "developerName": "Zichao Yang",
     "category": "Productivity",
     "capabilities": [
@@ -30,8 +30,9 @@
     ],
     "websiteURL": "https://github.com/yangzichao/gluon-agent",
     "defaultPrompt": [
-      "Use gluon-agent deep-research to investigate a topic and produce a source-backed report.",
-      "Use gluon-agent to explain how Claude Code and Codex share skills through this plugin."
+      "Use quick-research to look up a focused question and return sourced findings.",
+      "Use deep-research to investigate a topic and produce a source-backed report.",
+      "Use deep-research-pro for an exhaustive, unbounded research investigation."
     ],
     "brandColor": "#10A37F"
   }

@@ -16,7 +16,7 @@ Produce a concise, sourced answer to a focused question within a tight budget. O
 
 1. **Clarify** the question (infer if obvious).
 2. **Search** from 2-3 angles.
-3. **Verify** key claims with a second source.
+3. **Verify** key claims with a second source when feasible within budget.
 4. **Synthesize** into a compact answer with citations.
 
 ## Tool usage guide

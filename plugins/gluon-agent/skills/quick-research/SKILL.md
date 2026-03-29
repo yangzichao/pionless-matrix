@@ -1,7 +1,6 @@
 ---
 name: quick-research
 description: Run a fast, single-agent research pass for focused questions. No subagent decomposition. Designed to be invoked as a worker by other workflows or used standalone for time-sensitive lookups.
-allowed-tools: Read, Write, Bash, WebSearch, WebFetch
 ---
 
 # Quick Research
@@ -16,7 +15,7 @@ Produce a concise, sourced answer to a focused question within a tight budget. O
 
 1. **Clarify** the question (infer if obvious).
 2. **Search** from 2-3 angles.
-3. **Verify** key claims with a second source.
+3. **Verify** key claims with a second source when feasible within budget.
 4. **Synthesize** into a compact answer with citations.
 
 ## Tool usage guide
