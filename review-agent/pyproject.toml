@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "review-agent"
+version = "0.1.0"
+description = "Dual-agent code review orchestrator — Claude Code × Codex CLI"
+requires-python = ">=3.10"
+dependencies = []
+license = {text = "MIT"}
+
+[project.scripts]
+review-agent = "review_agent.cli:main"

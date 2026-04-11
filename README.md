@@ -1,7 +1,9 @@
 # gluon-agent
 
-`gluon-agent` is a cross-platform research agent package for Claude Code and OpenAI Codex.
-This repository now contains:
+`gluon-agent` is a cross-platform research agent package for Claude Code and OpenAI Codex,
+plus a **dual-agent code review CLI** that orchestrates Claude Code and Codex CLI together.
+
+This repository contains:
 
 - shared workflow skills in `shared/`
 - Claude plugin subagents in `claude/agents/`
@@ -13,25 +15,31 @@ This repository now contains:
 - `build.sh` to assemble runnable distributions under `dist/`
 - `.agents/plugins/marketplace.json` so Codex can discover the plugin from this repo
 - install scripts under `scripts/`
+- **`review-agent/`** — pip-installable dual-agent code review tool
 
 ## Structure
 
 ```text
-shared/
-  skills/
-  scripts/
-  .mcp.json
-claude/
+src/                          # single source of truth
+  agents/                     # agent definitions (.md with codex frontmatter)
+  skills/                     # skill sources with <!-- include: --> markers
+    includes/                 # modular fragments shared across tiers
+shared/                       # expanded skills + scripts (generated)
+claude/                       # generated Claude platform output
   agents/
   .claude-plugin/plugin.json
-codex/
+codex/                        # generated Codex platform output
   agents/
   .codex-plugin/plugin.json
 plugins/
-  gluon-agent/
-.claude-plugin/
-  marketplace.json
-.agents/plugins/marketplace.json
+  gluon-agent/                # committed universal plugin for both platforms
+review-agent/                 # dual-agent code review CLI (Python)
+  review_agent/
+    cli.py                    # argparse entry point
+    orchestrator.py           # multi-round review protocol
+    agents.py                 # Claude Code / Codex CLI wrappers
+    prompts.py                # prompt templates per phase
+    output.py                 # file output
 scripts/
 build.sh
 ```
@@ -142,6 +150,94 @@ If you install the plugin and invoke the skill from a normal session (e.g. `/dee
 make build
 make install-claude
 make install-codex
+```
+
+## review-agent — Dual-Agent Code Review
+
+A pip-installable CLI that orchestrates Claude Code and Codex CLI for collaborative code review.
+
+### Install
+
+```bash
+cd review-agent
+pip install -e .
+```
+
+### How It Works
+
+```
+Phase 1: Independent Review (parallel)
+  Claude Code ──review──> claude review
+  Codex CLI   ──review──> codex review
+
+Phase 2: Cross-Verification (parallel × N rounds)
+  Claude receives Codex's review, verifies each finding
+  Codex receives Claude's review, verifies each finding
+
+Phase 3: Consensus Synthesis
+  All findings merged into a single unified review (FINAL.md)
+```
+
+### Usage
+
+```bash
+# Review uncommitted changes
+review-agent
+
+# Review last 3 commits, security focus
+review-agent --last 3 --focus security
+
+# Review a directory, high-level architecture focus
+review-agent --dir src/ --focus high-level
+
+# Review branch diff with custom instructions
+review-agent --branch main --system-prompt "Focus on database migration safety"
+
+# Review specific files
+review-agent --files foo.py bar.py
+
+# Full repo review (agents explore via tools)
+review-agent --repo
+
+# Multi-round cross-verification
+review-agent --last 5 --rounds 2
+
+# Dry run (mock agents, inspect prompts)
+review-agent --dry-run --dir src/ -v
+```
+
+### Source Options
+
+| Flag | What it reviews |
+|------|----------------|
+| `--diff` | Uncommitted changes — staged + unstaged (default) |
+| `--branch BASE` | Changes compared to a base branch |
+| `--commit REF` | A specific commit or range |
+| `--last N` | The last N commits (log + diff) |
+| `--files PATH...` | Full content of specific files |
+| `--dir PATH` | All files under a directory |
+| `--repo` | Full repository (file tree; agents explore via tools) |
+
+### Focus Modes
+
+| Mode | Description |
+|------|-------------|
+| `balanced` | Correctness, design, security, performance (default) |
+| `high-level` | Architecture, API design, module boundaries |
+| `low-level` | Logic bugs, edge cases, off-by-one errors |
+| `security` | OWASP Top 10, injection, auth, input validation |
+| `performance` | Complexity, N+1 queries, memory leaks, caching |
+
+### Output
+
+Each run creates a timestamped folder in `code-review/`:
+
+```
+code-review/2026-04-11-1522/
+  FINAL.md      ← unified consensus review
+  claude.md     ← Claude's full review + verification notes
+  codex.md      ← Codex's full review + verification notes
+  debug/        ← (only with --dry-run or -v)
 ```
 
 ## Reference
