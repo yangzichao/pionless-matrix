@@ -1,45 +1,35 @@
-Use this internal structure for the workspace file. The YAML `loop_state` header is machine-readable and MUST be updated every iteration.
+Use this structure for the workspace file. The Loop State and Gate Checklist sections are mandatory and must be updated every iteration.
 
 ```markdown
----
-loop_state:
-  iteration: 1
-  gate_passed: false
-  gate_checklist:
-    main_question_answered: false
-    major_claims_sourced: false
-    contradictions_checked: false
-    contradiction_pass_completed: false
-    uncertainty_explicit: false
-    methodology_section_present: false
-    report_structured: false
-  stale_iterations: 0
-  total_searches: 0
-  total_fetches: 0
-  total_subagents: 0
----
+# Workspace
 
-# Research question
+## Loop State
+- Iteration: 1
+- Gate: NOT PASSED
+- Stale rounds: 0
+- Searches: 0 | Fetches: 0 | Subagents: 0
+
+## Gate Checklist
+- [ ] Main question answered directly
+- [ ] Major claims backed by 3+ independent sources
+- [ ] Contradictions investigated and addressed
+- [ ] Dedicated contradiction-seeking pass completed
+- [ ] Uncertainty called out explicitly
+- [ ] Methodology section present
+- [ ] Report organized for decision-making
+
+## Research Question
 - [exact question]
 - [decision context]
 - [constraints]
 
-# Plan Board
-| # | Subquestion | Priority | Evidence Type | Assigned To | Status |
-|---|-------------|----------|---------------|-------------|--------|
+## Plan Board
+| # | Subquestion | Priority | Assigned To | Status |
+|---|-------------|----------|-------------|--------|
 
-# Evolving report
-- Current thesis: ...
-- Confirmed findings (with source count): ...
-- Contested findings: ...
-- Contradictions found: ...
+## Findings
+- ...
 
-# Immediate context
-- Last step: ...
-- Blocking: ...
-- Next action: ...
-- Subagent status: ...
-
-# Open tasks
-- [ ] ...
+## Next Action
+- ...
 ```
