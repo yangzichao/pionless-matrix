@@ -5,13 +5,82 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
+import textwrap
+
+
+GUIDE = textwrap.dedent("""\
+    review-agent — Dual-agent code review (Claude Code x Codex CLI)
+
+    QUICK START
+      review-agent                        Review uncommitted changes
+      review-agent --last 1               Review the most recent commit
+      review-agent --branch main          Review current branch vs main
+
+    WHAT TO REVIEW
+      --diff                              Uncommitted changes (default)
+      --last N                            Last N commits
+      --branch BASE                       Changes compared to a base branch
+      --commit REF                        A single commit or range (e.g. HEAD~3..HEAD)
+      --files PATH [PATH ...]             Specific files (full content)
+      --dir PATH                          All git-tracked files under a directory
+      --repo                              Full repository (agents explore via tools)
+
+    FOCUS
+      --focus balanced                    Correctness, design, security, performance (default)
+      --focus high-level                  Architecture, API design, module boundaries
+      --focus low-level                   Logic bugs, edge cases, off-by-one errors
+      --focus security                    OWASP Top 10, injection, auth, input validation
+      --focus performance                 Complexity, N+1 queries, memory leaks, caching
+
+    CUSTOM INSTRUCTIONS
+      --system-prompt TEXT                Inject instructions into every agent prompt
+      --system-prompt-file FILE           Read instructions from a file
+
+    TUNING
+      --rounds N                          Cross-verification rounds (default: 1, more = stricter)
+      --claude-cmd CMD                    Override Claude CLI executable
+      --codex-cmd CMD                     Override Codex CLI executable
+      --output-dir DIR                    Output directory (default: code-review)
+
+    DEBUG
+      --dry-run                           Mock agents, inspect prompts & data flow
+      -v, --verbose                       Show previews + save debug traces
+
+    PROTOCOL
+      Phase 1  Both agents review independently (parallel)
+      Phase 2  Each agent verifies the other's findings (parallel x N rounds)
+      Phase 3  Consensus synthesis into FINAL.md
+
+    OUTPUT
+      code-review/<timestamp>/
+        FINAL.md      <- unified consensus (read this)
+        claude.md     <- Claude's full review + verification
+        codex.md      <- Codex's full review + verification
+        debug/        <- prompts & per-phase responses (with -v or --dry-run)
+
+    EXAMPLES
+      review-agent --last 3 --focus security
+      review-agent --branch main --rounds 2
+      review-agent --dir src/api/ --focus high-level
+      review-agent --repo --system-prompt "Focus on error handling"
+      review-agent --files auth.py --system-prompt-file .review-rules.md
+      review-agent --dry-run --branch main -v
+""")
 
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="review-agent",
-        description="Dual-agent code review — Claude Code × Codex CLI collaborate, "
+        description="Dual-agent code review — Claude Code x Codex CLI collaborate, "
         "cross-verify, and produce a unified review.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    # ── Guide ────────────────────────────────────────────────────────
+    p.add_argument(
+        "--guide",
+        action="store_true",
+        help="Show the full usage guide with examples",
     )
 
     # ── What to review ───────────────────────────────────────────────
@@ -134,6 +203,10 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> None:
     args = _build_parser().parse_args(argv)
+
+    if args.guide:
+        print(GUIDE)
+        return
 
     # ── Resolve source ───────────────────────────────────────────────
     if args.files:
