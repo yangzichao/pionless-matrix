@@ -116,6 +116,11 @@ class ReviewOrchestrator:
         paths = self.output.write_final(unified, claude_text, codex_text)
         self._summary(paths)
 
+        # Print FINAL to terminal
+        print(f"\n{'─' * 60}")
+        print(unified)
+        print(f"{'─' * 60}")
+
     # ── agent invocation with logging ────────────────────────────────
 
     async def _invoke(
