@@ -1,0 +1,5 @@
+{
+  "name": "real-ralph",
+  "version": "0.1.0",
+  "description": "Real Ralph Loop for Claude Code: spawns a fresh `claude -p` subprocess per iteration (no in-session stop-hook trick). State lives on disk; the loop survives the launching Claude session via nohup+disown."
+}
