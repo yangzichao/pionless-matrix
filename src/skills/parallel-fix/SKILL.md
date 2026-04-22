@@ -43,7 +43,9 @@ Max parallel: <N>
 | # | Severity | Files | Issue | Status |
 |---|----------|-------|-------|--------|
 | 1 | high | src/auth/login.py:42 | SQL injection in query | pending |
-| 2 | med  | ... | ... | pending |
+| 2 | med  | src/auth/session.py, src/auth/tokens.py:88 | stale token not invalidated | pending |
+
+**Files column format (strict):** comma-separated list of paths. Each entry is either `path` or `path:line` or `path:line-range`. The orchestrator parses this column by splitting on commas and stripping whitespace + any `:...` suffix to get the file-level set for chain computation. Do not use other delimiters (no `;`, no newlines inside the cell, no bracketed JSON). Workers receive the parsed list as a JSON array in their task card.
 
 ## Worker results
 _(filled in by orchestrator during dispatch)_
