@@ -24,34 +24,72 @@ If the description is empty, ask the user what to look for and stop.
 
 ---
 
-## Phase 1 — Find & draft
+## Phase 1 — Find & draft (aggressive multi-angle scan)
 
-1. Orient: `git rev-parse --show-toplevel`, `git branch --show-current`, skim `ls` + root `CLAUDE.md` if present. Run `git status --short` — if there are uncommitted changes, **warn the user** that workers branch from HEAD and will not see those changes, and recommend stashing (`git stash`) before proceeding. Do not abort; let the user decide.
-2. Scan for issues matching the description using Read/Grep/Glob. Scope to what the description names (e.g., "check auth module" → auth-related files only). Don't boil the ocean.
-3. Classify each finding by severity: `high` / `medium` / `low`. Favor high-confidence findings; flag low-confidence ones explicitly.
-4. Derive a slug from the description (lowercase, dashes, ≤30 chars).
-5. Ensure `.claude/fix-queue/` exists (`mkdir -p`).
-6. Write the todo file at `<project>/.claude/fix-queue/YYYYMMDD-HHMM-<slug>.md`:
+**Goal: maximize recall.** Find every plausible issue within scope. The user prunes in phase 2 — your job is not to miss things. Err on the side of over-reporting. A thin queue means you scanned too timidly; redo it.
+
+1. **Orient**: `git rev-parse --show-toplevel`, `git branch --show-current`, skim `ls` + root `CLAUDE.md` if present. Run `git status --short` — if there are uncommitted changes, **warn the user** that workers branch from HEAD and will not see those changes, and recommend stashing (`git stash`) before proceeding. Do not abort; let the user decide.
+
+2. **Scope & checklist.** Parse the description and define three things explicitly (write them into the todo-file header later):
+   - **Scope** — the file/dir set to scan. Stay within what the description names — don't boil the ocean, but within scope go as deep as you can.
+   - **Category** — classify as one of: `security` / `bugs` / `performance` / `types` / `lint-cleanup` / `tests` / `docs` / `mixed`.
+   - **Checklist** — enumerate concrete items to look for. Seed from category:
+     - `security` → OWASP-style: SQLi, XSS, CSRF, auth/session bypass, IDOR, SSRF, path traversal, command/template injection, crypto misuse, hardcoded secrets/keys, unsafe deserialization, insecure defaults, TOCTOU, missing rate-limit/authZ on sensitive endpoints.
+     - `bugs` → null/undefined deref, race conditions, off-by-one, resource leaks (unclosed files/connections/subscriptions), swallowed exceptions, wrong type coercion, missing input validation, shadowed vars, async/await misuse, unchecked promise rejections, dead branches.
+     - `performance` → N+1 queries, unbounded loops/recursion, sync I/O in async path, missing indexes, redundant work in hot paths, unbounded memory growth, blocking the event loop.
+     - `types` → unsafe casts, `any`/`unknown` leaks, missing null guards, wrong generics, ignored type errors (`@ts-ignore`, `# type: ignore`).
+     - `lint-cleanup` → dead code, unused imports/vars/params, magic numbers, duplicated blocks, stale TODO/FIXME/XXX, inconsistent naming.
+     - `tests` → missing coverage for public APIs, sleep-based flakiness, over-mocking (especially of the unit under test), missing edge/error cases, tests that don't actually assert.
+     - `docs` → stale references, broken links, wrong signatures, missing invariants/preconditions.
+     - For `mixed` or unclear, build the checklist from the description + your judgment. List at least 6–10 concrete items.
+
+3. **Three-angle parallel scan.** In a **single message**, spawn three `Explore` subagents (`thoroughness: "very thorough"`) over the SAME scope and checklist, each with a distinct angle. Pass the full scope + checklist to each; request structured output `file:line | severity (high/med/low) | checklist item or angle | issue description`.
+   - **Agent A — Direct**: "Find every instance matching any checklist item within <scope>. Don't filter by confidence — flag low-confidence inline. Grep exhaustively for each item; don't stop at the first hit per file."
+   - **Agent B — Adversarial**: "You are an attacker / fuzzer / malicious user. Within <scope>, find every place that breaks under hostile input, unexpected state, concurrent calls, partial failures, or edge cases the author didn't anticipate. What would you exploit? What input crashes this? What invariant is assumed but not enforced? What happens on auth-expired, network-dropped, or half-written state?"
+   - **Agent C — Harsh reviewer**: "You are the strictest staff-level code reviewer. Within <scope>, flag everything that would fail your review: fragile patterns, hidden assumptions, subtle bugs, bad abstractions, inconsistent error handling, concurrency smells, API misuse, missing guards on public entrypoints. Assume the author is junior and missed things. Be ruthless; a passing review is the failure mode."
+
+4. **Self-pass — what did they all miss?** After the three agents return, read the actual code in scope yourself and ask: **"what did all three miss?"** Likely gaps: (a) same bug repeated across files — if they found one instance, grep the pattern and enumerate all of them; (b) cross-file interaction bugs (A calls B with assumptions B doesn't meet); (c) issues in adjacent config/build/migration/CI files; (d) boring-but-real items like missing validation on a public entrypoint; (e) inverted or mismatched defaults. Add your findings to the pool.
+
+5. **Merge, dedupe, classify.** Combine A + B + C + self. Dedupe by (file, line, issue-kind). Classify each as `high` / `med` / `low`. **Keep low-confidence findings** — prefix their `Issue` field with `[low-confidence]` so the user can prune in phase 2. Bias toward including, not excluding. If after merge you have noticeably fewer findings than the checklist suggested (e.g. ≤3 findings on a non-trivial scope), run **one** additional pass: add 2–3 more items to the checklist (or expand scope by one adjacent directory) and re-run Agent C only. Cap at one retry — if the pool is still thin, finalize as-is and flag "thin results" in the summary so the user knows.
+
+6. Derive a slug from the description (lowercase, dashes, ≤30 chars). Ensure `.claude/fix-queue/` exists (`mkdir -p`). Write the todo file at `<project>/.claude/fix-queue/YYYYMMDD-HHMM-<slug>.md`:
 
 ```markdown
 # Fix Queue — <YYYY-MM-DD HH:MM>
 Source: <verbatim user description>
+Scope: <files/dirs scanned>
+Category: <category>
 Branch: <current branch>
 Max parallel: <N>
 
+## Checklist applied
+- <item 1>
+- <item 2>
+- ...
+
+## Scan coverage
+- Agent A (direct): <N findings>
+- Agent B (adversarial): <N findings>
+- Agent C (harsh reviewer): <N findings>
+- Self-pass (cross-cutting): <N findings>
+- After dedupe: <N unique tasks>
+
 ## Tasks
-| # | Severity | Files | Issue | Status |
-|---|----------|-------|-------|--------|
-| 1 | high | src/auth/login.py:42 | SQL injection in query | pending |
-| 2 | med  | src/auth/session.py, src/auth/tokens.py:88 | stale token not invalidated | pending |
+| # | Severity | Files | Issue | Found by | Status |
+|---|----------|-------|-------|----------|--------|
+| 1 | high | src/auth/login.py:42 | SQL injection in query | A,C | pending |
+| 2 | med  | src/auth/session.py, src/auth/tokens.py:88 | stale token not invalidated | B | pending |
+| 3 | low  | src/util/cache.py:12 | [low-confidence] possible race on eviction | C | pending |
 
 **Files column format (strict):** comma-separated list of paths. Each entry is either `path` or `path:line` or `path:line-range`. The orchestrator parses this column by splitting on commas and stripping whitespace + any `:...` suffix to get the file-level set for chain computation. Do not use other delimiters (no `;`, no newlines inside the cell, no bracketed JSON). Workers receive the parsed list as a JSON array in their task card.
+
+**Found by column:** label(s) from `A` / `B` / `C` / `Self`, comma-separated (e.g. `A,C`). Provenance only — not parsed by downstream phases, but helps the user gauge coverage during phase 2 review.
 
 ## Worker results
 _(filled in by orchestrator during dispatch)_
 ```
 
-7. Print a compact summary to the user — total tasks, severity breakdown, path to the todo file — and **stop this turn**. Do not proceed to phase 3 yet.
+7. Print a compact summary — total tasks, severity breakdown, per-pass counts, path to the todo file — and **stop this turn**. Do not proceed to phase 3 yet.
 
 ---
 
