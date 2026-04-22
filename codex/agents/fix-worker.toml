@@ -70,10 +70,13 @@ If self-check passed (or was legitimately skipped):
 
 ```bash
 git add -A
-git commit -m "fix(task-<task_id>): <one-line summary>"
+git commit -m "$(cat <<'EOF'
+fix(task-<task_id>): <one-line summary>
+EOF
+)"
 ```
 
-The branch name is whatever the harness gave you — read it with `git branch --show-current`. Do not push. Do not rebase. Do not touch other branches.
+Use a heredoc for the commit message so special characters, `$` signs, or quotes in the summary don't break the shell invocation. The branch name is whatever the harness gave you — read it with `git branch --show-current`. Do not push. Do not rebase. Do not touch other branches.
 
 ### 5. Return
 
@@ -84,7 +87,7 @@ Return your final answer as a fenced JSON block, with no other prose:
   "task_id": 3,
   "status": "fixed",
   "branch": "<current branch name>",
-  "worktree_path": "<$PWD>",
+  "worktree_path": "<run `pwd` and insert the absolute path here>",
   "summary": "<one-line what changed or why skipped>",
   "files_modified": ["path1", "path2"],
   "self_check_command": "<command run, or null>",

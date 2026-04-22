@@ -26,7 +26,7 @@ If the description is empty, ask the user what to look for and stop.
 
 ## Phase 1 — Find & draft
 
-1. Orient: `git rev-parse --show-toplevel`, `git branch --show-current`, skim `ls` + root `CLAUDE.md` if present.
+1. Orient: `git rev-parse --show-toplevel`, `git branch --show-current`, skim `ls` + root `CLAUDE.md` if present. Run `git status --short` — if there are uncommitted changes, **warn the user** that workers branch from HEAD and will not see those changes, and recommend stashing (`git stash`) before proceeding. Do not abort; let the user decide.
 2. Scan for issues matching the description using Read/Grep/Glob. Scope to what the description names (e.g., "check auth module" → auth-related files only). Don't boil the ocean.
 3. Classify each finding by severity: `high` / `medium` / `low`. Favor high-confidence findings; flag low-confidence ones explicitly.
 4. Derive a slug from the description (lowercase, dashes, ≤30 chars).
@@ -132,7 +132,7 @@ After all chains complete:
 
 1. Detect toolchain (same rules as fix-worker: `package.json` / `Cargo.toml` / `pyproject.toml` / `go.mod` / `tsconfig.json`). Run the combined check with generous timeout (180s+).
 2. **Pass** → print "all green" with the last lines of output, then stop.
-3. **Fail** → capture failure output (tail ~200 lines), announce "Final check failed — starting follow-up round `<N>`", and re-enter **phase 1** using the failure output as the new description. Write the new todo file at `.claude/fix-queue/YYYYMMDD-HHMM-followup-<N>.md`. Pause for user review as normal.
+3. **Fail** → run the check **one more time** immediately (same command, same timeout) to rule out flakiness. If the second run passes, print "all green (flaky pass on retry)" and stop. If the second run also fails, capture the failure output (tail ~200 lines), announce "Final check failed — starting follow-up round `<N>`", and re-enter **phase 1** using the failure output as the new description. Write the new todo file at `.claude/fix-queue/YYYYMMDD-HHMM-followup-<N>.md`. Pause for user review as normal.
 4. **Hard budget: 3 follow-up rounds max.** After the 3rd fails, stop and print the residual failure with "requires manual intervention". Do not loop further.
 
 ---
