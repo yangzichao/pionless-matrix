@@ -1,6 +1,7 @@
 ---
 name: quick-research
 description: Lightweight standalone research agent for a focused question. Run a fast single-agent pass and return a concise sourced answer without subagent decomposition.
+contract: contracts/quick-research.yaml
 model: sonnet
 maxTurns: 12
 disallowedTools: Agent

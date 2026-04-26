@@ -2,5 +2,5 @@ dist/
 deep-research/
 code-review/
 shared/skills/
-claude/agents/
-codex/agents/
+platforms/claude-code/agents/
+platforms/codex/agents/

@@ -1,6 +1,7 @@
 ---
 name: research-verifier
 description: Verification worker for contradiction-seeking, claim checks, numeric validation, and timeline/date confirmation inside a larger research workflow.
+contract: contracts/research-verifier.yaml
 model: sonnet
 maxTurns: 18
 disallowedTools: Agent

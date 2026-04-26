@@ -1,6 +1,7 @@
 ---
 name: fix-worker
 description: Worker agent that verifies one reported code issue and, if real, implements the minimal fix and self-checks in an isolated worktree. Returns structured JSON for a parent orchestrator to merge. Scope strictly limited to the assigned task.
+contract: contracts/fix-worker.yaml
 model: sonnet
 maxTurns: 20
 disallowedTools: Agent

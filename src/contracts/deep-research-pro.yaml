@@ -1,0 +1,38 @@
+name: deep-research-pro
+role: orchestrator (exhaustive tier)
+
+input_contract:
+  question: string
+  constraints: optional string
+
+output_contract:
+  final_report: file at deep-research/YYYY-MM-DD-HHMM-topic.md
+  workspace: file at deep-research/YYYY-MM-DD-HHMM-topic.workspace.md
+  required_sections: [methodology, contradictions, limitations]
+
+delegation:
+  may_spawn_subagents: true
+  spawnable: [research-worker, research-verifier]
+  spawn_budget: unbounded
+
+artifacts:
+  may_write_files: true
+  output_dir: deep-research/
+  files:
+    - YYYY-MM-DD-HHMM-topic.md
+    - YYYY-MM-DD-HHMM-topic.workspace.md
+
+budget:
+  iterations: unbounded (terminates on 3 stale rounds)
+  searches: unbounded
+  fetches: unbounded
+  source_minimum: 3 independent per major claim
+
+gates:
+  - main_question_answered
+  - claims_backed_3plus_independent_sources
+  - contradictions_investigated
+  - dedicated_contradiction_pass_completed
+  - uncertainty_called_out
+  - methodology_section_present
+  - report_organized_for_decision

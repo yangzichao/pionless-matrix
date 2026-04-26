@@ -20,7 +20,7 @@ This repository is a cross-platform research agent package.
 4. Run `bash build.sh` — this expands includes, generates platform agents, and assembles dist
 5. Test `dist/claude-plugin` and `dist/codex-plugin` separately
 
-Never hand-edit files in `claude/agents/`, `codex/agents/`, `shared/skills/`, or `plugins/pionless-agent/` — they are build outputs.
+Never hand-edit files in `platforms/claude-code/agents/`, `platforms/codex/agents/`, `shared/skills/`, or `plugins/pionless-agent/` — they are build outputs.
 
 ## Research Output Convention
 

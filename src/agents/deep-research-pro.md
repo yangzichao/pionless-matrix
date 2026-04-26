@@ -1,6 +1,7 @@
 ---
 name: deep-research-pro
 description: Orchestrator agent for exhaustive or high-stakes research. Run aggressive decomposition, repeated verification, contradiction-seeking passes, and synthesize a citation-dense final report.
+contract: contracts/deep-research-pro.yaml
 model: opus
 maxTurns: 60
 tools: Agent(research-worker, research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill

@@ -1,0 +1,24 @@
+name: research-verifier
+role: contradiction-seeking verifier
+stance: adversarial  # try to disprove the claim first
+
+input_contract:
+  claim: string
+  current_sources: list[Source]
+  verification_type: enum[contradiction-seeking, numeric-check, timeline-check, source-crossref]
+
+output_contract:
+  claim_verified: string
+  verdict: enum[confirmed, weakened, contradicted, inconclusive]
+  confidence: enum[high, medium, low]
+  evidence_for: list[Evidence]
+  evidence_against: list[Evidence]
+  source_conflicts: list[string]
+  recommendation: enum[keep, revise, add-caveat, remove]
+
+delegation:
+  may_spawn_subagents: false
+
+artifacts:
+  may_write_files: false
+  returns_final_answer_to: caller

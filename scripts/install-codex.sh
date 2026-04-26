@@ -15,7 +15,7 @@ mkdir -p "${HOME}/.codex/plugins" "$TARGET_AGENT_DIR" "$MARKETPLACE_DIR"
 rm -rf "$TARGET_PLUGIN_DIR"
 cp -R "$ROOT_DIR/dist/codex-plugin" "$TARGET_PLUGIN_DIR"
 
-/usr/bin/python3 - "$ROOT_DIR/codex/agents" "$TARGET_AGENT_DIR" "$TARGET_PLUGIN_DIR" <<'PYTHON'
+/usr/bin/python3 - "$ROOT_DIR/platforms/codex/agents" "$TARGET_AGENT_DIR" "$TARGET_PLUGIN_DIR" <<'PYTHON'
 import pathlib
 import sys
 

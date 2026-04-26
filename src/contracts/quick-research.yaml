@@ -1,0 +1,29 @@
+name: quick-research
+role: lightweight research (standalone or subagent)
+
+modes:
+  - standalone  # invoked directly by user
+  - subagent    # invoked by parent orchestrator
+
+input_contract:
+  question: string
+  constraints: optional string
+  task_card: optional TaskCard  # subagent mode only
+
+output_contract:
+  standalone_mode:
+    artifact: file
+    output_dir: deep-research/
+    filename_pattern: YYYY-MM-DD-HHMM-topic.md
+  subagent_mode:
+    findings: list[Finding]
+    confidence: enum[high, medium, low]
+    returns_final_answer_to: caller
+
+delegation:
+  may_spawn_subagents: false
+
+budget:
+  searches: 5-10
+  fetches: 2-5
+  iterations: 1-2

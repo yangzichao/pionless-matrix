@@ -1,6 +1,7 @@
 ---
 name: research-worker
 description: Worker agent for a narrow research subquestion. Gather evidence, stay within the assigned scope, and return structured findings for a parent orchestrator to synthesize.
+contract: contracts/research-worker.yaml
 model: sonnet
 maxTurns: 18
 disallowedTools: Agent

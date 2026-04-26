@@ -1,0 +1,34 @@
+name: deep-research
+role: orchestrator (standard tier)
+
+input_contract:
+  question: string
+  constraints: optional string
+
+output_contract:
+  final_report: file at deep-research/YYYY-MM-DD-HHMM-topic.md
+  workspace: file at deep-research/YYYY-MM-DD-HHMM-topic.workspace.md
+
+delegation:
+  may_spawn_subagents: true
+  spawnable: [research-worker, research-verifier]
+  spawn_budget: 10
+
+artifacts:
+  may_write_files: true
+  output_dir: deep-research/
+  files:
+    - YYYY-MM-DD-HHMM-topic.md
+    - YYYY-MM-DD-HHMM-topic.workspace.md
+
+budget:
+  iterations: 4-8 typical, 10 hard cap
+  searches: 15-25 (pause at 30)
+  fetches: 8-15
+
+gates:
+  - main_question_answered
+  - claims_backed_2plus_sources
+  - contradictions_investigated
+  - uncertainty_called_out
+  - report_organized_for_decision

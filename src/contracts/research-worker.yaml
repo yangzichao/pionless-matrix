@@ -1,0 +1,24 @@
+name: research-worker
+role: evidence-gathering worker
+
+input_contract:
+  objective: string
+  seed_queries: list[string]
+  acceptance_criteria: list[string]
+  return_format: string  # default: structured findings per quick-research subagent mode
+
+output_contract:
+  task: string
+  status: enum[answered, partially-answered, unanswerable]
+  confidence: enum[high, medium, low]
+  findings: list[Finding]
+  contradictions: list[string]
+  unresolved: list[string]
+  recommended_followup: list[string]
+
+delegation:
+  may_spawn_subagents: false
+
+artifacts:
+  may_write_files: false
+  returns_final_answer_to: caller

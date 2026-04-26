@@ -10,8 +10,8 @@ Agents are the brains (orchestration logic, turn protocol, Ralph loop enforcemen
 
 All agent definitions live in `src/agents/` as Claude-format .md files with an extended `codex:` frontmatter section. Build.sh generates both platforms:
 
-- `claude/agents/*.md` — Claude Code agents (codex section stripped)
-- `codex/agents/*.toml` — Codex agents (converted format)
+- `platforms/claude-code/agents/*.md` — Claude Code agents (codex section stripped)
+- `platforms/codex/agents/*.toml` — Codex agents (converted format)
 
 ## Modular Skills
 
@@ -19,7 +19,7 @@ Skill content is decomposed into small modules in `src/skills/includes/`. Source
 
 ## Working Rules
 
-- Edit agents in `src/agents/` — never hand-edit `claude/agents/` or `codex/agents/`
+- Edit agents in `src/agents/` — never hand-edit `platforms/claude-code/agents/` or `platforms/codex/agents/`
 - Edit skill modules in `src/skills/includes/` — never hand-edit `shared/skills/`
 - Run `bash build.sh` to assemble all outputs
 - All research output goes to `deep-research/` using `YYYY-MM-DD-HHMM-topic.md` naming

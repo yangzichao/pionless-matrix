@@ -31,8 +31,8 @@ src_dir = pathlib.Path(sys.argv[1])
 root_dir = pathlib.Path(sys.argv[2])
 
 agents_src = src_dir / "agents"
-claude_agents = root_dir / "claude" / "agents"
-codex_agents = root_dir / "codex" / "agents"
+claude_agents = root_dir / "platforms" / "claude-code" / "agents"
+codex_agents = root_dir / "platforms" / "codex" / "agents"
 
 claude_agents.mkdir(parents=True, exist_ok=True)
 codex_agents.mkdir(parents=True, exist_ok=True)
@@ -297,33 +297,33 @@ cp "$ROOT_DIR/shared/.mcp.json" "$CLAUDE_DIST/"
 cp "$ROOT_DIR/shared/.mcp.json" "$CODEX_DIST/"
 
 # Platform-specific manifests
-cp -R "$ROOT_DIR/claude/.claude-plugin" "$CLAUDE_DIST/"
-cp -R "$ROOT_DIR/codex/.codex-plugin" "$CODEX_DIST/"
+cp -R "$ROOT_DIR/platforms/claude-code/.claude-plugin" "$CLAUDE_DIST/"
+cp -R "$ROOT_DIR/platforms/codex/.codex-plugin" "$CODEX_DIST/"
 
 # Claude agents (generated in Step 0)
-if [ -d "$ROOT_DIR/claude/agents" ]; then
-  cp -R "$ROOT_DIR/claude/agents" "$CLAUDE_DIST/"
+if [ -d "$ROOT_DIR/platforms/claude-code/agents" ]; then
+  cp -R "$ROOT_DIR/platforms/claude-code/agents" "$CLAUDE_DIST/"
 fi
 
 # Claude hooks
-if [ -d "$ROOT_DIR/claude/hooks" ]; then
-  cp -R "$ROOT_DIR/claude/hooks" "$CLAUDE_DIST/"
+if [ -d "$ROOT_DIR/platforms/claude-code/hooks" ]; then
+  cp -R "$ROOT_DIR/platforms/claude-code/hooks" "$CLAUDE_DIST/"
 fi
 
 # Claude LSP config
-if [ -f "$ROOT_DIR/claude/.lsp.json" ]; then
-  cp "$ROOT_DIR/claude/.lsp.json" "$CLAUDE_DIST/"
+if [ -f "$ROOT_DIR/platforms/claude-code/.lsp.json" ]; then
+  cp "$ROOT_DIR/platforms/claude-code/.lsp.json" "$CLAUDE_DIST/"
 fi
 
 # Codex app config
-if [ -f "$ROOT_DIR/codex/.app.json" ]; then
-  cp "$ROOT_DIR/codex/.app.json" "$CODEX_DIST/"
+if [ -f "$ROOT_DIR/platforms/codex/.app.json" ]; then
+  cp "$ROOT_DIR/platforms/codex/.app.json" "$CODEX_DIST/"
 fi
 
 # Codex agent templates (generated in Step 0)
-if [ -d "$ROOT_DIR/codex/agents" ]; then
+if [ -d "$ROOT_DIR/platforms/codex/agents" ]; then
   mkdir -p "$CODEX_DIST/agent-templates"
-  cp -R "$ROOT_DIR/codex/agents/." "$CODEX_DIST/agent-templates/"
+  cp -R "$ROOT_DIR/platforms/codex/agents/." "$CODEX_DIST/agent-templates/"
 fi
 
 # ---------------------------------------------------------------------------
@@ -383,30 +383,30 @@ cp -R "$ROOT_DIR/shared/skills" "$REPO_PLUGIN_DIR/"
 cp "$ROOT_DIR/shared/.mcp.json" "$REPO_PLUGIN_DIR/"
 
 # Both platform manifests
-cp -R "$ROOT_DIR/claude/.claude-plugin" "$REPO_PLUGIN_DIR/"
-cp -R "$ROOT_DIR/codex/.codex-plugin" "$REPO_PLUGIN_DIR/"
+cp -R "$ROOT_DIR/platforms/claude-code/.claude-plugin" "$REPO_PLUGIN_DIR/"
+cp -R "$ROOT_DIR/platforms/codex/.codex-plugin" "$REPO_PLUGIN_DIR/"
 
 # Claude agents
-if [ -d "$ROOT_DIR/claude/agents" ]; then
-  cp -R "$ROOT_DIR/claude/agents" "$REPO_PLUGIN_DIR/"
+if [ -d "$ROOT_DIR/platforms/claude-code/agents" ]; then
+  cp -R "$ROOT_DIR/platforms/claude-code/agents" "$REPO_PLUGIN_DIR/"
 fi
 
-if [ -d "$ROOT_DIR/claude/hooks" ]; then
-  cp -R "$ROOT_DIR/claude/hooks" "$REPO_PLUGIN_DIR/"
+if [ -d "$ROOT_DIR/platforms/claude-code/hooks" ]; then
+  cp -R "$ROOT_DIR/platforms/claude-code/hooks" "$REPO_PLUGIN_DIR/"
 fi
 
-if [ -f "$ROOT_DIR/claude/.lsp.json" ]; then
-  cp "$ROOT_DIR/claude/.lsp.json" "$REPO_PLUGIN_DIR/"
+if [ -f "$ROOT_DIR/platforms/claude-code/.lsp.json" ]; then
+  cp "$ROOT_DIR/platforms/claude-code/.lsp.json" "$REPO_PLUGIN_DIR/"
 fi
 
-if [ -f "$ROOT_DIR/codex/.app.json" ]; then
-  cp "$ROOT_DIR/codex/.app.json" "$REPO_PLUGIN_DIR/"
+if [ -f "$ROOT_DIR/platforms/codex/.app.json" ]; then
+  cp "$ROOT_DIR/platforms/codex/.app.json" "$REPO_PLUGIN_DIR/"
 fi
 
 # Codex agent templates
-if [ -d "$ROOT_DIR/codex/agents" ]; then
+if [ -d "$ROOT_DIR/platforms/codex/agents" ]; then
   mkdir -p "$REPO_PLUGIN_DIR/agent-templates"
-  cp -R "$ROOT_DIR/codex/agents/." "$REPO_PLUGIN_DIR/agent-templates/"
+  cp -R "$ROOT_DIR/platforms/codex/agents/." "$REPO_PLUGIN_DIR/agent-templates/"
 fi
 
 # Strip repo plugin skills to keep Claude-compatible frontmatter

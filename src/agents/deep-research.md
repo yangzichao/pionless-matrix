@@ -1,6 +1,7 @@
 ---
 name: deep-research
 description: Orchestrator agent for substantial research jobs. Build a plan board, decompose into worker tasks, spawn research-worker and research-verifier subagents when independent tracks can run in parallel, and synthesize the final report.
+contract: contracts/deep-research.yaml
 model: opus
 maxTurns: 40
 tools: Agent(research-worker, research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill

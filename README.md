@@ -6,40 +6,43 @@ plus a **dual-agent code review CLI** that orchestrates Claude Code and Codex CL
 This repository contains:
 
 - shared workflow skills in `shared/`
-- Claude plugin subagents in `claude/agents/`
-- Codex custom-agent templates in `codex/agents/`
-- Claude-specific manifest in `claude/.claude-plugin/`
-- Codex-specific manifest in `codex/.codex-plugin/`
+- Claude plugin subagents in `platforms/claude-code/agents/`
+- Codex custom-agent templates in `platforms/codex/agents/`
+- Claude-specific manifest in `platforms/claude-code/.claude-plugin/`
+- Codex-specific manifest in `platforms/codex/.codex-plugin/`
 - a committed universal plugin package in `plugins/pionless-agent/`
 - a Claude marketplace in `.claude-plugin/marketplace.json`
 - `build.sh` to assemble runnable distributions under `dist/`
 - `.agents/plugins/marketplace.json` so Codex can discover the plugin from this repo
 - install scripts under `scripts/`
-- **`review-agent/`** — pip-installable dual-agent code review tool
+- **`packages/review-agent/`** — pip-installable dual-agent code review tool
 
 ## Structure
 
 ```text
 src/                          # single source of truth
   agents/                     # agent definitions (.md with codex frontmatter)
+  contracts/                  # agent input/output contracts (yaml)
   skills/                     # skill sources with <!-- include: --> markers
     includes/                 # modular fragments shared across tiers
-shared/                       # expanded skills + scripts (generated)
-claude/                       # generated Claude platform output
-  agents/
-  .claude-plugin/plugin.json
-codex/                        # generated Codex platform output
-  agents/
-  .codex-plugin/plugin.json
+shared/                       # expanded skills (generated, gitignored)
+platforms/
+  claude-code/
+    agents/                   # generated, gitignored
+    .claude-plugin/plugin.json
+  codex/
+    agents/                   # generated, gitignored
+    .codex-plugin/plugin.json
 plugins/
-  pionless-agent/                # committed universal plugin for both platforms
-review-agent/                 # dual-agent code review CLI (Python)
-  review_agent/
-    cli.py                    # argparse entry point
-    orchestrator.py           # multi-round review protocol
-    agents.py                 # Claude Code / Codex CLI wrappers
-    prompts.py                # prompt templates per phase
-    output.py                 # file output
+  pionless-agent/             # committed universal plugin (marketplace target)
+packages/
+  review-agent/               # dual-agent code review CLI (Python)
+    review_agent/
+      cli.py                  # argparse entry point
+      orchestrator.py         # multi-round review protocol
+      agents.py               # Claude Code / Codex CLI wrappers
+      prompts.py              # prompt templates per phase
+      output.py               # file output
 scripts/
 build.sh
 ```
@@ -59,7 +62,7 @@ This generates:
 Agent packaging differs by platform:
 
 - Claude Code can load plugin-shipped subagents from `agents/`.
-- Codex custom agents live under `.codex/agents/` or `~/.codex/agents/`, so this repo ships templates in `codex/agents/` and the installer copies them into `~/.codex/agents/`.
+- Codex custom agents live under `.codex/agents/` or `~/.codex/agents/`, so this repo ships templates in `platforms/codex/agents/` and the installer copies them into `~/.codex/agents/`.
 
 ## Install From GitHub
 
@@ -95,7 +98,7 @@ This installs:
 - the Codex plugin under `~/.codex/plugins/pionless-agent`
 - custom research agents under `~/.codex/agents/`
 
-2. Or open the cloned repo in Codex and use the repo marketplace at `.agents/plugins/marketplace.json`, which exposes `pionless-agent` from `./plugins/pionless-agent`. In that mode you still need to copy `codex/agents/*.toml` into `.codex/agents/` or `~/.codex/agents/` if you want the named orchestrator agents.
+2. Or open the cloned repo in Codex and use the repo marketplace at `.agents/plugins/marketplace.json`, which exposes `pionless-agent` from `./plugins/pionless-agent`. In that mode you still need to copy `platforms/codex/agents/*.toml` into `.codex/agents/` or `~/.codex/agents/` if you want the named orchestrator agents.
 
 ## Test
 
@@ -159,7 +162,7 @@ A pip-installable CLI that orchestrates Claude Code and Codex CLI for collaborat
 ### Install
 
 ```bash
-cd review-agent
+cd packages/review-agent
 pip install -e .
 ```
 
