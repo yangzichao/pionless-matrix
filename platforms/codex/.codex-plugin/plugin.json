@@ -22,8 +22,8 @@
   ],
   "interface": {
     "displayName": "pionless-agent",
-    "shortDescription": "Research agents: quick, deep, and pro",
-    "longDescription": "A research-agent package centered on named orchestrators and worker agents. The Codex plugin distributes reusable skills and MCP config; the installer also lays down matching custom-agent files under ~/.codex/agents so deep-research and deep-research-pro can fan out to workers.",
+    "shortDescription": "Research agents with deep investigation and worker spawning",
+    "longDescription": "A research-agent package centered on named orchestrators and worker agents. The Codex plugin distributes reusable skills and MCP config; the installer also lays down matching custom-agent files under ~/.codex/agents so deep-research can fan out to worker and verifier agents.",
     "developerName": "Zichao Yang",
     "category": "Productivity",
     "capabilities": [
@@ -33,8 +33,8 @@
     "websiteURL": "https://github.com/yangzichao/pionless-agent",
     "defaultPrompt": [
       "Use the deep-research agent to investigate a topic and delegate worker agents.",
-      "Use the deep-research-pro agent for an exhaustive investigation with verification workers.",
-      "Use the quick-research agent for a fast, single-agent sourced answer."
+      "Use the deep-research-worker agent to run a focused evidence-gathering pass on a subquestion.",
+      "Use the deep-research-verifier agent to seek contradictions in a current research thesis."
     ],
     "brandColor": "#10A37F"
   }
