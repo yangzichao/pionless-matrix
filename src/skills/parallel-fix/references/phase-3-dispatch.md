@@ -38,7 +38,7 @@ base_branch: <branch from the queue header>
 
 ## 4. Dispatch across chains, serial within each chain
 
-At most `--max` chains active simultaneously (default 4). Launch the **first pending task of each active chain** in one assistant message: a single batch of up to `--max` parallel worker spawns with worktree isolation, using the `fix-worker` agent.
+At most `--max` chains active simultaneously (default 4). Launch the **first pending task of each active chain** in one assistant message: a single batch of up to `--max` parallel worker spawns with worktree isolation, using the `parallel-fix-worker` agent.
 
 Mark each dispatched row `dispatched`.
 

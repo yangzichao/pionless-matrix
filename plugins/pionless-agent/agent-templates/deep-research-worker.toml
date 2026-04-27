@@ -1,5 +1,5 @@
-name = "research-worker"
-description = "Worker agent for a narrow research subquestion. Gather evidence, stay within the assigned scope, and return structured findings for a parent orchestrator to synthesize."
+name = "deep-research-worker"
+description = "Use when the deep-research orchestrator needs evidence gathered for one narrow subquestion and returned as structured findings (no synthesis, no spawning)."
 model = "gpt-5.4-mini"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

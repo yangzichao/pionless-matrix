@@ -60,7 +60,7 @@ Five phases. Each one has its own reference file with the detailed procedure.
 - `references/phase-4-merge.md` — merge-back and worktree cleanup.
 - `references/phase-5-final-check.md` — final test and follow-up loop.
 - `references/checklist-by-category.md` — seed checklists for security / bugs / performance / types / lint / tests / docs.
-- `references/worker-contract.md` — what the fix-worker agent returns and how the orchestrator parses it.
+- `references/worker-contract.md` — what the parallel-fix-worker agent returns and how the orchestrator parses it.
 - `references/queue-file-conventions.md` — the queue file location, naming, and Files-column parser rules.
 - `references/safety-rules.md` — never push, never force-push, stranded-dispatch recovery.
 - `references/delegation-patterns.md` — how this skill leans on host worker-spawn capability.
@@ -83,4 +83,4 @@ The queue file is the user's live log. Path: `<project>/.claude/fix-queue/YYYYMM
 
 ## Related
 
-- `fix-worker` agent — the single-fix worker the host spawns once per task. See `references/worker-contract.md` for the orchestrator/worker boundary.
+- `parallel-fix-worker` agent — the single-fix worker the host spawns once per task. See `references/worker-contract.md` for the orchestrator/worker boundary.

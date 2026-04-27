@@ -10,7 +10,7 @@ Three scanning workers run in parallel over the same scope with three distinct a
 
 ### One worker per fix (phase 3)
 
-Each pending task is dispatched to its own `fix-worker` in an isolated git worktree. Up to `--max` workers run in parallel across chains; tasks within a chain run serially. The host decides the actual concurrency.
+Each pending task is dispatched to its own `parallel-fix-worker` in an isolated git worktree. Up to `--max` workers run in parallel across chains; tasks within a chain run serially. The host decides the actual concurrency.
 
 ### Stranded-dispatch recovery (phase 3)
 
@@ -18,7 +18,7 @@ When a prior run was interrupted, the orchestrator asks the host to either re-sp
 
 ## Worker contract
 
-See `references/worker-contract.md` for the JSON shape returned by each `fix-worker`.
+See `references/worker-contract.md` for the JSON shape returned by each `parallel-fix-worker`.
 
 ## Host responsibilities
 

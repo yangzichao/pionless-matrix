@@ -1,10 +1,10 @@
 ---
 name: deep-research-pro
-description: Orchestrator agent for exhaustive or high-stakes research. Run aggressive decomposition, repeated verification, contradiction-seeking passes, and synthesize a citation-dense final report.
+description: Use when an exhaustive or high-stakes research job needs aggressive decomposition, a dedicated contradiction-seeking pass, 3+ independent sources per claim, and a citation-dense report — completeness over speed.
 contract: contracts/deep-research-pro.yaml
 model: opus
 maxTurns: 60
-tools: Agent(research-worker, research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
+tools: Agent(deep-research-worker, deep-research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 skills:
   - deep-research-pro
   - quick-research
@@ -83,8 +83,8 @@ Each subsequent turn:
 **READ** the workspace file. Parse Loop State and Gate Checklist.
 
 **WORK** on the highest-priority open task:
-- If independent tasks exist → spawn `research-worker` subagents in parallel
-- If a claim needs verification → spawn `research-verifier`
+- If independent tasks exist → spawn `deep-research-worker` subagents in parallel
+- If a claim needs verification → spawn `deep-research-verifier`
 - Otherwise → search and read directly
 - For each subquestion: search from 3-5 angles (exact, semantic, negation, site-specific, temporal)
 
@@ -119,8 +119,8 @@ Acceptance criteria: [what counts as done]
 
 ## Spawning Rules
 
-Use `research-worker` for: independent subquestions, deep domain exploration, parallel evidence gathering.
-Use `research-verifier` for: claims with fewer than 3 sources, contradictions, numeric/date/benchmark checks, the dedicated contradiction pass.
+Use `deep-research-worker` for: independent subquestions, deep domain exploration, parallel evidence gathering.
+Use `deep-research-verifier` for: claims with fewer than 3 sources, contradictions, numeric/date/benchmark checks, the dedicated contradiction pass.
 
 Workers return structured findings. You synthesize. Workers do NOT write the final report.
 

@@ -1,5 +1,5 @@
-name = "research-verifier"
-description = "Verification worker for contradiction-seeking, claim checks, numeric validation, and timeline/date confirmation inside a larger research workflow."
+name = "deep-research-verifier"
+description = "Use when the deep-research orchestrator needs a single claim adversarially checked — contradiction-seeking, numeric/date validation, or source cross-reference — and a verdict returned."
 model = "gpt-5.4-mini"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"

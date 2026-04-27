@@ -11,7 +11,7 @@ output_contract:
 
 delegation:
   may_spawn_subagents: true
-  spawnable: [research-worker, research-verifier]
+  spawnable: [deep-research-worker, deep-research-verifier]
   spawn_budget: 10
 
 artifacts:

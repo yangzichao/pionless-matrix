@@ -18,7 +18,7 @@ See [`02-agent-anatomy.md`](02-agent-anatomy.md).
 
 ## 3. Shared Fragments
 
-See [`03-shared-fragments.md`](03-shared-fragments.md).
+See [`03-shared-fragments.md`](03-shared-fragments.md). *Decided against — chapter records the reasoning so the question is not re-litigated.*
 
 ---
 
@@ -34,9 +34,9 @@ See [`05-agent-orchestrates-agent.md`](05-agent-orchestrates-agent.md).
 
 ---
 
-## 6. Python in Skills
+## 6. Scripts in Skills
 
-See [`06-python-in-skills.md`](06-python-in-skills.md).
+See [`06-scripts-in-skills.md`](06-scripts-in-skills.md).
 
 ---
 

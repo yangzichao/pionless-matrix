@@ -1,7 +1,7 @@
 ---
-name: research-verifier
-description: Verification worker for contradiction-seeking, claim checks, numeric validation, and timeline/date confirmation inside a larger research workflow.
-contract: contracts/research-verifier.yaml
+name: deep-research-verifier
+description: Use when the deep-research orchestrator needs a single claim adversarially checked — contradiction-seeking, numeric/date validation, or source cross-reference — and a verdict returned.
+contract: contracts/deep-research-verifier.yaml
 model: sonnet
 maxTurns: 18
 disallowedTools: Agent

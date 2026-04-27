@@ -1,4 +1,4 @@
-name: research-verifier
+name: deep-research-verifier
 role: contradiction-seeking verifier
 stance: adversarial  # try to disprove the claim first
 

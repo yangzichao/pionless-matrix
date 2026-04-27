@@ -1,4 +1,4 @@
-name: fix-worker
+name: parallel-fix-worker
 role: single-issue fix worker (verify → minimal patch → self-check → commit)
 
 invocation_context:

@@ -2,7 +2,7 @@
 
 ## 1. Detect toolchain and run the combined check
 
-Detection rules (same as the fix-worker):
+Detection rules (same as the parallel-fix-worker):
 
 - `package.json` → npm/pnpm scripts (lint, typecheck, test).
 - `Cargo.toml` → `cargo check && cargo test`.

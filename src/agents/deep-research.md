@@ -1,10 +1,10 @@
 ---
 name: deep-research
-description: Orchestrator agent for substantial research jobs. Build a plan board, decompose into worker tasks, spawn research-worker and research-verifier subagents when independent tracks can run in parallel, and synthesize the final report.
+description: Use when a research task needs plan-board decomposition, parallel evidence gathering via deep-research-worker, claim verification via deep-research-verifier, and synthesis into a citation-backed final report.
 contract: contracts/deep-research.yaml
 model: opus
 maxTurns: 40
-tools: Agent(research-worker, research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
+tools: Agent(deep-research-worker, deep-research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 skills:
   - deep-research
   - quick-research
@@ -80,8 +80,8 @@ Each subsequent turn:
 **READ** the workspace file. Parse Loop State and Gate Checklist.
 
 **WORK** on the highest-priority open task:
-- If independent tasks exist → spawn `research-worker` subagents in parallel
-- If a claim needs verification → spawn `research-verifier`
+- If independent tasks exist → spawn `deep-research-worker` subagents in parallel
+- If a claim needs verification → spawn `deep-research-verifier`
 - Otherwise → search and read directly
 
 Task card format for subagents:
@@ -115,8 +115,8 @@ Acceptance criteria: [what counts as done]
 
 ## Spawning Rules
 
-Use `research-worker` for: independent subquestions, domain exploration, parallel evidence gathering.
-Use `research-verifier` for: single-sourced claims, contradictions, numeric/date/benchmark checks.
+Use `deep-research-worker` for: independent subquestions, domain exploration, parallel evidence gathering.
+Use `deep-research-verifier` for: single-sourced claims, contradictions, numeric/date/benchmark checks.
 
 Workers return structured findings. You synthesize. Workers do NOT write the final report.
 

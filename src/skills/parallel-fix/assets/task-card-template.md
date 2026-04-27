@@ -1,6 +1,6 @@
 # Task Card
 
-Built by the orchestrator and passed to each `fix-worker` at dispatch time.
+Built by the orchestrator and passed to each `parallel-fix-worker` at dispatch time.
 
 ```text
 task_id: {row #}

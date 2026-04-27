@@ -25,5 +25,5 @@ Workers with `status: skipped` that reported **no** `worktree_path` were auto-cl
 
 ## After all chains complete
 
-1. Sanity check: `git worktree list` — should show no leftover fix-worker worktrees. If any remain, list them for the user and attempt force-remove.
+1. Sanity check: `git worktree list` — should show no leftover parallel-fix-worker worktrees. If any remain, list them for the user and attempt force-remove.
 2. Print a summary table: task #, final status, files touched.

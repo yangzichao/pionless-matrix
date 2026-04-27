@@ -1,6 +1,6 @@
-## 6. Python in Skills
+## 6. Scripts in Skills
 
-Python scripts live in `scripts/` inside the skill folder. They are invoked by SKILL.md instructing the model to run a Bash command.
+Executable scripts (Python, Bash, or any language the runtime supports) live in `scripts/` inside the skill folder. They are invoked by SKILL.md instructing the model to run a Bash command.
 
 ### Layout
 

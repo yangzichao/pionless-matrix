@@ -1,6 +1,6 @@
 # Worker Contract
 
-The `fix-worker` agent is the unit of work this skill dispatches. One worker per task, each in its own git worktree.
+The `parallel-fix-worker` agent is the unit of work this skill dispatches. One worker per task, each in its own git worktree.
 
 ## Inputs to the worker
 
