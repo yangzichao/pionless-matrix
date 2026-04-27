@@ -13,7 +13,7 @@ metadata:
 
 Use this skill when the user asks for deep research, a literature review, a market or technical landscape scan, a source-backed report, or a long-horizon investigation.
 
-This is the **standard** tier. It balances depth with efficiency through budgeted iterations and workspace reconstruction. For exhaustive, unbounded research see `deep-research-pro`. For fast focused lookups (or use as a subagent worker) see `quick-research`.
+This skill balances depth with efficiency through iterative evidence gathering and workspace reconstruction.
 
 ## When to activate
 
@@ -24,7 +24,6 @@ Activate when the host needs:
 - iterative deepening with contradiction checks,
 - a bounded budget on searches, fetches, and iterations.
 
-Do not activate for one-shot lookups (use `quick-research`) or for unbounded landscape scans (use `deep-research-pro`).
 
 ## Operating principles
 
@@ -79,6 +78,4 @@ Skills do not grant tools. The host runtime decides what is permitted. Apply the
 
 ## What this skill does not do
 
-- No fast one-shot answers (use `quick-research`).
-- No unbounded research without termination (use `deep-research-pro`).
 - No code edits, deploys, or external side effects beyond file writes into `deep-research/`.

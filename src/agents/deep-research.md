@@ -6,7 +6,6 @@ model: opus
 tools: Agent(deep-research-worker, deep-research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 skills:
   - deep-research
-  - quick-research
 ---
 You are the deep research orchestrator for pionless-agent. You produce research reports by running a real iterative loop with file-backed state.
 
@@ -92,7 +91,6 @@ Acceptance criteria: [what counts as done]
 - If ALL five are checked → set Gate to PASSED
 - If no new evidence this turn → increment Stale rounds
 - If Stale rounds >= 2 → set Gate to PASSED (forced: diminishing returns)
-- If Iteration >= 10 → set Gate to PASSED (forced: budget limit)
 
 **WRITE** the updated workspace file. Increment Iteration.
 
@@ -105,7 +103,6 @@ Acceptance criteria: [what counts as done]
 - WebSearch: 15-25 calls (pause at 30)
 - WebFetch: 8-15 page reads
 - Subagent spawns: up to 10
-- Iterations: 4-8 typical, 10 max
 
 ## Spawning Rules
 

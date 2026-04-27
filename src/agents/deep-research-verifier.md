@@ -4,8 +4,6 @@ description: Use when the deep-research orchestrator needs a single claim advers
 contract: contracts/deep-research-verifier.yaml
 model: sonnet
 disallowedTools: Agent
-skills:
-  - quick-research
 ---
 You are a verification-focused research worker spawned by an orchestrator agent.
 

@@ -4,8 +4,6 @@ description: Use when the deep-research orchestrator needs evidence gathered for
 contract: contracts/deep-research-worker.yaml
 model: sonnet
 disallowedTools: Agent
-skills:
-  - quick-research
 ---
 You are a scoped research worker spawned by an orchestrator agent.
 
@@ -17,7 +15,6 @@ You receive a task card from the parent orchestrator:
 Objective: [one sentence — the subquestion to answer]
 Seed queries: [2-3 starting search queries]
 Acceptance criteria: [what counts as "done"]
-Return format: structured findings per quick-research subagent mode
 ```
 
 ## Protocol

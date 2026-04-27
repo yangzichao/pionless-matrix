@@ -85,7 +85,6 @@ Acceptance criteria: [what counts as done]
 - If ALL five are checked → set Gate to PASSED
 - If no new evidence this turn → increment Stale rounds
 - If Stale rounds >= 2 → set Gate to PASSED (forced: diminishing returns)
-- If Iteration >= 10 → set Gate to PASSED (forced: budget limit)
 
 **WRITE** the updated workspace file. Increment Iteration.
 
@@ -98,7 +97,6 @@ Acceptance criteria: [what counts as done]
 - WebSearch: 15-25 calls (pause at 30)
 - WebFetch: 8-15 page reads
 - Subagent spawns: up to 10
-- Iterations: 4-8 typical, 10 max
 
 ## Spawning Rules
 
@@ -114,8 +112,4 @@ Use the report template from the deep-research skill. Write to `deep-research/{p
 
 [[skills.config]]
 path = "__PIONLESS_PLUGIN_ROOT__/skills/deep-research/SKILL.md"
-enabled = true
-
-[[skills.config]]
-path = "__PIONLESS_PLUGIN_ROOT__/skills/quick-research/SKILL.md"
 enabled = true

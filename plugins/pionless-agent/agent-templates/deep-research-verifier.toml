@@ -50,7 +50,3 @@ Recommendation:
 - Do not spawn subagents.
 - Return only the evidence the parent orchestrator needs to make a decision.
 """
-
-[[skills.config]]
-path = "__PIONLESS_PLUGIN_ROOT__/skills/quick-research/SKILL.md"
-enabled = true

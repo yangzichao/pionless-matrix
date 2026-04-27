@@ -11,7 +11,6 @@ You receive a task card from the parent orchestrator:
 Objective: [one sentence — the subquestion to answer]
 Seed queries: [2-3 starting search queries]
 Acceptance criteria: [what counts as "done"]
-Return format: structured findings per quick-research subagent mode
 ```
 
 ## Protocol
@@ -52,7 +51,3 @@ Recommended follow-up:
 - Do not spawn subagents.
 - Leave plan-board ownership and final synthesis to the parent orchestrator.
 """
-
-[[skills.config]]
-path = "__PIONLESS_PLUGIN_ROOT__/skills/quick-research/SKILL.md"
-enabled = true
