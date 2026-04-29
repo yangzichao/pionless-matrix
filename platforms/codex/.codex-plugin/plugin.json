@@ -1,7 +1,7 @@
 {
   "name": "pionless-agent",
-  "version": "0.2.0",
-  "description": "Cross-platform research agent package. Codex ships shared research skills through the plugin and installs matching custom-agent templates separately under ~/.codex/agents.",
+  "version": "0.4.0",
+  "description": "Cross-platform research agent package. Codex ships shared research skills (with search/research mode auto-classification) and matching custom-agent templates (worker, verifier, drafter, writer) under ~/.codex/agents.",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "author": {
@@ -32,9 +32,11 @@
     ],
     "websiteURL": "https://github.com/yangzichao/pionless-agent",
     "defaultPrompt": [
-      "Use the deep-research agent to investigate a topic and delegate worker agents.",
+      "Use the deep-research agent to investigate a topic and delegate worker, verifier, drafter, and writer agents.",
       "Use the deep-research-worker agent to run a focused evidence-gathering pass on a subquestion.",
-      "Use the deep-research-verifier agent to seek contradictions in a current research thesis."
+      "Use the deep-research-verifier agent to seek contradictions in a current research thesis.",
+      "Use the deep-research-drafter agent to synthesize a finished workspace into a substantively-complete draft.",
+      "Use the deep-research-writer agent to apply craft polish to a draft and produce the final report file."
     ],
     "brandColor": "#10A37F"
   }

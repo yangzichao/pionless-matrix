@@ -73,12 +73,21 @@ If the draft cites a URL that is not in the `sources` list, return `status: fail
 
 ### 5. Apply math and notation rules
 
-When the draft includes formulas, code, or symbolic notation, preserve characters exactly through Markdown rendering:
+Math and code are different things. Render them differently.
 
-- Do not accidentally rewrite or strip `$`, `\\`, `_`, `^`, `{}`, `[]`, or `*` when they are part of notation.
-- Prefer fenced code blocks for literal formulas, pseudo-LaTeX, or syntax examples that must not be interpreted by Markdown.
-- Use inline math only when the renderer is likely to support it; otherwise present the expression in backticks or a fenced block so the formula survives intact.
-- If a sentence mixes prose and notation, check the final text to ensure currency symbols, shell variables, and math delimiters are not confused with each other.
+**Math — always LaTeX, never code blocks, never Unicode glyph hacks.**
+
+- Inline math goes in `$...$`. Display (multi-line, set-off) equations go in `$$...$$` — on their own paragraph, blank line above and below.
+- Do **not** put equations inside ```` ``` ``` ```` fences. Code fences render in monospace and break math typography (subscripts, integrals, fractions, Greek letters all collapse to ASCII). Reserve fences for source code, shell commands, file paths, JSON/YAML, and pseudo-syntax — never for equations the reader is meant to read as math.
+- Spell math symbols as LaTeX commands, not Unicode substitutes. Use `\\Lambda`, `\\mu`, `\\partial`, `\\nabla`, `\\dagger`, `\\pi`, `\\hbar`, `\\sim`, `\\approx`, `\\to`, `\\langle`, `\\rangle` — not `Λ`, `μ`, `∂`, `∇`, `†`, `π`, `ℏ`, `~`, `≈`, `→`, `⟨`, `⟩`. Use `_{...}` and `^{...}` with braces for multi-character sub/superscripts (e.g., `{}^{3}S_{1}`, `C_0^{(s)}`, `\\Lambda_b`) — not Unicode digits like `¹S₀`, `³S₁`, `Λᵦ`. The LaTeX form renders consistently across GitHub, VS Code preview, MathJax, and KaTeX; the Unicode form is brittle and looks broken next to real math in the same paragraph.
+- Multi-line aligned equations use `$$\\begin{aligned} ... \\end{aligned}$$`. Cases use `\\begin{cases}`. Do not approximate alignment with whitespace inside a code fence.
+- Operator names (`\\sin`, `\\log`, `\\arctan`, `\\det`, `\\Tr`) get their LaTeX command form, not raw letters in math mode.
+
+**Notation that is genuinely code, not math** — file paths, identifiers, CLI flags, env-var names, JSON keys, code symbols — goes in backticks (inline) or fenced code blocks (multi-line). A function signature is code; a Hamiltonian is math. Do not mix the two.
+
+**Preserving literal characters.** When a passage discusses Markdown / LaTeX syntax itself, escape or fence as needed so `$`, `\\`, `_`, `^`, `{}`, `[]`, `*` survive rendering. When a sentence mixes prose, code, and math, re-read the rendered output to confirm currency symbols (`$`), shell variables, and math delimiters are not colliding.
+
+**If the orchestrator's draft already put equations in code fences or used Unicode glyph hacks, convert them to proper LaTeX before writing the file** and note the conversion in `notes`. Do not silently keep the broken form just because the draft had it that way.
 
 ### 6. Write the file
 

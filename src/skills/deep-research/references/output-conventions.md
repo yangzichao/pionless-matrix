@@ -35,7 +35,7 @@ Use the same prefix for both files of a run:
 
 ## Subagent file writes
 
-In the canonical setup only one subagent writes a file: `deep-research-writer`. The orchestrator passes it the full report path (`deep-research/<prefix>.md`) at dispatch time — workers and verifiers return JSON and never write to disk. The orchestrator owns the workspace file write itself.
+In the canonical setup only one subagent writes a file: `deep-research-writer`. The orchestrator passes it the full report path (`deep-research/<prefix>.md`) at dispatch time — workers, verifiers, and the drafter return JSON and never write to disk. The orchestrator owns the workspace file write itself.
 
 ## Host without write access
 

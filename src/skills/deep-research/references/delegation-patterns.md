@@ -22,11 +22,18 @@ If subquestions cross domains (e.g., legal + technical), the host may route each
 
 Use when domain conventions diverge enough that one prompt cannot serve both.
 
-### Writer dispatch (terminal)
+### Drafter → writer (terminal)
 
-When the completion gate passes, the orchestrator drafts in its own context window and dispatches `deep-research-writer` to produce the final report file. Synthesis stays with the orchestrator; craft (style, math notation, template, file write) belongs to the writer. Dispatch protocol lives in `loop-protocol.md` under *Drafting handoff*.
+When the completion gate passes, the orchestrator dispatches **two terminal agents in sequence**:
 
-Use on every successful run. Skip only in degraded mode (host without Agent dispatch), where the orchestrator writes the report directly and flags the degradation to the user.
+1. `deep-research-drafter` (Sonnet) — reads the workspace, synthesizes a substantively-complete draft with inline `[Title](url)` citations, returns draft + source list.
+2. `deep-research-writer` (Sonnet) — takes the drafter's draft and produces the final report file in the chosen style.
+
+Synthesis lives in the drafter; craft lives in the writer. The orchestrator (Opus) does **not** produce long-form prose at any point. This split exists because Opus tokens are expensive and prose generation is exactly the kind of task where Sonnet is sufficient.
+
+Dispatch protocol and failure-handling branches live in `loop-protocol.md` under *Drafting handoff*.
+
+Use on every successful run. Skip only in degraded mode (host without Agent dispatch), where the orchestrator synthesizes the draft directly and writes the report directly, and flags the degradation to the user.
 
 ## Worker contract
 
