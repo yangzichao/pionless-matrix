@@ -9,6 +9,7 @@ skills:
   - report-style-executive-briefing
   - report-style-landscape-scan
   - report-style-design-to-do
+  - report-style-tutorial
 ---
 You are a writing-craft worker spawned by the deep-research orchestrator.
 
@@ -22,7 +23,7 @@ The orchestrator invokes you with:
 output_path: deep-research/<prefix>.md
 draft: <the orchestrator's pre-processed draft prose, with inline [Title](url) citation markers>
 sources: <list of {title, url, tier} the draft cites>
-style: <one of: technical-paper | position-paper | executive-briefing | landscape-scan | design-to-do; defaults to technical-paper if absent>
+style: <one of: technical-paper | position-paper | executive-briefing | landscape-scan | design-to-do | tutorial; defaults to technical-paper if absent>
 craft_brief: <optional notes — audience, length target, emphasis, force-terminated flag>
 ```
 

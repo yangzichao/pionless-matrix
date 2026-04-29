@@ -53,6 +53,8 @@ Mode and style are orthogonal axes, but signals usually correlate:
 
 If signals are absent, default to `search` and state the assumption in the workspace's Research Question section. The only mechanical difference between modes: `research` mode requires a Working Thesis section in the workspace and a thesis-revision check at the end of every UPDATE step (see `references/loop-protocol.md`). Everything else — workers, verifier, plan board, gate — is unchanged.
 
+**Mode is internal — never ask the user about it.** Mode names (`search`, `research`) are orchestrator mechanics; they are confusing to a user invoking a product called "deep research". Do NOT enumerate mode options in clarification prompts, do NOT ask the user to pick between `search` and `research`, do NOT mention the word "mode" in user-facing text. Classify silently from the user's wording (verbs like "review / scan / summarize / what's out there" → `search`; verbs like "should we / is X true / why does Y / figure out" → `research`). Record the classification in the workspace's Research Question section and move on. The user-facing Turn 1 clarification, if any, asks only about the question itself, constraints, and (optionally) report style.
+
 ## Style decision (Turn 1)
 
 The orchestrator picks **exactly one** style at Turn 1, records it in the workspace, and passes it to the writer at dispatch time. Pick from user signals; otherwise pick a default and explicitly state the assumption.
@@ -62,6 +64,7 @@ The orchestrator picks **exactly one** style at Turn 1, records it in the worksp
 - `executive-briefing` — short decision memo, BLUF, ≤1000 words. Use when user signals brevity ("brief", "TL;DR", "one-pager") or names a stakeholder needing a fast read.
 - `landscape-scan` — categorized survey with comparable depth per item. Use when user asks "what's out there", "what are the X options", or wants a comparable map of a space.
 - `design-to-do` — engineering design + topologically-sorted task list. Use when user asks "design X", "how should we build Y", "plan the implementation of Z", or wants an engineering kickoff artifact.
+- `tutorial` — textbook-style step-by-step explanation building intuition → worked example → formalism → connections → pitfalls. Use when the user wants to *understand* a complex concept ("explain X step by step", "walk me through Y", "help me understand Z", "tutorial on W", "教科书风格").
 
 If signals genuinely conflict, ask the user once. If signals are absent, default to `technical-paper` and state the assumption in the workspace's Research Question section.
 
@@ -125,3 +128,4 @@ Skills do not grant tools. The host runtime decides what is permitted. Apply the
 - `report-style-executive-briefing` skill — short decision memo.
 - `report-style-landscape-scan` skill — categorized survey.
 - `report-style-design-to-do` skill — engineering design + task plan.
+- `report-style-tutorial` skill — textbook-style step-by-step concept walkthrough.

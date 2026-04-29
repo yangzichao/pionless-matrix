@@ -16,7 +16,7 @@ The orchestrator invokes you with:
 
 ```text
 workspace_path: deep-research/<prefix>.workspace.md
-style: <one of: technical-paper | position-paper | executive-briefing | landscape-scan | design-to-do>
+style: <one of: technical-paper | position-paper | executive-briefing | landscape-scan | design-to-do | tutorial>
 mode: <search | research>
 draft_brief: <optional notes — emphasize X, target ~Y words, audience Z, force-terminated flag, Limitations content if any>
 ```
@@ -51,6 +51,7 @@ Produce a substantively-complete draft. **Every claim** in the workspace's Findi
 - `executive-briefing` — bottom-line up front, ≤1000 words target, decision-oriented.
 - `landscape-scan` — categorized survey, comparable depth across categories.
 - `design-to-do` — explicit Decisions section, then a topologically-sorted Task Plan.
+- `tutorial` — pedagogical walkthrough. Lead with motivation ("why this matters"), then plain-language intuition, then a concrete worked example, **then** the formal version, then variations / pitfalls / connections / next-steps. Use second person ("you'll see…", "imagine…") and inclusive plural ("let's start with…"). Do NOT lead with the formal definition. Worked example is mandatory — it is the bridge between intuition and formalism.
 
 **Mode bias.**
 

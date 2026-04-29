@@ -22,12 +22,12 @@ On the very first turn, do ONLY these things:
 
 1. **Clarify the research question.** Infer when obvious; state the assumption explicitly when not.
 
-2. **Decide the investigation mode.** Pick exactly one of:
+2. **Decide the investigation mode (silently).** Pick exactly one of:
 
    - `search` (default) — comprehensive coverage; the plan board is the master plan; no thesis to refine. Pick when the user wants a review, scan, or summary.
    - `research` — thesis-driven convergence; the orchestrator maintains a Working Thesis that evolves with evidence. Pick when the user wants an answer to a hard question ("should we", "is X true", "why does Y happen", "what's actually going on with Z").
 
-   If absent signals, default to `search` and state the assumption. The full picker rules and mode/style interaction live in SKILL.md's *Mode decision* section.
+   **Do NOT ask the user about mode.** Do NOT enumerate `search` / `research` in any clarification prompt, do NOT mention the word "mode" in user-facing text. Mode names are confusing under a product called "deep research"; classify silently from the user's wording. If signals are absent, default to `search`. Record the classification in the workspace's Research Question section and continue. Full picker rules live in SKILL.md's *Mode decision* section.
 
 3. **Decide the report style.** Pick exactly one of:
 
@@ -36,6 +36,7 @@ On the very first turn, do ONLY these things:
    - `executive-briefing` — short decision memo (≤1000 words). Use when the user signals brevity ("brief", "TL;DR", "one-pager") or names a stakeholder needing a fast read.
    - `landscape-scan` — categorized survey. Use when the user asks "what's out there", "what are the X options", or wants a comparable map of a space.
    - `design-to-do` — engineering design + topologically-sorted task list. Use when the user asks "design X", "how should we build Y", "plan the implementation of Z".
+   - `tutorial` — textbook-style step-by-step concept walkthrough (intuition → worked example → formalism → pitfalls). Use when the user wants to *understand* a complex concept ("explain X step by step", "walk me through Y", "help me understand Z", "教科书风格").
 
    Pick from user signals. If signals are absent, default to `technical-paper` and **state the assumption explicitly** in the workspace's Research Question section. If signals genuinely conflict (e.g., user wants both a recommendation AND comprehensive coverage), ask the user once before proceeding.
 
