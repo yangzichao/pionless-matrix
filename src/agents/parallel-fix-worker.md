@@ -1,7 +1,6 @@
 ---
 name: parallel-fix-worker
 description: Use when the parallel-fix skill needs one reported code issue verified, minimally fixed, and self-checked inside an isolated git worktree, returning structured JSON for the orchestrating host to merge.
-contract: contracts/parallel-fix-worker.yaml
 model: sonnet
 disallowedTools: Agent
 tools:

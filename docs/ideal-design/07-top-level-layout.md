@@ -11,7 +11,7 @@ Once the lower-level decisions are fixed, most of the repository shape follows:
 - orchestration topology lives in the orchestrator's `tools: Agent(...)`, not in folder structure (chapter 05);
 - a skill may bundle scripts inside its own `scripts/` directory (chapter 06).
 
-The top-level layout follows from these. It should be organized by **lifecycle first** (source vs generated) and **runtime concept second** (skills vs agents vs companion contracts).
+The top-level layout follows from these. It should be organized by **lifecycle first** (source vs generated) and **runtime concept second** (skills vs agents).
 
 ### First split: source vs generated
 
@@ -34,17 +34,14 @@ repo-root/
         scripts/
     agents/
       <agent-name>.md
-    contracts/
-      <agent-name>.yaml
 ```
 
 This is the recommended authoring layout.
 
 - `src/skills/` contains self-contained skill packages. Each skill is its own directory holding its `SKILL.md`, plus optional `references/`, `assets/`, and `scripts/` (chapter 01, chapter 06).
 - `src/agents/` contains source-of-truth agent definitions, each as a single `.md` file (chapter 02). Flat — no folder form, no nesting by orchestrator/worker role (chapter 05).
-- `src/contracts/` contains machine-readable companion contracts, keyed by the same basename as the agent they describe.
 
-Skills and agents are siblings. They are different runtime concepts and deserve different top-level homes. Contracts are a parallel tree, not hidden inside agent files or skill folders.
+Skills and agents are siblings. They are different runtime concepts and deserve different top-level homes.
 
 **No `src/shared/`.** Chapter 03 decided against shared prompt fragments between skills; if two skills need similar text they each carry their own copy. Chapter 06 puts skill scripts inside each skill's own `scripts/` directory. There is therefore nothing for a `src/shared/` tree to hold at the source layer. (The `shared/` folder under repo root is something else — a generated output, covered below.)
 
@@ -73,7 +70,6 @@ Folder nesting does not buy much here:
 When an agent needs related material, that material usually belongs somewhere else:
 
 - reusable workflow knowledge belongs in a skill (chapter 01);
-- a machine-readable output contract belongs in `src/contracts/`;
 - test fixtures belong in `tests/`;
 - helper scripts belong in `scripts/` inside the skill that owns the workflow (chapter 06).
 
@@ -125,8 +121,7 @@ The repository should be grouped by runtime concept inside one source tree, with
 
 1. `src/skills/<name>/` — self-contained skill packages (chapter 01, chapter 06).
 2. `src/agents/<name>.md` — flat single-file agent definitions (chapter 02, chapter 05).
-3. `src/contracts/<name>.yaml` — machine-readable companion contracts.
-4. `platforms/<target>/` — platform-specific packaging metadata, no source forks.
-5. `shared/skills/`, `dist/<target>-plugin/`, `plugins/<bundle>/` — generated outputs outside `src/`.
+3. `platforms/<target>/` — platform-specific packaging metadata, no source forks.
+4. `shared/skills/`, `dist/<target>-plugin/`, `plugins/<bundle>/` — generated outputs outside `src/`.
 
-This resolves the agent-layout question cleanly. Agents are not mini-packages at the source layer; they are single-file definitions, with contracts and other companions stored in parallel trees when needed. And the absence of `src/shared/` is a deliberate consequence of chapter 03 — there is nothing for it to hold.
+This resolves the agent-layout question cleanly. Agents are not mini-packages at the source layer; they are single-file definitions. And the absence of `src/shared/` is a deliberate consequence of chapter 03 — there is nothing for it to hold.

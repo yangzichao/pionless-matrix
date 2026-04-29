@@ -41,13 +41,6 @@ repo-root/
       deep-research-verifier.md      # bonded verifier (agent-driven)
       parallel-fix-worker.md         # bonded worker (skill-driven)
       quick-research.md              # standalone main session + reusable as a leaf
-    contracts/
-      deep-research.yaml
-      deep-research-pro.yaml
-      deep-research-worker.yaml
-      deep-research-verifier.yaml
-      parallel-fix-worker.yaml
-      quick-research.yaml
   platforms/
     claude-code/.claude-plugin/
     codex/.codex-plugin/
@@ -60,7 +53,7 @@ repo-root/
     pionless-agent/                  # GENERATED — repo-local installable bundle
 ```
 
-The shape follows chapter 07: `src/skills/`, `src/agents/`, `src/contracts/` as siblings; `platforms/`, `shared/`, `dist/`, `plugins/` as derived outputs outside `src/`.
+The shape follows chapter 07: `src/skills/` and `src/agents/` as siblings; `platforms/`, `shared/`, `dist/`, `plugins/` as derived outputs outside `src/`.
 
 ### Agent-driven orchestration: `deep-research`
 
@@ -72,7 +65,6 @@ The orchestrator is a single agent file. The whole spawn graph lives in its fron
 ---
 name: deep-research
 description: Use when a research task needs plan-board decomposition, parallel evidence gathering via deep-research-worker, claim verification via deep-research-verifier, and synthesis into a citation-backed final report.
-contract: contracts/deep-research.yaml
 model: opus
 tools: Agent(deep-research-worker, deep-research-verifier), Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch, Skill
 skills:
@@ -94,7 +86,6 @@ The bonded leaves:
 ---
 name: deep-research-worker
 description: Use when the deep-research orchestrator needs evidence gathered for one narrow subquestion and returned as structured findings (no synthesis, no spawning).
-contract: contracts/deep-research-worker.yaml
 model: sonnet
 disallowedTools: Agent
 skills:
@@ -107,7 +98,6 @@ skills:
 ---
 name: deep-research-verifier
 description: Use when the deep-research orchestrator needs a single claim adversarially checked — contradiction-seeking, numeric/date validation, or source cross-reference — and a verdict returned.
-contract: contracts/deep-research-verifier.yaml
 model: sonnet
 disallowedTools: Agent
 skills:
@@ -146,7 +136,6 @@ The bonded leaf:
 ---
 name: parallel-fix-worker
 description: Use when the parallel-fix skill needs one reported code issue verified, minimally fixed, and self-checked inside an isolated git worktree, returning structured JSON for the orchestrating host to merge.
-contract: contracts/parallel-fix-worker.yaml
 model: sonnet
 disallowedTools: Agent
 tools:
@@ -168,7 +157,6 @@ The naming follows chapter 05's relaxed bonded-prefix rule: `<originating-contex
 ---
 name: quick-research
 description: Use when a focused question needs a fast single-agent pass with a concise sourced answer — no plan board, no subagent decomposition, one or two retrieval rounds and stop.
-contract: contracts/quick-research.yaml
 model: sonnet
 disallowedTools: Agent
 skills:
@@ -215,7 +203,7 @@ Walking chapter 05's six invariants against `src/agents/`:
 | ch.04 — Claude-first source | All authoring in `src/`. Codex outputs produced by translation in `build.sh`, not by a parallel `src/codex/` tree. |
 | ch.05 — Agent-orchestrates-agent | Agent-driven via `deep-research.md`'s `tools: Agent(...)`. Skill-driven via `parallel-fix`'s SKILL.md driving the host. Bonded leaves named after their originating context. |
 | ch.06 — Scripts in skills | `quick-research/scripts/` holds Bash-invokable helpers; SKILL.md invokes them so their source never enters context. |
-| ch.07 — Top-level layout | `src/skills/`, `src/agents/`, `src/contracts/` as siblings inside one source tree. `platforms/`, `shared/`, `dist/`, `plugins/` as derived outputs outside `src/`. |
+| ch.07 — Top-level layout | `src/skills/` and `src/agents/` as siblings inside one source tree. `platforms/`, `shared/`, `dist/`, `plugins/` as derived outputs outside `src/`. |
 
 ### Where this stays correct under evolution
 

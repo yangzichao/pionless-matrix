@@ -1,6 +1,6 @@
 dist/
-deep-research/
-code-review/
+/deep-research/
+/code-review/
 shared/skills/
 platforms/claude-code/agents/
 platforms/codex/agents/

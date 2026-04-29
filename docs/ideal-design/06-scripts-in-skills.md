@@ -39,7 +39,7 @@ compatibility: Requires Python 3.14+ and uv
 ---
 ```
 
-Whatever the skill depends on at runtime should be listed in `SKILL.md` or `compatibility`. The spec does not define a `requirements.txt` convention.
+Whatever the skill depends on at runtime should be listed in `SKILL.md` or `compatibility`. The Anthropic spec does not define a `requirements.txt` convention; this project follows [ch.01](01-skill-anatomy.md), whose canonical tree puts `requirements.txt` at the skill root for skill-local Python deps when scripts need them.
 
 ### Per-surface dependency constraints
 
@@ -80,10 +80,10 @@ The script's source never enters the context window — only the bytes it writes
 
 ### What the spec does not specify
 
-The official spec is silent on:
+The official Anthropic spec is silent on:
 
 - The internal structure of `scripts/` — subfolders, helper modules, naming conventions.
 - The working directory at script invocation time (relative paths from skill root work in practice).
-- A canonical place for tests inside a skill. The closest documented concept is **evaluations**, recorded in `evals/evals.json` per the [best-practices guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) — these test agent behavior on representative tasks, not script units.
+- A canonical place for tests inside a skill. The closest documented concept is **evaluations**, recorded in `evals/evals.json` per the [best-practices guide](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) — these test agent behavior on representative tasks, not script units. For this project, [ch.01](01-skill-anatomy.md)'s canonical tree places author-side script tests under `tests/` inside the skill folder, separate from any `evals/` directory.
 
-Anything beyond what this chapter states is project-local convention and should be documented as such, not as part of the Skills spec.
+Anything beyond what this chapter states or what ch.01 fixes is project-local convention and should be documented as such, not treated as part of the Anthropic Skills spec.
