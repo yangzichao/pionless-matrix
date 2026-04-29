@@ -1,7 +1,7 @@
 {
   "name": "pionless-agent",
-  "description": "Cross-platform research agent package. Claude ships explicit orchestrator and worker subagents, backed by shared research skills and MCP config.",
-  "version": "0.2.0",
+  "description": "Cross-platform research agent package. Skill-shell orchestrator with leaf craft agents (worker, verifier, writer) and 5 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do).",
+  "version": "0.3.0",
   "author": {
     "name": "Zichao Yang"
   },

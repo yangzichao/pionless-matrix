@@ -5,13 +5,13 @@
     "url": "https://github.com/yangzichao"
   },
   "metadata": {
-    "description": "Cross-platform Claude Code and Codex plugin marketplace for pionless-agent. Provides a three-tier research system (quick-research, deep-research, deep-research-pro)."
+    "description": "Cross-platform Claude Code and Codex plugin marketplace for pionless-agent. Provides a deep-research orchestrator (skill-shell) with leaf craft agents and 5 selectable report styles."
   },
   "plugins": [
     {
       "name": "pionless-agent",
       "source": "./plugins/pionless-agent",
-      "description": "Shared Claude Code and Codex plugin with a tiered research system (quick-research, deep-research, deep-research-pro) and composable subagent patterns."
+      "description": "Skill-shell deep-research orchestrator + leaf craft agents (worker / verifier / writer) + 5 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do)."
     }
   ]
 }
