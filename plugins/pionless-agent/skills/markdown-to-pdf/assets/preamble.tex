@@ -1,0 +1,81 @@
+% Curated XeLaTeX preamble for academic/research markdown reports.
+% Loaded by pandoc via --include-in-header.
+
+% ---- Typography ---------------------------------------------------------
+% (microtype is loaded by pandoc's default template; we tune via
+%  -V microtypeoptions in build_pdf.sh)
+
+% ---- Math ---------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+% Latin Modern (text) + STIX Two (math) is a strong, freely-available pair
+% with full Unicode math coverage. Falls back gracefully if STIX absent.
+\IfFontExistsTF{STIX Two Math}{%
+  \setmathfont{STIX Two Math}%
+}{%
+  \setmathfont{Latin Modern Math}%
+}
+
+% ---- Tables / floats ----------------------------------------------------
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+
+% ---- Lists --------------------------------------------------------------
+\usepackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt, parsep=0pt}
+
+% ---- Spacing ------------------------------------------------------------
+\usepackage{parskip}        % blank-line paragraphs, no first-line indent
+\usepackage{setspace}
+\setstretch{1.15}
+
+% ---- Section headings ---------------------------------------------------
+\usepackage{titlesec}
+\titleformat*{\section}{\Large\bfseries}
+\titleformat*{\subsection}{\large\bfseries}
+\titleformat*{\subsubsection}{\normalsize\bfseries}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+% ---- Code ---------------------------------------------------------------
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{framed}
+% Pandoc's default Shaded env uses \color{shadecolor}; just retint it.
+\definecolor{shadecolor}{RGB}{246,248,250}
+
+% ---- Hyperlinks (must be near the end) ----------------------------------
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor={black!60!blue},
+  urlcolor={black!50!blue},
+  filecolor={black!50!blue},
+  pdfborder={0 0 0},
+  bookmarksnumbered=true,
+  bookmarksopen=true,
+  pdfstartview={FitH}
+}
+
+% ---- Footnotes ----------------------------------------------------------
+\usepackage[bottom,hang,flushmargin]{footmisc}
+
+% ---- Quotes -------------------------------------------------------------
+\usepackage{csquotes}
+
+% ---- Title block tightening --------------------------------------------
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begingroup
+    \centering
+    {\LARGE\bfseries \@title \par}\vspace{0.6em}%
+    \ifx\@author\@empty\else{\large \@author \par}\vspace{0.4em}\fi
+    \ifx\@date\@empty\else{\small \@date \par}\fi
+    \vspace{1.2em}%
+  \endgroup
+}
+\makeatother

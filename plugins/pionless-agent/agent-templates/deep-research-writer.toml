@@ -85,9 +85,18 @@ Math and code are different things. Render them differently.
 
 **Notation that is genuinely code, not math** — file paths, identifiers, CLI flags, env-var names, JSON keys, code symbols — goes in backticks (inline) or fenced code blocks (multi-line). A function signature is code; a Hamiltonian is math. Do not mix the two.
 
-**Preserving literal characters.** When a passage discusses Markdown / LaTeX syntax itself, escape or fence as needed so `$`, `\\`, `_`, `^`, `{}`, `[]`, `*` survive rendering. When a sentence mixes prose, code, and math, re-read the rendered output to confirm currency symbols (`$`), shell variables, and math delimiters are not colliding.
+**Markdown rendering hazards.** When prose mixes with math delimiters and emphasis markers, common ASCII characters become silent collision points. The renderer (KaTeX / MathJax / GitHub / Notion / Substack) does not warn — it just produces broken output. Apply these rules without exception:
 
-**If the orchestrator's draft already put equations in code fences or used Unicode glyph hacks, convert them to proper LaTeX before writing the file** and note the conversion in `notes`. Do not silently keep the broken form just because the draft had it that way.
+- **Currency `$` — escape every literal dollar sign in prose as `\\$`.** `$44B`, `$1.3T`, `$0.99` are math-mode openers; the next `$` anywhere in the document closes the pair and italicizes everything between. This is the single most common failure mode for finance, pricing, market-cap, and valuation content. Preferred fixes: `\\$44B`, or rewrite as `USD 44B` / `44B USD`. Inside inline code (`` `$44B` ``) the `$` is also safe and does not need escaping.
+- **Identifiers with `_`** — `snake_case_var`, `event_name`, `user_id`, `t_0` written as bare prose become `snake`*case*`var` because `_..._` is parsed as italic. Wrap any identifier, symbol, or filename containing `_` in inline code: `` `snake_case_var` ``. (Math subscripts like `t_0` belong in `$...$`, not bare prose.)
+- **Bare `<...>`** — `<email@domain>`, `<TypeName>`, `<user>`, `<id>` are eaten as autolinks or stripped as HTML tags. Wrap in inline code or use entities (`&lt;...&gt;`).
+- **Stray `*`** — multiplication `5 * 3 * 2`, footnote markers, and decorative dashes can collide with `*...*` italic or `**...**` bold parsing — especially when the draft mixes bold list-item leads (`**Term** — ...`) with em-dashes. Escape as `\\*` or wrap the literal in inline code.
+- **`|` in prose** — even though tables are banned, if a draft slipped one in or a sentence contains a literal `|`, escape internal pipes as `\\|` before converting to definition-list form.
+- **Numbers + period at line start** — `1. ` and `2025. ` at the start of a line render as ordered-list items. If a sentence must begin with a year or numeral, either rephrase or escape the period as `1\\. `.
+
+After writing the file, mentally re-render the output paragraph by paragraph: any unpaired `$` in non-math prose, any dangling `_..._`, or any bare `<...>` is a defect. Fix it before returning. Note any conversions you applied in `notes`.
+
+**If the orchestrator's draft already put equations in code fences, used Unicode glyph hacks, or contains the rendering hazards above, fix them before writing the file** and note the conversions in `notes`. Do not silently keep the broken form just because the draft had it that way.
 
 ### 6. Write the file
 
