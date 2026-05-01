@@ -16,6 +16,20 @@ EVERY TURN:
 
 NEVER skip step 1 (read) or step 4 (write). NEVER do all research in a single turn. NEVER write the final report from this thread — dispatch `deep-research-writer`. NEVER skip the writer, even when the gate is forced PASSED by stale rounds.
 
+## One-shot execution (no user pauses between iterations)
+
+All iterations run in a **single user-facing response**. The "Turn N" labels below are internal — they correspond to *iterations of the loop*, NOT to user conversation turns. After Turn 1 writes the workspace, immediately continue into Turn 2 (and 3, 4, …) within the same response, dispatching workers via the Agent tool (which returns synchronously) and looping until the gate passes and the writer has produced the report file.
+
+**Never pause to ask the user:**
+- "should I continue / proceed / go on?"
+- "shall I dispatch workers now?"
+- "want to adjust the plan first?" / "want to review the plan board?"
+- "any changes before I run iteration N?"
+
+The user invoked deep research expecting an autonomous, multi-minute run that ends with a delivered report. Asking for permission mid-run defeats the product and forces the user to babysit the loop.
+
+**The single allowed user-facing pause** is a Turn 1 clarification when question wording or style signals *genuinely conflict* (e.g., the user asked for both a defended recommendation and comprehensive coverage). Merely *absent* signals must be defaulted silently with the assumption stated in the workspace — do NOT ask. After clarification (or if none was needed), proceed autonomously through the entire loop until the writer returns `status: written`.
+
 ## Turn 1: Initialization
 
 On the very first turn, do ONLY these things:
@@ -44,7 +58,7 @@ On the very first turn, do ONLY these things:
 
 5. **Write the workspace file** using `assets/workspace-template.md`. The chosen mode and style go in the Research Question section. If mode = `research`, also write an initial Working Thesis (a placeholder like *"TBD — needs initial evidence"* is fine; the loop will sharpen it).
 
-6. **Do NOT search or spawn workers on turn 1.** Planning only.
+6. **Do not spawn workers in this iteration — the workspace must exist first.** This iteration is planning-only. **However, do NOT stop here.** Once the workspace is written, immediately continue into Turn 2 within the **same user-facing response**: dispatch the first batch of workers per the plan board. Do not announce the plan and ask the user for confirmation, do not offer to "adjust the plan board first", do not ask "should I continue?" — the iteration boundary is internal and not a user-facing checkpoint. (See *One-shot execution* above.)
 
 ## Turn 2+: The gather-check loop
 
@@ -98,8 +112,8 @@ Overwrite the workspace file with the updated state per `workspace-reconstructio
 
 ### DECIDE
 
-- Gate PASSED → dispatch `deep-research-drafter` then `deep-research-writer` (see *Drafting handoff* below), stop.
-- Gate NOT PASSED → state what next iteration targets, continue.
+- Gate PASSED → dispatch `deep-research-drafter` then `deep-research-writer` (see *Drafting handoff* below), then stop.
+- Gate NOT PASSED → **immediately start the next iteration in the same response** (re-enter READ → WORK → UPDATE → CHECK → WRITE). Do not emit a user-facing "next iteration will target X" message and stop — that's a pause masquerading as a status update. The user sees one continuous run; status updates between iterations are unnecessary noise.
 
 ## Drafting handoff
 

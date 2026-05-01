@@ -74,8 +74,9 @@ The full per-style template, tone, length norms, and anti-patterns live in each 
 
 1. **Orchestrator-worker.** This thread is the lead; isolated investigation, verification, and writing happen as Agent dispatches. See `references/delegation-patterns.md`.
 2. **Iteration loop.** Repeat gather → record → check until the gate passes or stale rounds force a PASSED state. See `references/loop-protocol.md`.
-3. **Workspace reconstruction.** After every meaningful step, rebuild only the minimal working state from a persisted file rather than dragging in the full transcript. See `references/workspace-reconstruction.md`.
-4. **Synthesis and craft both go elsewhere.** When the gate passes, dispatch `deep-research-drafter` with the workspace path; the drafter returns a draft + source list. Then dispatch `deep-research-writer` with that draft for craft polish. The orchestrator does not write the draft and does not write the report file.
+3. **One-shot execution — no user pauses between iterations.** The entire run from clarification to final report happens in a single user-facing response. Iteration boundaries are internal; they are NOT user conversation turns. After the workspace is written, never stop to ask the user "should I continue", "shall I dispatch workers now", or "want to adjust the plan first" — the user invoked deep research expecting an autonomous run that ends with a delivered report. The only legitimate user-facing pause is a single Turn 1 clarification when question/style signals *genuinely conflict* (see Mode/Style decision sections); absent signals default silently. See `references/loop-protocol.md` for the explicit rule.
+4. **Workspace reconstruction.** After every meaningful step, rebuild only the minimal working state from a persisted file rather than dragging in the full transcript. See `references/workspace-reconstruction.md`.
+5. **Synthesis and craft both go elsewhere.** When the gate passes, dispatch `deep-research-drafter` with the workspace path; the drafter returns a draft + source list. Then dispatch `deep-research-writer` with that draft for craft polish. The orchestrator does not write the draft and does not write the report file.
 
 ## Workflow
 
