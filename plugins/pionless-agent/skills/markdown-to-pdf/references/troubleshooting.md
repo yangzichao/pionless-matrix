@@ -41,6 +41,8 @@ The preamble loads `xeCJK` only when a known CJK font is detected (PingFang SC o
 ### Build hangs
 XeLaTeX is waiting for input on an unrecoverable error. The script runs `pandoc` (which calls XeLaTeX non-interactively), so this should not happen — if it does, kill the process and inspect the log; usually a `\begin{...}` without a matching `\end{...}` from raw-LaTeX in the markdown source.
 
+A specific known cause: adding a `\newunicodechar` entry for a **variable-size / large operator** (∑ ∏ ∫ ∮ ⋃ ⋂ ∐ ⨁ ⨂ etc.) in `assets/preamble.tex`. Under `unicode-math`, macros like `\sum` emit the literal Unicode codepoint back into the math token stream; if that codepoint is also an active char that re-expands to `\sum`, you get infinite recursion and xelatex spins at 100% CPU. The shipped preamble deliberately omits these. Don't add them back. If a document needs a bare `∑` in prose, write it as `$\sum$` instead of as a literal Unicode char.
+
 ## When to escalate
 
 If a report fails after fixing the obvious issues, the source markdown may have raw-LaTeX fragments that conflict with the preamble. Strip them, rebuild, then re-add piece by piece.
