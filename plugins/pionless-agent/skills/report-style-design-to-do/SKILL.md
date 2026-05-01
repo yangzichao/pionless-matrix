@@ -53,7 +53,7 @@ A code-oriented design document fused with an actionable implementation plan. Bu
 
 ## High-Level Architecture
 
-{Prose + structured list. **No ASCII diagrams.** Describe components and their interactions in 1–2 paragraphs and a labelled list.}
+{A Mermaid architecture diagram + prose + structured list. Engineering reports benefit most from a visual — render the component graph as a fenced ```mermaid block (flowchart works well for component-and-data-flow; sequence for interaction-heavy systems). Follow with 1–2 paragraphs describing components and interactions, then a labelled list. ASCII diagrams allowed but discouraged.}
 
 - **{Component A}** — {purpose} — {key interface}
 - **{Component B}** — {purpose} — {key interface}

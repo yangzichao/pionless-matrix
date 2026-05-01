@@ -49,7 +49,7 @@ These apply to every style:
 - **Answer-first.** Every section leads with the conclusion, then support.
 - **Source vs inference.** Distinguish sourced facts from inference. Use "based on [N]" for sourced facts, "this suggests" / "this implies" for inference, "[N] argues that" for cited opinion. Never silently elevate inference to fact.
 - **Compact.** Avoid walls of prose; use lists and structured prose where they fit. One claim per bullet. No filler — state it directly.
-- **No ASCII art / diagrams.** Render any conceptual diagram as a structured list, definition list, or fenced text — never as ASCII boxes-and-arrows. (User preference.)
+- **Diagrams: prefer Mermaid; ASCII allowed but discouraged.** When the draft has a conceptual diagram, render it as a fenced ```mermaid block — pick the type that fits (flowchart, sequence, state, ER, class). Mermaid renders natively on GitHub, VS Code preview, Notion, and Obsidian. ASCII boxes-and-arrows are allowed when nothing else fits, but they should be a last resort — they look poor and don't scale. A structured list or definition list is also fine when the relationship is simple enough that a diagram would be overkill. (User preference.)
 - **No Markdown tables.** Render comparisons as definition-list pairs, indented bullet groups, or paragraph + sub-bullets — never `| ... | ... |` tables. (User preference.)
 
 ### 4. Convert citations to numbered paper-style references
@@ -130,7 +130,7 @@ For `failed`, prefix `notes` with a short reason keyword:
 - Do NOT invent claims, examples, or citations beyond what the draft contains.
 - Do NOT re-do research or fetch new sources.
 - Do NOT read or modify the workspace file.
-- If the orchestrator's draft contains an ASCII diagram or Markdown table, convert it (per universal writing rules) and note the conversion in `notes`. Do not silently keep the banned form.
+- If the orchestrator's draft contains a Markdown table, convert it (per universal writing rules) and note the conversion in `notes`. Do not silently keep the banned form. Mermaid blocks pass through unchanged. If the draft contains an ASCII diagram and a Mermaid version would clearly render better, convert it and note the change in `notes`; otherwise let it pass.
 - If the chosen style's anti-patterns conflict with the draft's content (e.g., a hedged conclusion in `position-paper`, an exhaustive low-level walkthrough in `design-to-do`), flag in `notes` rather than silently editing the substance — the orchestrator owns substance, you own craft.
 """
 

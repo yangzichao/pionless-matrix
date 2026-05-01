@@ -1,7 +1,7 @@
 {
   "name": "pionless-agent",
   "description": "Cross-platform research agent package. Skill-shell orchestrator with leaf craft agents (worker, verifier, drafter, writer), silent search/research mode auto-classification, and 6 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do, tutorial).",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": {
     "name": "Zichao Yang"
   },

@@ -1,6 +1,6 @@
 {
   "name": "pionless-agent",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Cross-platform research agent package. Codex ships shared research skills (with silent search/research mode auto-classification and 6 report styles including tutorial) and matching custom-agent templates (worker, verifier, drafter, writer) under ~/.codex/agents.",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",

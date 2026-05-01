@@ -65,7 +65,7 @@ Produce a substantively-complete draft. **Every claim** in the workspace's Findi
 - Inline math goes in `$...$`. Display equations go in `$$...$$` on their own paragraph, blank line above and below.
 - Use LaTeX commands (`\Lambda`, `\partial`, `\dagger`, `_{...}`, `^{...}`), not Unicode substitutes (`Λ`, `∂`, `†`, `¹`, `₀`).
 - Do NOT wrap equations in code fences — code fences render in monospace and break math typography. Reserve fences for source code, file paths, JSON/YAML.
-- Tables and ASCII diagrams are banned. Render comparisons as definition-list pairs or grouped bullets. The writer will catch any leftovers but minimize that work.
+- Markdown tables are banned — render comparisons as definition-list pairs or grouped bullets. For diagrams, prefer Mermaid in fenced ```mermaid blocks (flowchart, sequence, state, ER, class — pick what fits); ASCII art is allowed when Mermaid doesn't fit, but should be a last resort. The writer will catch any table leftovers but minimize that work.
 - **Markdown safety in prose.** Escape literal dollar signs as `\$` when writing currency, prices, market caps (`\$44B`, `\$1.3T`) — bare `$` opens math mode and pairs with the next `$` in the document. Wrap identifiers containing `_` in inline code (`` `snake_case` ``, `` `event_name` ``). Wrap bare `<email@x>`, `<TypeName>`, `<id>` in inline code. The writer enforces these too, but minimize that work.
 
 ### 4. Assemble the source list
