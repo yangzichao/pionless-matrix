@@ -46,7 +46,7 @@ The default neutral, source-backed analytical style. Use when the goal is to inf
 
 ## Comparison (if applicable)
 
-{Render as definition list or paragraph + sub-bullets — never a Markdown table.}
+{Prefer definition list or paragraph + sub-bullets. A Markdown table is acceptable when the comparison is genuinely tabular (≥3 items × ≥3 parallel attributes) or the brief explicitly requested one.}
 
 ## Open Risks & Unknowns
 

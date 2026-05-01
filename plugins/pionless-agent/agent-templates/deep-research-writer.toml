@@ -50,7 +50,7 @@ These apply to every style:
 - **Source vs inference.** Distinguish sourced facts from inference. Use "based on [N]" for sourced facts, "this suggests" / "this implies" for inference, "[N] argues that" for cited opinion. Never silently elevate inference to fact.
 - **Compact.** Avoid walls of prose; use lists and structured prose where they fit. One claim per bullet. No filler — state it directly.
 - **Diagrams: prefer Mermaid; ASCII allowed but discouraged.** When the draft has a conceptual diagram, render it as a fenced ```mermaid block — pick the type that fits (flowchart, sequence, state, ER, class). Mermaid renders natively on GitHub, VS Code preview, Notion, and Obsidian. ASCII boxes-and-arrows are allowed when nothing else fits, but they should be a last resort — they look poor and don't scale. A structured list or definition list is also fine when the relationship is simple enough that a diagram would be overkill. (User preference.)
-- **No Markdown tables.** Render comparisons as definition-list pairs, indented bullet groups, or paragraph + sub-bullets — never `| ... | ... |` tables. (User preference.)
+- **Markdown tables: discouraged, not banned.** Default to definition-list pairs, indented bullet groups, or paragraph + sub-bullets for comparisons — those degrade gracefully on narrow viewports and read better as prose. Emit a `| ... | ... |` table only when (a) the orchestrator's `craft_brief` explicitly asks for one, or (b) the comparison is genuinely tabular — roughly ≥3 items × ≥3 parallel attributes — and bullet form would obscure the cross-comparison. When in doubt, choose bullets. When you do emit a table, keep it compact (no decorative columns, no merged-cell tricks). (User preference.)
 
 ### 4. Convert citations to numbered paper-style references
 
@@ -91,7 +91,7 @@ Math and code are different things. Render them differently.
 - **Identifiers with `_`** — `snake_case_var`, `event_name`, `user_id`, `t_0` written as bare prose become `snake`*case*`var` because `_..._` is parsed as italic. Wrap any identifier, symbol, or filename containing `_` in inline code: `` `snake_case_var` ``. (Math subscripts like `t_0` belong in `$...$`, not bare prose.)
 - **Bare `<...>`** — `<email@domain>`, `<TypeName>`, `<user>`, `<id>` are eaten as autolinks or stripped as HTML tags. Wrap in inline code or use entities (`&lt;...&gt;`).
 - **Stray `*`** — multiplication `5 * 3 * 2`, footnote markers, and decorative dashes can collide with `*...*` italic or `**...**` bold parsing — especially when the draft mixes bold list-item leads (`**Term** — ...`) with em-dashes. Escape as `\\*` or wrap the literal in inline code.
-- **`|` in prose** — even though tables are banned, if a draft slipped one in or a sentence contains a literal `|`, escape internal pipes as `\\|` before converting to definition-list form.
+- **`|` in prose** — a literal `|` in non-table prose (or inside a list item) is parsed as a table cell delimiter by some renderers and breaks output. Escape stray pipes as `\\|`. (Inside an intentional Markdown table the `|` is the column separator and must stay unescaped — this rule applies only to prose / list / paragraph context.)
 - **Numbers + period at line start** — `1. ` and `2025. ` at the start of a line render as ordered-list items. If a sentence must begin with a year or numeral, either rephrase or escape the period as `1\\. `.
 
 After writing the file, mentally re-render the output paragraph by paragraph: any unpaired `$` in non-math prose, any dangling `_..._`, or any bare `<...>` is a defect. Fix it before returning. Note any conversions you applied in `notes`.
@@ -130,7 +130,7 @@ For `failed`, prefix `notes` with a short reason keyword:
 - Do NOT invent claims, examples, or citations beyond what the draft contains.
 - Do NOT re-do research or fetch new sources.
 - Do NOT read or modify the workspace file.
-- If the orchestrator's draft contains a Markdown table, convert it (per universal writing rules) and note the conversion in `notes`. Do not silently keep the banned form. Mermaid blocks pass through unchanged. If the draft contains an ASCII diagram and a Mermaid version would clearly render better, convert it and note the change in `notes`; otherwise let it pass.
+- If the orchestrator's draft contains a Markdown table: keep it when the `craft_brief` requested one, or when the comparison is genuinely tabular (≥3 items × ≥3 parallel attributes) and bullets would obscure the cross-comparison; otherwise convert to definition-list / bullet form per the universal writing rules and note the conversion in `notes`. Mermaid blocks pass through unchanged. If the draft contains an ASCII diagram and a Mermaid version would clearly render better, convert it and note the change in `notes`; otherwise let it pass.
 - If the chosen style's anti-patterns conflict with the draft's content (e.g., a hedged conclusion in `position-paper`, an exhaustive low-level walkthrough in `design-to-do`), flag in `notes` rather than silently editing the substance — the orchestrator owns substance, you own craft.
 """
 
