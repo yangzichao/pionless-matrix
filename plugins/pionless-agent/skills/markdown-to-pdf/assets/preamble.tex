@@ -18,6 +18,29 @@
   \setmathfont{Latin Modern Math}%
 }
 
+% ---- CJK (Chinese / Japanese / Korean) ---------------------------------
+% Load xeCJK only when a usable CJK font is present. Falls through silently
+% on systems without CJK fonts so pure-Latin builds are untouched.
+% Order: macOS system fonts → Noto CJK (Linux/CTAN) → give up.
+\IfFontExistsTF{PingFang SC}{%
+  \usepackage{xeCJK}%
+  \setCJKmainfont[BoldFont={PingFang SC Semibold}, ItalicFont={Kaiti SC}]{PingFang SC}%
+  \IfFontExistsTF{Heiti SC}{\setCJKsansfont{Heiti SC}}{}%
+  \IfFontExistsTF{STSong}{\setCJKmonofont{STSong}}{}%
+}{%
+  \IfFontExistsTF{Noto Serif CJK SC}{%
+    \usepackage{xeCJK}%
+    \setCJKmainfont{Noto Serif CJK SC}%
+    \IfFontExistsTF{Noto Sans CJK SC}{\setCJKsansfont{Noto Sans CJK SC}}{}%
+    \IfFontExistsTF{Noto Sans Mono CJK SC}{\setCJKmonofont{Noto Sans Mono CJK SC}}{}%
+  }{%
+    \IfFontExistsTF{Songti SC}{%
+      \usepackage{xeCJK}%
+      \setCJKmainfont{Songti SC}%
+    }{}%
+  }%
+}
+
 % ---- Tables / floats ----------------------------------------------------
 \usepackage{booktabs}
 \usepackage{longtable}

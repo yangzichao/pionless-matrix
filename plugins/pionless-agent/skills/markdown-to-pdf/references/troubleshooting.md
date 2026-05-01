@@ -32,6 +32,12 @@ That's the expected behavior for **manual** numbered citations (the report keeps
 ### Output PDF is huge (> 5 MB) for a text-only document
 Almost always because XeLaTeX embedded a heavy font. Drop `--mainfont` or pick a font with a smaller subset (Latin Modern, STIX Two).
 
+### Chinese / Japanese / Korean text disappears or shows as boxes
+The preamble loads `xeCJK` only when a known CJK font is detected (PingFang SC on macOS, Noto Serif CJK SC on Linux, or Songti SC as a last resort). If your CJK glyphs render as blanks/tofu:
+1. Confirm at least one of those fonts is installed: `fc-list :lang=zh | head` (macOS users have PingFang SC by default).
+2. If you have a different CJK font, pass it as the **main** font via `--mainfont "Source Han Serif SC"` — `fontspec` will pick up CJK ranges from it. Or add another `\IfFontExistsTF{...}{...}` branch to `assets/preamble.tex`.
+3. If you see `! Package xeCJK Error: Cannot find ...`, it means a font name is misspelled or missing — install via `tlmgr install ctex` (TeX Live) and the system font manager.
+
 ### Build hangs
 XeLaTeX is waiting for input on an unrecoverable error. The script runs `pandoc` (which calls XeLaTeX non-interactively), so this should not happen — if it does, kill the process and inspect the log; usually a `\begin{...}` without a matching `\end{...}` from raw-LaTeX in the markdown source.
 
