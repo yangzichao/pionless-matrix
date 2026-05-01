@@ -92,7 +92,7 @@ Skills in the series share the `freshwater-` prefix so they cluster in the user'
 | **`freshwater-compute`** | proposed | Drive a CAS workflow: route a natural-language calculation request to Wolfram MCP (preferred) or `sympy-mcp` (fallback); maintain a persistent kernel session for multi-step derivations. |
 | **`freshwater-cite`** | proposed | Search Mathlib for an existing lemma that matches a user-provided informal claim. Returns Lean lemma name + applicable rewrite. Could absorb `lean-explore` semantic search. |
 | **`freshwater-asymptotic`** | proposed | Specialization of `freshwater-compute` for asymptotic expansions (Edgeworth, saddlepoint, delta method). Pre-loaded prompts and assumption boilerplate. |
-| **`freshwater-research-loop`** | proposed | The umbrella workflow: take a research question, alternate between `compute` and `prove` to make progress, write a running notebook to `deep-research/`. The "main entry point" of the series for end users. |
+| **`freshwater-research-loop`** | proposed | The umbrella workflow: take a research question, alternate between `compute` and `prove` to make progress, and persist a running notebook (output location TBD — see §7). The "main entry point" of the series for end users. |
 
 This list is the working scope. Any specific skill may be dropped, merged, or renamed during implementation; the prefix stays.
 

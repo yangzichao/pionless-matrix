@@ -16,7 +16,7 @@ Diagnose whether the user's local environment has the components needed for the 
 - **Proof side**: `elan` → Lean 4 → a Mathlib-bearing Lake project, plus `lean-lsp-mcp` and `lean-explore` MCP servers, plus the `lean4-skills` Claude Code plugin.
 - **Glue**: `uv` / `uvx` for installing MCP servers, and the Claude Code MCP wiring (`claude mcp list`).
 
-This skill **diagnoses, it does not install**. Its output is a structured checklist plus a recommendation. The user (or a follow-up `freshwater-bootstrap` skill, when that exists) does the actual installs.
+This skill **diagnoses, it does not install**. Its output is a structured checklist plus a recommendation; the user runs the actual install commands themselves.
 
 ## When this skill activates
 
@@ -35,7 +35,7 @@ Run `bash scripts/check.sh` from the skill directory. The script probes (in roug
 3. **Mathlib project**: walks common workspace paths (`~/workplace`, `~/math-workspace`, `$PWD`) up to a few levels deep; reports any directory containing `lakefile.toml` / `lakefile.lean` whose dependencies include `mathlib`.
 4. **Wolfram (optional)**: `wolframscript`, `/Applications/Mathematica.app`, `/Applications/Wolfram Engine.app`, license activation status.
 5. **MCP servers**: parses `claude mcp list` for `lean-lsp`, `lean-explore`, `wolfram` / `mathematica` entries; flags servers configured but failing health check.
-6. **Claude Code plugins**: checks `~/.claude/plugins/` for `lean4-skills` and any `freshwater-*` peers.
+6. **Claude Code plugins**: checks `~/.claude/plugins/` for the optional `lean4-skills` plugin and confirms the parent `pionless-agent` plugin (which ships this skill) is installed. Note that `freshwater-*` are skills inside `pionless-agent`, not standalone plugins.
 7. **Disk**: free space on `$HOME` (Mathlib cache + Wolfram are several GB combined).
 
 The script writes a plain-text checklist to stdout using `[OK] / [--] / [!!]` markers (no emoji), one component per line, plus a final `RECOMMENDATION:` line.
@@ -68,7 +68,7 @@ If the user wants the open-source-only path, point them at `sympy-mcp` instead o
 
 The agent's reply to the user should look roughly like:
 
-```markdown
+~~~markdown
 ## freshwater-doctor: stack status
 
 | Bucket | Components |
@@ -85,13 +85,13 @@ curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf 
 ```
 
 Want me to run it?
-```
+~~~
 
 Keep the table tight; don't pad with components that aren't present and aren't blockers.
 
 ## Anti-patterns
 
-- **Don't try to install anything from inside this skill.** The doctor diagnoses; a future `freshwater-bootstrap` skill (or the user themselves) installs.
+- **Don't try to install anything from inside this skill.** The doctor diagnoses; the user runs the recommended install commands themselves.
 - **Don't recommend Wolfram as a blocker.** It is optional in the freshwater stack design.
 - **Don't run `lake build` to verify Mathlib.** That's a 10–30 minute operation; the doctor is supposed to be fast (sub-second). Detecting `lake-manifest.json` + a populated `.lake/build/` is enough to declare "Mathlib project present and previously built".
 - **Don't write to the user's filesystem.** This is a pure-read diagnostic. The check script must not create files outside its own scratch space.
