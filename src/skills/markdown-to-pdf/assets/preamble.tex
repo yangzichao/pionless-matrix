@@ -1,17 +1,14 @@
 % Curated XeLaTeX preamble for academic/research markdown reports.
-% Loaded by pandoc via --include-in-header.
-
-% ---- Typography ---------------------------------------------------------
-% (microtype is loaded by pandoc's default template; we tune via
-%  -V microtypeoptions in build_pdf.sh)
+% Tuned for a *modern web* look: sans-serif body, GitHub-style code blocks,
+% colored hyperlinks, generous spacing. Loaded by pandoc via --include-in-header.
 
 % ---- Math ---------------------------------------------------------------
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{unicode-math}
-% Latin Modern (text) + STIX Two (math) is a strong, freely-available pair
-% with full Unicode math coverage. Falls back gracefully if STIX absent.
+% STIX Two Math pairs cleanly with sans-serif body fonts and gives wide
+% Unicode coverage. Falls back to Latin Modern Math if STIX absent.
 \IfFontExistsTF{STIX Two Math}{%
   \setmathfont{STIX Two Math}%
 }{%
@@ -42,10 +39,10 @@
 }
 
 % ---- Unicode symbol fallbacks ------------------------------------------
-% Latin Modern Roman lacks glyphs for many Greek letters and math symbols
-% that appear *outside* math mode in research prose (e.g. "C(α) 检验",
-% "x → y", "p × q"). Without these mappings such characters silently vanish
-% in the PDF. Routing them through math mode lets the math font render them.
+% Some text fonts lack glyphs for Greek letters and math symbols that appear
+% *outside* math mode in research prose (e.g. "C(α) 检验", "x → y", "p × q").
+% Without these mappings such characters silently vanish in the PDF.
+% Routing them through math mode lets the math font render them.
 \usepackage{newunicodechar}
 % Greek lowercase
 \newunicodechar{α}{\ensuremath{\alpha}}
@@ -140,43 +137,63 @@
 \newunicodechar{𝔼}{\ensuremath{\mathbb{E}}}
 \newunicodechar{ℙ}{\ensuremath{\mathbb{P}}}
 
+% ---- Color palette (web-inspired) --------------------------------------
+\usepackage{xcolor}
+\definecolor{headingink}{HTML}{111827}     % near-black for headings (slate-900)
+\definecolor{bodyink}{HTML}{1F2937}         % slate-800 for body text
+\definecolor{linkink}{HTML}{0969DA}         % GitHub blue for links
+\definecolor{mutedink}{HTML}{57606A}        % slate-500 for muted text
+\definecolor{codebg}{HTML}{F6F8FA}          % GitHub code background
+\definecolor{coderule}{HTML}{D0D7DE}        % subtle border on code blocks
+\color{bodyink}                             % default body color
+
 % ---- Tables / floats ----------------------------------------------------
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
+\renewcommand{\arraystretch}{1.25}          % more breathing room per row
 
 % ---- Lists --------------------------------------------------------------
 \usepackage{enumitem}
-\setlist{itemsep=2pt, topsep=4pt, parsep=0pt}
+\setlist{itemsep=4pt, topsep=6pt, parsep=0pt, leftmargin=1.4em}
 
 % ---- Spacing ------------------------------------------------------------
-\usepackage{parskip}        % blank-line paragraphs, no first-line indent
+\usepackage{parskip}                        % blank-line paragraphs, no first-line indent
 \usepackage{setspace}
-\setstretch{1.15}
+\setstretch{1.4}                            % web-like line spacing
 
 % ---- Section headings ---------------------------------------------------
 \usepackage{titlesec}
-\titleformat*{\section}{\Large\bfseries}
-\titleformat*{\subsection}{\large\bfseries}
-\titleformat*{\subsubsection}{\normalsize\bfseries}
-\titlespacing*{\section}{0pt}{14pt}{6pt}
-\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\titleformat*{\section}{\Huge\bfseries\color{headingink}}
+\titleformat*{\subsection}{\LARGE\bfseries\color{headingink}}
+\titleformat*{\subsubsection}{\Large\bfseries\color{headingink}}
+\titleformat*{\paragraph}{\large\bfseries\color{headingink}}
+\titlespacing*{\section}{0pt}{24pt}{10pt}
+\titlespacing*{\subsection}{0pt}{18pt}{8pt}
+\titlespacing*{\subsubsection}{0pt}{14pt}{6pt}
 
 % ---- Code ---------------------------------------------------------------
-\usepackage{fancyvrb}
-\usepackage{xcolor}
+\usepackage{fvextra}                        % adds breaklines to fancyvrb
 \usepackage{framed}
-% Pandoc's default Shaded env uses \color{shadecolor}; just retint it.
-\definecolor{shadecolor}{RGB}{246,248,250}
+% Pandoc's default Shaded env wraps Highlighting blocks. Retint with the
+% GitHub palette and bump internal padding so code looks airy, not cramped.
+\definecolor{shadecolor}{HTML}{F6F8FA}
+\setlength{\FrameSep}{10pt}
+\setlength{\OuterFrameSep}{6pt}
+% Enable line wrapping for both plain Verbatim (unhighlighted code) and the
+% Highlighting environment pandoc emits for fenced code blocks. Without
+% breakanywhere, long identifiers/URLs run off the right margin.
+\fvset{breaklines=true,breakanywhere=true,fontsize=\small,breaksymbolleft={},breaksymbolright={}}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},breaklines,breakanywhere,fontsize=\small,breaksymbolleft={},breaksymbolright={}}
 
 % ---- Hyperlinks (must be near the end) ----------------------------------
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
 \hypersetup{
   colorlinks=true,
-  linkcolor=black,
-  citecolor={black!60!blue},
-  urlcolor={black!50!blue},
-  filecolor={black!50!blue},
+  linkcolor=linkink,
+  citecolor=linkink,
+  urlcolor=linkink,
+  filecolor=linkink,
   pdfborder={0 0 0},
   bookmarksnumbered=true,
   bookmarksopen=true,
@@ -194,10 +211,10 @@
 \renewcommand{\maketitle}{%
   \begingroup
     \centering
-    {\LARGE\bfseries \@title \par}\vspace{0.6em}%
-    \ifx\@author\@empty\else{\large \@author \par}\vspace{0.4em}\fi
-    \ifx\@date\@empty\else{\small \@date \par}\fi
-    \vspace{1.2em}%
+    {\Huge\bfseries\color{headingink} \@title \par}\vspace{0.8em}%
+    \ifx\@author\@empty\else{\large\color{mutedink} \@author \par}\vspace{0.4em}\fi
+    \ifx\@date\@empty\else{\small\color{mutedink} \@date \par}\fi
+    \vspace{1.6em}%
   \endgroup
 }
 \makeatother

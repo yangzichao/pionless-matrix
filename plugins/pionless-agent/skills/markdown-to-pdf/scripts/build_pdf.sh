@@ -3,10 +3,12 @@
 #
 # Usage:
 #   build_pdf.sh <input.md> [output.pdf] [--paper a4|letter] [--margin 1in]
-#                [--mainfont "Family"] [--twocolumn]
+#                [--mainfont "Family"] [--monofont "Family"] [--twocolumn]
 #                [--bib refs.bib] [--csl style.csl]
 #
-# Defaults: A4, 11pt, 1in margins, Latin Modern + STIX Two math, hyperref colored links.
+# Defaults: A4, 11pt, 1in margins. Body font defaults to a modern sans-serif
+# tuned per platform (Helvetica Neue on macOS, DejaVu Sans on Linux); pass
+# --mainfont to override. STIX Two math, GitHub-style code blocks, blue links.
 
 set -euo pipefail
 
@@ -31,7 +33,8 @@ fi
 
 PAPER="a4"
 MARGIN="1in"
-MAINFONT=""           # let pandoc/XeLaTeX pick default if empty
+MAINFONT=""           # auto-detect based on platform if empty
+MONOFONT=""           # auto-detect based on platform if empty
 TWOCOLUMN=0
 BIB=""
 CSL=""
@@ -41,6 +44,7 @@ while [[ $# -gt 0 ]]; do
     --paper)     PAPER="$2"; shift 2 ;;
     --margin)    MARGIN="$2"; shift 2 ;;
     --mainfont)  MAINFONT="$2"; shift 2 ;;
+    --monofont)  MONOFONT="$2"; shift 2 ;;
     --twocolumn) TWOCOLUMN=1; shift ;;
     --bib)       BIB="$2"; shift 2 ;;
     --csl)       CSL="$2"; shift 2 ;;
@@ -51,8 +55,33 @@ done
 command -v pandoc  >/dev/null || { echo "error: pandoc not installed (brew install pandoc)" >&2; exit 69; }
 command -v xelatex >/dev/null || { echo "error: xelatex not installed (brew install --cask mactex-no-gui)" >&2; exit 69; }
 
+# Platform-aware font defaults. macOS ships Helvetica Neue + Menlo; most
+# Linux distros ship DejaVu. If neither pattern matches, leave empty and
+# let pandoc/XeLaTeX use its built-in default (Latin Modern).
+if [[ -z "$MAINFONT" ]]; then
+  case "$(uname -s)" in
+    Darwin) MAINFONT="Helvetica Neue" ;;
+    Linux)
+      if command -v fc-list >/dev/null 2>&1 && fc-list | grep -qi "DejaVu Sans"; then
+        MAINFONT="DejaVu Sans"
+      fi
+      ;;
+  esac
+fi
+if [[ -z "$MONOFONT" ]]; then
+  case "$(uname -s)" in
+    Darwin) MONOFONT="Menlo" ;;
+    Linux)
+      if command -v fc-list >/dev/null 2>&1 && fc-list | grep -qi "DejaVu Sans Mono"; then
+        MONOFONT="DejaVu Sans Mono"
+      fi
+      ;;
+  esac
+fi
+
 SKILL_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PREAMBLE="$SKILL_ROOT/assets/preamble.tex"
+MERMAID_FILTER="$SKILL_ROOT/assets/mermaid-filter.lua"
 LOG="${OUTPUT%.pdf}.build.log"
 
 ARGS=(
@@ -63,7 +92,6 @@ ARGS=(
   --include-in-header="$PREAMBLE"
   -V geometry:"paper=${PAPER}paper,margin=${MARGIN}"
   -V fontsize=11pt
-  -V linkcolor=black
   -V colorlinks=true
   -V lang=en
   -V microtypeoptions=protrusion=true
@@ -72,11 +100,21 @@ ARGS=(
   -o "$OUTPUT"
 )
 
-if [[ -n "$MAINFONT" ]]; then
-  ARGS+=(-V mainfont="$MAINFONT")
-fi
+[[ -n "$MAINFONT" ]] && ARGS+=(-V mainfont="$MAINFONT")
+[[ -n "$MONOFONT" ]] && ARGS+=(-V monofont="$MONOFONT")
 if [[ "$TWOCOLUMN" -eq 1 ]]; then
   ARGS+=(-V classoption=twocolumn)
+fi
+
+# Mermaid: attach the Lua filter only when mmdc is installed. Without it,
+# ```mermaid blocks fall through to plain code rendering. Print a hint if
+# the input actually contains mermaid blocks so the user knows what's missing.
+if command -v mmdc >/dev/null 2>&1; then
+  ARGS+=(--lua-filter="$MERMAID_FILTER")
+elif grep -qE '^[[:space:]]*```[[:space:]]*mermaid' "$INPUT" 2>/dev/null; then
+  echo "warning: input has \`\`\`mermaid blocks but mmdc is not installed." >&2
+  echo "         they will render as plain code. install with:" >&2
+  echo "         npm install -g @mermaid-js/mermaid-cli" >&2
 fi
 if [[ -n "$BIB" ]]; then
   ARGS+=(--citeproc --bibliography="$BIB")

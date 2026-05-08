@@ -8,10 +8,26 @@ build_pdf.sh <input.md> [output.pdf] [flags...]
 |---|---|---|
 | `--paper a4\|letter` | `a4` | Sets `geometry` paper size. |
 | `--margin 1in` | `1in` | Symmetric page margin. Accepts any LaTeX length (`2cm`, `0.75in`). |
-| `--mainfont "Family"` | (Latin Modern) | Main text font. Must be installed system-wide. |
+| `--mainfont "Family"` | Helvetica Neue (macOS) / DejaVu Sans (Linux) | Main text font. Must be installed system-wide. Falls back to LaTeX default if unset and platform unknown. |
+| `--monofont "Family"` | Menlo (macOS) / DejaVu Sans Mono (Linux) | Monospace font for code. |
 | `--twocolumn` | off | Two-column layout via `\documentclass[twocolumn]`. |
 | `--bib path.bib` | none | Enable `pandoc --citeproc` with this bibliography. |
 | `--csl path.csl` | Chicago author-date | Citation style; only meaningful with `--bib`. |
+
+## Mermaid diagrams
+
+If `mmdc` (mermaid-cli) is on `PATH`, the script automatically attaches a Lua filter that renders each ` ```mermaid ` block to a tightly-cropped PDF image and inlines it via `\includegraphics`. Install with:
+
+```bash
+npm install -g @mermaid-js/mermaid-cli
+```
+
+Without `mmdc`, mermaid blocks fall through to plain code rendering and a warning is printed.
+
+Override the binary or temp directory via env vars:
+
+- `PANDOC_MERMAID_BIN` — path to a non-PATH `mmdc` build
+- `PANDOC_MERMAID_OUTDIR` — where intermediate `.mmd` / `.pdf` files are written (default `$TMPDIR` or `/tmp`)
 
 ## Pandoc input extensions enabled
 

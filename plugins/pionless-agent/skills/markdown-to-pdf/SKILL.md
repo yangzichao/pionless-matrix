@@ -29,6 +29,8 @@ The host runtime needs:
 
 If either is missing, instruct the user to `brew install pandoc` and `brew install --cask mactex-no-gui` (macOS) before retrying. Do not silently fall back to a lower-quality renderer — the user asked for quality.
 
+**Optional:** `mmdc` (mermaid-cli) for rendering ` ```mermaid ` diagrams as embedded images. Install via `npm install -g @mermaid-js/mermaid-cli`. The build script auto-detects it; without it, mermaid blocks render as plain code (and a warning is printed).
+
 ## Workflow
 
 When activated, guide the host agent through these steps:
@@ -45,6 +47,7 @@ When activated, guide the host agent through these steps:
    The script wires Pandoc to XeLaTeX with the curated preamble in `assets/preamble.tex` and sensible defaults (A4, 11pt, Latin Modern + STIX math, microtype, colored links, numbered sections off by default, smart quotes on).
 5. **Verify success.** Check the exit code and that the PDF exists and is non-empty (`> 10 KB` for any non-trivial report). Open the file path in the response so the user can click it.
 6. **If LaTeX errors.** Read the tail of the build log (the script tees it to a `.log` file next to the PDF). Common causes and fixes are listed in `references/troubleshooting.md` — load that file only when something actually fails.
+7. **If something looks structurally wrong** (missing engine, fonts not found, mermaid not rendering, fresh-machine setup) — run `bash scripts/doctor.sh` first. It probes every dependency the pipeline needs and prints a punch list with the single highest-priority install command. Details: `references/doctor.md`.
 
 ## Customization knobs (only when the user asks)
 
