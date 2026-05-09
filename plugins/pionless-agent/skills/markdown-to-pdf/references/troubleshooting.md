@@ -1,48 +1,53 @@
 # Troubleshooting `markdown-to-pdf`
 
-Load this file only when `scripts/build_pdf.sh` fails. The script writes a `.build.log` next to the intended output — read its last ~40 lines first.
+Load this file only when `scripts/build_pdf.sh` fails or produces visibly wrong output. The script writes a `.build.log` next to the intended output — read its last ~40 lines first.
+
+Pipeline reminder: `markdown → pandoc (HTML + KaTeX + style.css) → headless Chrome → PDF`.
 
 ## Common errors
 
-### `! LaTeX Error: File 'something.sty' not found.`
-A LaTeX package is missing. On macOS with MacTeX, install via:
-```
-sudo tlmgr update --self
-sudo tlmgr install <package>
-```
-Frequent culprits: `unicode-math`, `mathtools`, `microtype`, `xcolor`, `csquotes`, `footmisc`, `titlesec`.
+### `error: pandoc not installed`
+`brew install pandoc` (macOS), or `apt install pandoc` (Debian/Ubuntu).
 
-### `! Package fontspec Error: The font "X" cannot be found.`
-The `--mainfont` argument names a font not installed system-wide. Either install the font or omit `--mainfont` (the preamble falls back to Latin Modern).
+### `error: no Chrome/Chromium found`
+The build script walks the macOS `/Applications` bundles, the Puppeteer cache that `mermaid-cli` populates, and the PATH. If none hit, install Chrome from <https://www.google.com/chrome/> or set `CHROME_BIN=/explicit/path/to/chrome` and retry.
 
-### `! Undefined control sequence. \tightlist`
-Pandoc emits `\tightlist`; the preamble usually defines it. If you see this, add to `assets/preamble.tex`:
-```latex
-\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-```
+### Output PDF exists but math looks like literal `$...$` text
+KaTeX did not run. Three causes, in order of likelihood:
 
-### Math renders as literal `$...$` text
-The input uses non-standard delimiters (e.g. `\(...\)` only, or single backticks around math). Re-run with `--from=markdown+tex_math_single_backslash` added, or convert delimiters in the source.
+1. **No network** — pandoc's `--katex` injects `<link>` and `<script>` tags pointing at the `cdn.jsdelivr.net` CDN. If Chrome can't reach the CDN, math falls back to raw text. Run `bash scripts/doctor.sh`; the network probe will flag this. Workaround: render somewhere with internet, or download KaTeX locally and edit `build_pdf.sh` to point at the local copy.
+2. **Non-standard delimiters** — input uses `\(...\)` exclusively, or single backticks around math, or `\begin{equation}...\end{equation}` outside a fenced math block. Re-run with `--from=markdown+tex_math_single_backslash` added, or normalize the delimiters in the source.
+3. **Chrome printed before KaTeX finished** — the script passes `--virtual-time-budget=15000` (15s wait). For very large documents this can be too short; bump it in `scripts/build_pdf.sh`.
 
-### Inline citations `[1]` become hyperlinks to nothing
-That's the expected behavior for **manual** numbered citations (the report keeps the bracket text but has no anchor). To get clickable cross-refs, either:
-- Convert references to a real bibliography and pass `--bib refs.bib --csl style.csl`, or
-- Add explicit anchors like `[\[1\]](#ref-1)` and matching `<a id="ref-1"></a>` markers in the References section.
+### Mermaid diagrams render as code blocks instead of figures
+`mmdc` is not on PATH. Install with `npm install -g @mermaid-js/mermaid-cli` and re-run. The build script prints a warning when it detects mermaid blocks but no `mmdc`.
+
+If `mmdc` IS installed but renders are missing, check for stderr lines beginning with `[mermaid-filter]` in the build log — the filter writes one diagnostic per failed render and falls back to the original code block.
+
+### Code blocks overflow the page
+The CSS already has `pre code { white-space: pre-wrap; word-break: break-word }`. If a specific document still overflows, it likely contains an `<img>` or table inside a `<pre>` (rare). Inspect the `--keep-html` output to confirm.
+
+### Tables break across pages and look wrong
+CSS rule `table { page-break-inside: avoid }` is set. For tables longer than a page that genuinely need to break, remove that rule for that table inline (`<table style="break-inside: auto">`) or rework the data into a list. Chrome's print engine is not LaTeX longtable.
+
+### Chinese / Japanese / Korean text disappears or shows as tofu
+The CSS font stack (`assets/style.css`) lists `"PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei"` after the Latin sans-serifs. If none of those is installed, Chrome falls back to a default that may not cover CJK ranges.
+
+- macOS: PingFang SC is preinstalled. If it's missing, the OS install is broken.
+- Linux: `apt install fonts-noto-cjk` (Debian/Ubuntu) or equivalent.
+- If the user has a different CJK font, append it to the `body { font-family: ... }` rule in `assets/style.css`.
 
 ### Output PDF is huge (> 5 MB) for a text-only document
-Almost always because XeLaTeX embedded a heavy font. Drop `--mainfont` or pick a font with a smaller subset (Latin Modern, STIX Two).
+With `--embed-resources`, pandoc inlines KaTeX's CSS and JS (~300 KB combined). That is the floor; anything significantly larger means the document is embedding images. Use `--keep-html` and inspect.
 
-### Chinese / Japanese / Korean text disappears or shows as boxes
-The preamble loads `xeCJK` only when a known CJK font is detected (PingFang SC on macOS, Noto Serif CJK SC on Linux, or Songti SC as a last resort). If your CJK glyphs render as blanks/tofu:
-1. Confirm at least one of those fonts is installed: `fc-list :lang=zh | head` (macOS users have PingFang SC by default).
-2. If you have a different CJK font, pass it as the **main** font via `--mainfont "Source Han Serif SC"` — `fontspec` will pick up CJK ranges from it. Or add another `\IfFontExistsTF{...}{...}` branch to `assets/preamble.tex`.
-3. If you see `! Package xeCJK Error: Cannot find ...`, it means a font name is misspelled or missing — install via `tlmgr install ctex` (TeX Live) and the system font manager.
+### Chrome prints with default URL header / page footer
+The script passes `--no-pdf-header-footer`. Older Chrome builds (before ~v109) used different flag names; if upgrading is not an option, see `chrome --help | grep print` for that build's flag.
 
-### Build hangs
-XeLaTeX is waiting for input on an unrecoverable error. The script runs `pandoc` (which calls XeLaTeX non-interactively), so this should not happen — if it does, kill the process and inspect the log; usually a `\begin{...}` without a matching `\end{...}` from raw-LaTeX in the markdown source.
-
-A specific known cause: adding a `\newunicodechar` entry for a **variable-size / large operator** (∑ ∏ ∫ ∮ ⋃ ⋂ ∐ ⨁ ⨂ etc.) in `assets/preamble.tex`. Under `unicode-math`, macros like `\sum` emit the literal Unicode codepoint back into the math token stream; if that codepoint is also an active char that re-expands to `\sum`, you get infinite recursion and xelatex spins at 100% CPU. The shipped preamble deliberately omits these. Don't add them back. If a document needs a bare `∑` in prose, write it as `$\sum$` instead of as a literal Unicode char.
+### Build hangs / Chrome never exits
+This used to be a XeLaTeX hazard but Chrome `--headless=new` is generally well-behaved. If it does hang:
+1. Confirm no zombie Chrome process from a prior run is holding the user-data-dir lock.
+2. Check the log for `DevTools listening on …` — if Chrome started in interactive mode by mistake, the printed flag set was wrong (most likely missing `--headless=new`).
 
 ## When to escalate
 
-If a report fails after fixing the obvious issues, the source markdown may have raw-LaTeX fragments that conflict with the preamble. Strip them, rebuild, then re-add piece by piece.
+If a render fails after the above, the source markdown may have raw HTML or raw LaTeX fragments that conflict with pandoc's HTML output. Strip them, rebuild, then re-add piece by piece. Pass `--keep-html` and open the intermediate HTML directly in Chrome to see exactly what gets printed before the print snapshot.

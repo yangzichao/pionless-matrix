@@ -1,7 +1,7 @@
 ---
 name: hoah-reviewer
 description: Use when the hoah-coder skill needs the current diff reviewed against the task's acceptance criteria and preferences, returning severity-tagged JSON findings (must_fix / improvement / nit). Critique-only — does not edit code.
-model: sonnet
+model: opus
 disallowedTools: Agent
 tools:
   - Read
@@ -29,6 +29,8 @@ preferences: |
   <user/project preferences block — may say "(none provided)">
 prior_must_fix_summary: |
   <one-line summary of each must_fix from prior round, or "none">
+prior_overturned_summary: |
+  <items the user explicitly overturned in prior rounds — do NOT re-raise these as must_fix unless you have new evidence; if you do re-raise, the `issue` text MUST cite the new evidence. May say "none">
 ```
 
 If any required field is missing or unparseable, return JSON with a single `must_fix` entry: `{"file": "<orchestrator>", "line": null, "issue": "malformed input card: <what's wrong>", "criterion": null}`.
@@ -47,20 +49,30 @@ Read the full diff. Open any cited files for surrounding context as needed via t
 
 If the diff is empty, return JSON with one `must_fix`: `"diff is empty against base ref"`. Do not invent findings.
 
-### 2. Run the project's checks yourself
+### 2. Run the project's deterministic checks
 
-Detect the toolchain by scanning the project root for marker files, then run the matching check:
+Before forming any LLM-based judgment, run the project's deterministic tooling. These tools produce ground-truth findings — **your LLM lenses (Step 3) must NOT contradict them**, and any tool finding that points at lines inside the diff is automatically a `must_fix`. You may not "review past" a deterministic failure.
 
-| Marker file | Command |
-|---|---|
-| `package.json` (with test script; pick `pnpm test` if `pnpm-lock.yaml`, `yarn test` if `yarn.lock`, else `npm test --silent`) | the matching command |
-| `Cargo.toml` | `cargo build --quiet && cargo test --quiet` |
-| `pyproject.toml` or `setup.py` (with pytest available) | `pytest -x --quiet` |
-| `go.mod` | `go build ./... && go test ./... -count=1` |
-| `tsconfig.json` only (no `package.json` test script) | `npx tsc --noEmit` |
-| none of the above | skip; add a `nit` saying "self-check skipped: no toolchain detected" |
+Compute `<changed files>` once via `git diff --name-only <base_ref>` (substitute the literal hash), filtered to existing files (drop deleted paths). Use this list everywhere `<changed files>` appears in the table below. If the list is empty, skip Tier B/C entirely.
 
-Capture stdout+stderr (tail ~50 lines if large). A failing self-check is automatically a `must_fix` finding citing the failing command and excerpted output.
+Detect the toolchain by scanning the project root for marker files, then run **all available tiers** for that toolchain:
+
+| Marker file | Tier A: build & test (mandatory) | Tier B: lint & type (run if config present) | Tier C: security (run if installed) |
+|---|---|---|---|
+| `package.json` (pick `pnpm`/`yarn`/`npm` by lockfile) | `<runner> test --silent` | `npx tsc --noEmit` (if `tsconfig.json`); `npx eslint <changed files>` (if eslint config) | `npm audit --omit=dev` |
+| `Cargo.toml` | `cargo build --quiet && cargo test --quiet` | `cargo clippy --quiet` (do NOT pass `-D warnings` — let warnings stay warnings; classify per the diff/non-diff rule below) | `cargo audit` |
+| `pyproject.toml` or `setup.py` (with pytest available) | `pytest -x --quiet` | `mypy <changed files>` (if mypy config); `ruff check <changed files>` (if ruff config) | `bandit -r <changed files>` |
+| `go.mod` | `go build ./... && go test ./... -count=1` | `go vet ./...`; `golangci-lint run` | `gosec ./...` |
+| `tsconfig.json` only (no `package.json` test script) | `npx tsc --noEmit` | `npx eslint <changed files>` (if eslint config) | — |
+| none of the above | skip; add a `nit` saying "self-check skipped: no toolchain detected" | — | — |
+
+Tier-running rules:
+
+- **Tier A is mandatory.** Failing build/test → automatic `must_fix` citing the failing command and excerpted output. Do not skip.
+- **Tier B runs only if the tool's config file exists** in the project (e.g. don't run `eslint` without an `.eslintrc*` / `eslint.config.*`). Findings that point at lines in the diff are `must_fix`. Findings outside the diff are `nit` (pre-existing).
+- **Tier C runs only if the tool binary is installed and resolvable on `PATH`.** Don't fail if not present — record one `nit` per missing tool: "tier C skipped: `<tool>` not installed". Findings inside the diff are `must_fix`.
+- For each tool you run, capture stdout+stderr (tail ~50 lines if large) and cite the **exact command** plus excerpted output in every tool-derived finding.
+- Tool-derived `must_fix` items must include `criterion: null` unless the finding also matches an explicit acceptance criterion.
 
 ### 3. Review against multiple lenses
 

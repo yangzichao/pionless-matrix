@@ -21,7 +21,8 @@ Use this skill when the user wants to code one small-to-mid task with a built-in
 - Driving the implementation
 - Running self-checks before invoking the reviewer (no fresh-context burn on broken code)
 - Spawning `hoah-reviewer` and looping on its findings until no `must_fix`
-- Surfacing improvement / nit residue at the end
+- Triaging each `must_fix` as accept/dispute, and escalating disputes to the user as tiebreaker
+- Surfacing improvement / nit / overturned residue at the end
 
 ## What this skill does NOT own
 
@@ -111,7 +112,7 @@ Make the code changes. Follow `PREFERENCES` and the project's `CLAUDE.md`. Stay 
 
 Run the project's build / test / type-check commands. Loop locally on failures — fix, re-run, until everything is green. Do NOT spawn the reviewer on broken code.
 
-If self-check is still failing after 3 local attempts within this phase, STOP and report to the user with the failing output. Do not proceed to review. (The 3-attempt budget resets every time Phase 5 is entered — once at initial implementation, and once per round 7d.)
+If self-check is still failing after 3 local attempts within this phase, STOP and report to the user with the failing output. Do not proceed to review. (The 3-attempt budget resets every time Phase 5 is entered — once at initial implementation, and once per round when 7e re-enters Phase 5.)
 
 If the project has no detectable toolchain, note that and proceed.
 
@@ -133,6 +134,7 @@ Initialize:
 
 - `round = 1`
 - `prior_must_fix = []`
+- `overturned_items = []` (cumulative across all rounds — items the user explicitly dropped after dispute)
 
 Loop:
 
@@ -151,31 +153,72 @@ preferences: |
   {PREFERENCES block, verbatim}
 prior_must_fix_summary: |
   {one-line summary of each prior-round must_fix item, or "none"}
+prior_overturned_summary: |
+  {one-line summary of each must_fix the user has explicitly overturned across all prior rounds, or "none"}
 ```
 
 ### 7b. Parse reviewer JSON
 
 The reviewer returns a single JSON object with `round`, `must_fix`, `improvement`, `nit`. If JSON is malformed or missing required keys, treat it as a tool error: stop the loop and report to the user.
 
-### 7c. Exit checks (in order)
+### 7c. Triage must_fix into accept / dispute, then resolve disputes
+
+For each item in `must_fix`, form your own opinion:
+
+- **accept** — the reviewer is right; you will fix it.
+- **dispute** — you genuinely believe the reviewer is wrong (incorrect technical claim, misread the diff, false positive, or contradicts a deterministic tool finding). Disputing requires writing a one-line **counter-argument** stating *why* the finding is wrong.
+
+Default to `accept`. Only `dispute` when you have a real technical disagreement, not a stylistic preference. If you are uncertain, accept. **Tool-derived findings** (cited as coming from build/test/lint/type-check/SAST in Step 2 of the reviewer) should almost never be disputed — those are deterministic.
+
+If **no items are disputed**, skip the rest of this sub-phase and proceed to 7d.
+
+If **any items are disputed**, STOP and present them to the user in this shape:
+
+```
+Reviewer (round {N}) raised {K} must_fix item(s). I dispute {M} of them — your call:
+
+DISPUTED — please uphold or overturn each:
+1. {file}:{line} — reviewer: "{issue}"
+   my counter: "{counter-argument}"
+2. ...
+
+ACCEPTED (will fix without asking):
+- {file}:{line} — {issue}
+- ...
+```
+
+Wait for the user's response. Apply their verdicts:
+
+- Items the user **upholds** are added to the fix list (treated like accepted items).
+- Items the user **overturns** are dropped from `must_fix`, appended to the run-level `overturned_items` list, and reported in Phase 8 residue.
+
+If the user declines to adjudicate or asks to abort, STOP the loop and report.
+
+After resolution, the working `must_fix` list contains only accept + uphold items. Proceed to 7d.
+
+### 7d. Exit checks (in order)
+
+These checks operate on the **resolved** `must_fix` list from 7c (after dispute resolution).
 
 1. **No-progress detection** — if `round >= 2`, compare each current `must_fix` item against `prior_must_fix`. An item counts as "repeated" when it has **the same `file`** AND its `issue` text shares the **core topic** with a prior item (same noun phrases / same symbol names / same failure mode — not just same words). If **at least half** of the current `must_fix` items are repeats from the prior round, STOP. Tell the user: "I'm stuck on the same issue(s) across 2 rounds — listing the repeated items below for your call." Show the stuck items and ask how to proceed.
 2. **Hard cap** — if `round >= 5` and `must_fix` is non-empty, STOP. Tell the user the 5-round cap was hit, list the residual must_fix items, and ask how to proceed.
 3. **Clean exit** — if `must_fix` is empty, exit the loop and proceed to Phase 8.
 
-### 7d. Address must_fix
+### 7e. Address must_fix
 
 Address ALL `must_fix` items in one implementation pass — do not fix them one-by-one with re-reviews in between. Then re-run Phase 5 (self-check) until green.
 
-### 7e. Restage and loop
+### 7f. Restage and loop
 
-Re-run Phase 6 (`git add -A`). Save the current round's `must_fix` array as `prior_must_fix` for next-round comparison.
+Re-run Phase 6 (`git add -A`). Save the current round's resolved `must_fix` array as `prior_must_fix` for next-round comparison.
 
 Build the `prior_must_fix_summary` string for the next reviewer card — one line per item in this format:
 
 ```
 - {file}:{line} — {issue}
 ```
+
+Build the `prior_overturned_summary` string from the cumulative `overturned_items` list — same format. If `overturned_items` is empty, the summary is the literal string `"none"`.
 
 Use `?` for `line` when null. If `prior_must_fix` is empty (which means we just exited the loop, not looping again), this step doesn't apply.
 
@@ -201,9 +244,13 @@ Residue (not blocking — your call whether to follow up):
   Nits ({M}):
   - file:line — note
   - ...
+
+  Overturned ({O}) — reviewer flagged but you overruled:
+  - file:line — issue (round {N})
+  - ...
 ```
 
-Do NOT auto-fix improvements or nits. The whole point of the residue is the user gets to decide. If there are zero improvement and nit items, omit the residue section entirely.
+Do NOT auto-fix improvements or nits. The whole point of the residue is the user gets to decide. If there are zero improvement, nit, and overturned items, omit the residue section entirely. Sections with zero items inside the residue can be omitted individually.
 
 Do NOT commit on the user's behalf. The diff is staged; the user decides whether to commit and how to message it.
 
@@ -230,7 +277,7 @@ If subagent-spawn is unavailable the skill cannot run — there is no graceful d
 The user-visible output is:
 
 - the **staged diff** in the working tree (the skill never commits — the user owns that decision)
-- the **Phase 8 summary** — files changed plus any improvement / nit residue
+- the **Phase 8 summary** — files changed plus any improvement / nit / overturned residue
 
 The skill does not write any file outside the project's normal source tree, does not push to a remote, and does not modify git config or branches.
 
