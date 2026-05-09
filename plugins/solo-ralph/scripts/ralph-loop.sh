@@ -82,6 +82,7 @@ fi
 
 INTERRUPTED=0
 trap 'INTERRUPTED=1; echo; echo "ralph-loop: interrupted, exiting after current iteration"' INT TERM
+trap 'rm -f .ralph.pid' EXIT
 
 start_epoch=$(date +%s)
 consecutive_failures=0

@@ -1,0 +1,5 @@
+{
+  "name": "solo-ralph",
+  "version": "0.1.0",
+  "description": "Solo Ralph Loop for Claude Code: one command drives a vague goal through hard-req → spec → todo, then launches a fresh-subprocess loop that executes the todo. State lives on disk; the loop survives the launching session via nohup+disown."
+}

@@ -1,15 +1,17 @@
 ---
-description: Show real Ralph Loop status — running PID, iteration count, last log lines.
+description: Show Solo Ralph Loop status — running PID, iteration count, last log lines.
 allowed-tools: Bash
 ---
 
-Report the status of the real Ralph Loop in this directory.
+Report the status of the Solo Ralph Loop in this directory.
 
 ```bash
 echo "=== process ==="
 if [ -f .ralph.pid ]; then
   pid=$(cat .ralph.pid)
-  if kill -0 "$pid" 2>/dev/null; then
+  if [ "$pid" = "INIT" ]; then
+    echo "lock held by a starting /solo-ralph (pid not yet written)"
+  elif kill -0 "$pid" 2>/dev/null; then
     echo "running pid=$pid"
   else
     echo "stale pid file (pid=$pid is dead)"

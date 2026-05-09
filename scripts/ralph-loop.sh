@@ -1,1 +1,1 @@
-../plugins/real-ralph/scripts/ralph-loop.sh
+../plugins/solo-ralph/scripts/ralph-loop.sh

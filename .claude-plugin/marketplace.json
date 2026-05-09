@@ -12,6 +12,11 @@
       "name": "pionless-agent",
       "source": "./plugins/pionless-agent",
       "description": "Skill-shell deep-research orchestrator + leaf craft agents (worker / verifier / writer) + 5 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do)."
+    },
+    {
+      "name": "solo-ralph",
+      "source": "./plugins/solo-ralph",
+      "description": "Self-driving Ralph Loop: one command drives a vague goal through hard-req → spec → todo, then launches a fresh-subprocess loop that executes the todo until done. Loop survives session exit via nohup+disown."
     }
   ]
 }
