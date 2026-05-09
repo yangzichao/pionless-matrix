@@ -58,11 +58,12 @@ Iterate. On approval, write to `solo-ralph/<slug>/spec.md` and proceed to Phase 
 
 ## Phase 3 — todo
 
-Read `solo-ralph/<slug>/spec.md`. Draft `plan.md` as a flat checklist. Each item:
+Read `solo-ralph/<slug>/spec.md`. Draft `plan.md` as a flat checklist of **high-level** items. Each item is a self-contained chunk of work that **one fresh-context loop iteration can complete end-to-end** — potentially a substantial block of code, an entire subsystem, or one cohesive feature slice.
 
-- exactly one sentence
-- says **which file(s)** and **what change** (e.g. "Add function `foo` in `src/bar.ts` that does X")
-- contains **no code** — the loop will write the code
+- describe **which file(s) or area** and **what gets built or changed**, at a level the loop can reason about (e.g. "Implement the auth middleware in `src/middleware/auth.ts` per spec §3"; not "add line 42 of auth.ts")
+- contains **no code** — the loop writes the code
+- **size items by judgment, not by quota.** A small feature might be 2-3 items; a bigger one 5-8. Do not split a cohesive change into many trivial sub-items just to fill the list. Each fresh-context iteration is a real cost — over-atomized todos cause dozens of cold spawns doing trivial work, with worse results than fewer larger items.
+- if you cannot decide whether to split an item or keep it whole, keep it whole — the loop will subdivide internally if it needs to
 
 Add this **last item verbatim** (do not paraphrase):
 

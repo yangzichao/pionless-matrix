@@ -20,7 +20,7 @@ You will be walked through:
 
 1. **Hard requirements** — Claude drafts, you review and correct, you say "OK".
 2. **Spec** — Claude drafts the design from the locked hard-reqs, you review, you say "OK".
-3. **Todo** — Claude drafts a checklist of file-level changes (no code), you review, you say "OK".
+3. **Todo** — Claude drafts a **high-level** checklist (each item = one substantial chunk of work for one fresh-context loop iteration; no code), you review, you say "OK".
 4. **Loop** — Claude writes `PROMPT.md`, launches `ralph-loop.sh` detached, exits.
 
 After phase 4 the loop iterates until every todo item is `[x]` and the last item (mandatory: a 3-pass self-review against the locked hard-req + spec) passes. Then Claude inside the loop runs `touch .ralph-stop` and the loop exits.
