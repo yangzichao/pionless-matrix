@@ -12,7 +12,7 @@ My personal [Agent Skills](https://agentskills.io) library. Every skill is a pla
 | [parallel-fix](skills/coding/parallel-fix/SKILL.md) | coding | Scan for a class of issues, fix each one in its own git worktree in parallel, merge back, run a final check. |
 | [no-comments](skills/coding/no-comments/SKILL.md) | coding | Delete comments in a diff through an independent Comment Sicko pass, flag the code they excuse, and fix it at the root. Adapted from backnotprop/pstack. |
 | [solo-ralph](skills/coding/solo-ralph/SKILL.md) | coding | Turn a vague goal into a spec and todo, then run a detached loop of fresh agent processes until the todo is done. |
-| [humanizer](skills/writing/humanizer/SKILL.md) | writing | Rewrite AI-sounding prose so it reads like the writer without changing what it says. Vendored from blader/humanizer. |
+| [humanizer](skills/writing/humanizer/SKILL.md) | writing | Rewrite AI-sounding prose so it reads like the writer without changing what it says. From blader/humanizer, with the plain-style rules of pstack's unslop merged in. |
 | [socratic-tutor](skills/learning/socratic-tutor/SKILL.md) | learning | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
 | [onepoint3acres-interview-scraper](skills/career/onepoint3acres-interview-scraper/SKILL.md) | career | Scrape 一亩三分地 面经 for a company and role, filter, cross-check, and cluster them into a 题库. |
 | [freshwater-doctor](skills/setup/freshwater-doctor/SKILL.md) | setup | Read-only check of the Lean 4 + Mathlib + Wolfram + MCP math stack, with the next install step. |
