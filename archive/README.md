@@ -26,4 +26,10 @@ To restore one, reverse the steps.
 
 ## Archived skills
 
-None yet.
+Archived 2026-11-21:
+
+- [career/onepoint3acres-interview-scraper](career/onepoint3acres-interview-scraper/SKILL.archived.md): scrape 一亩三分地 面经 for a company and role and cluster them into a 题库.
+- [coding/hoah-coder](coding/hoah-coder/SKILL.archived.md): one focused coding task with a clarify, implement, self-check, and reviewer loop.
+- [coding/parallel-fix](coding/parallel-fix/SKILL.archived.md): scan for a class of issues, fix each in its own git worktree in parallel, merge back.
+- [coding/solo-ralph](coding/solo-ralph/SKILL.archived.md): turn a vague goal into a spec and todo, then run a detached loop of fresh agent processes.
+- [setup/freshwater-doctor](setup/freshwater-doctor/SKILL.archived.md): read-only check of the Lean 4, Mathlib, Wolfram, and MCP math stack. Its design notes are in `docs/proposals/freshwater-series.md`.

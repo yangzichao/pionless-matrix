@@ -1,6 +1,6 @@
 # Freshwater: A Math Research Agent Series
 
-> **Status: proposal — only `freshwater-doctor` exists; the rest of the series is design-only.**
+> **Status: proposal — only `freshwater-doctor` was built, and it was archived on 2026-11-21 (`archive/setup/freshwater-doctor/`). The rest of the series is design-only.**
 
 This document captures the design intent, landscape research, and skill roadmap for the **`freshwater-*`** series — a family of skills inside `pionless-agent` aimed at a working mathematician / mathematical econometrician who needs both **symbolic computation** and **formal proof** support in their daily research.
 
