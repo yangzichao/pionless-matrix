@@ -8,6 +8,7 @@ A personal Agent Skills library. Skills live in `skills/<bucket>/<skill-name>/SK
 - Skills must be host-neutral: no host-specific agent definitions, tool names, or model choices. Subagent work goes in the skill's own `roles/<role>.md` with a fallback for hosts without subagents.
 - A skill folder is self-contained. No paths outside it; to use another skill, say "call the skill named X".
 - Adding, renaming or removing a skill means updating, in the same change: the bucket `README.md`, the `skills` array in `.claude-plugin/plugin.json`, and the table in the top-level `README.md`.
+- Retiring a skill means moving it to `archive/<bucket>/<skill-name>/` with `SKILL.md` renamed to `SKILL.archived.md`, and removing it from the same three places. Follow `archive/README.md`. Never edit archived skills; they are for reading only.
 - Bump `metadata.version` in the skill's frontmatter: patch for behavior fixes, minor for new capabilities. Bump `.claude-plugin/plugin.json` `version` when releasing. Versions are manual.
 - Before reporting done, run `python3 scripts/validate-skills.py` and `bash -n` on any changed shell script. After touching `.claude-plugin/`, also run `claude plugin validate .` if the Claude Code CLI is installed.
 

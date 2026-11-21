@@ -7,6 +7,7 @@ skills/
   <bucket>/
     README.md            # one line per skill in the bucket
     <skill-name>/SKILL.md
+archive/                 # retired skills, read-only, never installed (see archive/README.md)
 .claude-plugin/
   marketplace.json       # Claude Code marketplace, points at this repo root
   plugin.json            # Claude Code plugin, lists every skill path
@@ -28,6 +29,10 @@ Buckets group skills by area (`research/`, `coding/`, `writing/`, `learning/`, `
 3. Add the path to the `skills` array in `.claude-plugin/plugin.json`.
 4. Add a row to the skill table in the top-level `README.md`.
 5. Run `python3 scripts/validate-skills.py`.
+
+## Retiring a skill
+
+Move it to `archive/<bucket>/<skill-name>/` and rename its `SKILL.md` to `SKILL.archived.md`, then undo steps 2 to 4 above. `archive/README.md` has the exact commands. The rename matters: `npx skills add --full-depth` installs any file named `SKILL.md` anywhere in the repo.
 
 ## Install paths
 
