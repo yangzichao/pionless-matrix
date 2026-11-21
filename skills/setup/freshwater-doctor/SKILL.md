@@ -3,7 +3,7 @@ name: freshwater-doctor
 description: "Diagnose the local math research stack: Lean 4 + Mathlib, the optional Wolfram Engine, and the MCP servers (lean-lsp, lean-explore, optional wolfram) that connect them to coding agents such as Claude Code and Codex. Runs a read-only checklist and reports a punch list with the smallest next install step. Use when the user asks \"is my math setup ready\", wants to check a Lean or Mathematica install, verify the math stack, or bootstrap a fresh math research environment."
 compatibility: Needs shell access; reads Claude Code and Codex MCP config when those CLIs are installed
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # freshwater-doctor

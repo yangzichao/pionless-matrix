@@ -3,7 +3,7 @@ name: solo-ralph
 description: Drive a vague coding goal through user-approved hard requirements, a spec, and a high-level todo list, then launch a detached Ralph loop that runs a fresh non-interactive agent subprocess (claude -p or codex exec) per iteration until every todo item is done. Use when the user wants to start a Ralph loop or solo-ralph on a goal, turn a fuzzy feature idea into a spec-driven autonomous loop that keeps working after this session ends, check the status or progress of a running solo-ralph loop, or stop or cancel one.
 compatibility: Needs shell access (bash, nohup, pgrep) and a non-interactive agent CLI on PATH, either claude (claude -p) or codex (codex exec).
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Solo-Ralph

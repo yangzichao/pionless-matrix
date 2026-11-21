@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-"""Check every skill under skills/ against docs/authoring/skill-anatomy.md.
-
-Usage: python3 scripts/validate-skills.py
-Exit code 0 when there are no errors. Warnings never fail the run.
-Standard library only, so it runs the same locally and in CI.
-"""
 
 import json
 import os
@@ -19,17 +13,16 @@ PLUGIN_MANIFEST = REPO_ROOT / ".claude-plugin" / "plugin.json"
 # Limits from the Agent Skills spec (agentskills.io).
 MAX_NAME_LENGTH = 64
 MAX_DESCRIPTION_LENGTH = 1024
-# Soft limit from docs/authoring/skill-anatomy.md; SKILL.md is an index, not a manual.
 SOFT_MAX_SKILL_MD_LINES = 300
 
+NESTED_MAP_PLACEHOLDER = "<map>"
+
 SKILL_NAME_PATTERN = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
-# Relative paths a skill may point at inside its own folder.
 INTERNAL_PATH_PATTERN = re.compile(
     r"(?<![\w/.-])((?:references|roles|assets|scripts)/[\w./-]*\w)"
 )
 MARKDOWN_LINK_PATTERN = re.compile(r"\]\(([^)\s]+)\)")
 
-# Leftovers from the old Claude-only agent layer. These are errors in a skill.
 FORBIDDEN_PATTERNS = {
     r"subagent_type": "names a host-specific agent type",
     r"disallowedTools": "host-specific agent frontmatter",
@@ -40,7 +33,6 @@ FORBIDDEN_PATTERNS = {
     r"\bhoah-reviewer\b": "old agent name; use roles/reviewer.md",
     r"parallel-fix-worker\b": "old agent name; use roles/worker.md",
 }
-# Host tool names. Fine when the host product is the subject of the skill, so only warn.
 HOST_TOOL_PATTERNS = [
     r"\bAgent tool\b",
     r"\bTask tool\b",
@@ -69,11 +61,6 @@ def relative(path):
 
 
 def parse_frontmatter(text):
-    """Return top-level scalar fields of the YAML frontmatter, or None if missing.
-
-    Handles plain, quoted and block (| or >) scalars. Nested maps such as
-    metadata are recorded as present but not parsed.
-    """
     match = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
     if not match:
         return None
@@ -93,12 +80,16 @@ def parse_frontmatter(text):
                 block.append(lines[index].strip())
                 index += 1
             joiner = "\n" if value.startswith("|") else " "
-            fields[key] = joiner.join(part for part in block if part) if value else "<map>"
+            fields[key] = joiner.join(part for part in block if part) if value else NESTED_MAP_PLACEHOLDER
             continue
         if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
             value = value[1:-1]
         fields[key] = value
     return fields
+
+
+def is_template_placeholder_link(target):
+    return "/" not in target and "." not in target
 
 
 def find_skill_folders(report):
@@ -160,8 +151,8 @@ def check_markdown_files(skill_folder, report):
             if re.match(r"^[a-z]+:", link) or link.startswith("#"):
                 continue
             target = link.split("#", 1)[0]
-            if "/" not in target and "." not in target:
-                continue  # placeholder such as [title](url) inside a template
+            if is_template_placeholder_link(target):
+                continue
             if target.startswith("/") or target.startswith("~"):
                 report.error(where, f"absolute link '{link}'")
                 continue

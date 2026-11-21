@@ -3,7 +3,7 @@ name: markdown-to-pdf
 description: "Render a markdown document into a polished PDF that looks like the markdown editor preview (VSCode, Typora, GitHub): KaTeX math, footnotes, code, tables, mermaid diagrams, and numbered citations, via Pandoc to HTML to headless Chrome. Use when the user asks to convert, export, or print a .md file to PDF, wants a print-ready or shareable version of a report, or asks for a \"PDF version\"."
 compatibility: Needs shell access, pandoc 3.1+, and Chrome, Chromium, or Edge; mermaid-cli is optional
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
 ---
 
 # Markdown → PDF (HTML + KaTeX + Chrome)

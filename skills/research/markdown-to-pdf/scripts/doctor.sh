@@ -1,16 +1,4 @@
 #!/usr/bin/env bash
-# Diagnostic for the markdown-to-pdf pipeline. Read-only — installs nothing.
-#
-# Probes every component the build script depends on (pandoc, a Chrome /
-# Chromium binary, optional mmdc) and prints a structured punch list with
-# [OK] / [--] / [!!] markers, ending with the single most useful next
-# install command. The current pipeline is markdown → HTML+KaTeX → Chrome
-# → PDF; XeLaTeX is no longer involved, so we don't probe TeX Live or
-# math fonts (KaTeX bundles its own).
-#
-# NOTE: deliberately no `pipefail` here. Some probes pipe huge outputs
-# into `grep -q`, which exits on first match and triggers SIGPIPE upstream;
-# with pipefail set, that would surface as a false negative.
 set -u
 
 PLATFORM="$(uname -s)"
@@ -52,30 +40,25 @@ find_chrome() {
 echo "=== markdown-to-pdf doctor ($PLATFORM) ==="
 echo
 
-# 1. Pandoc (blocker)
 if command -v pandoc >/dev/null 2>&1; then
   ok "pandoc $(pandoc --version | head -1 | awk '{print $2}')"
 else
   blocker "pandoc — install: brew install pandoc"
 fi
 
-# 2. Chrome / Chromium (blocker)
 if CHROME="$(find_chrome)"; then
-  # Try to extract a version string. Most Chrome builds support --version.
   VERSION="$("$CHROME" --version 2>/dev/null | head -1)"
   ok "chrome — $CHROME${VERSION:+ ($VERSION)}"
 else
   blocker "chrome/chromium — install Google Chrome from https://www.google.com/chrome/ or set \$CHROME_BIN"
 fi
 
-# 3. mmdc (optional, mermaid)
 if command -v mmdc >/dev/null 2>&1; then
   ok "mmdc $(mmdc --version 2>&1 | head -1) (mermaid support active)"
 else
   warn "mmdc — mermaid blocks will render as plain code. install: npm install -g @mermaid-js/mermaid-cli"
 fi
 
-# 4. Skill assets
 SKILL_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 for f in assets/style.css assets/mermaid-filter.lua scripts/build_pdf.sh; do
   if [[ -f "$SKILL_ROOT/$f" ]]; then
@@ -85,7 +68,6 @@ for f in assets/style.css assets/mermaid-filter.lua scripts/build_pdf.sh; do
   fi
 done
 
-# 5. Network reachability for KaTeX CDN (warning only — Chrome can usually cache)
 if command -v curl >/dev/null 2>&1; then
   if curl -sIfL --max-time 5 https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css >/dev/null 2>&1; then
     ok "network: KaTeX CDN reachable (jsdelivr.net)"

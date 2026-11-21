@@ -1,16 +1,3 @@
--- Pandoc Lua filter: render ```mermaid code blocks as SVG images embedded
--- in the intermediate HTML (which Chrome then prints to PDF).
---
--- For each fenced code block tagged `mermaid`, write the source to a temp
--- file, invoke `mmdc` (mermaid-cli) to render it as SVG with a transparent
--- background, then replace the block with an Image node so pandoc emits
--- <img src="..."> in HTML. SVG scales perfectly at print resolution.
---
--- Fails open: if mmdc is missing or rendering errors out, the original
--- code block is left in place and a single-line warning is printed to
--- stderr. build_pdf.sh only attaches this filter when mmdc is on PATH,
--- so the missing-binary case should be rare.
-
 local mmdc_bin = os.getenv("PANDOC_MERMAID_BIN") or "mmdc"
 local outdir   = os.getenv("PANDOC_MERMAID_OUTDIR")
                  or os.getenv("TMPDIR")
@@ -35,7 +22,6 @@ local function render(source)
   f:write(source)
   f:close()
   -- -b transparent → no white background panel
-  -- SVG output crops to diagram bounds automatically
   local cmd = string.format(
     '%s --quiet -i %q -o %q -b transparent 2>&1',
     mmdc_bin, input, output
@@ -55,5 +41,5 @@ function CodeBlock(block)
     io.stderr:write("[mermaid-filter] " .. (err or "render failed") .. "; leaving as code.\n")
     return nil
   end
-  return pandoc.Para({ pandoc.Image({}, svg, "") })
+  return pandoc.Para({ pandoc.Image({}, svg, "", pandoc.Attr("", { "mermaid-diagram" })) })
 end

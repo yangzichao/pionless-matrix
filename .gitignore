@@ -1,8 +1,6 @@
-# research and review output written by skills run in this repo
 /deep-research/
 /code-review/
 
-# local noise
 .DS_Store
 *.profraw
 __pycache__/

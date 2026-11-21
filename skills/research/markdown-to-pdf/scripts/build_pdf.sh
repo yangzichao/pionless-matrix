@@ -1,19 +1,4 @@
 #!/usr/bin/env bash
-# Render a markdown document to PDF via:
-#   pandoc → HTML (KaTeX-rendered math, custom CSS) → headless Chrome → PDF
-#
-# Usage:
-#   build_pdf.sh <input.md> [output.pdf] [--paper a4|letter] [--margin 1in]
-#                [--keep-html]
-#
-# This pipeline picks Chrome over XeLaTeX so that math, code highlighting,
-# and overall typography match what the user sees in their markdown editor
-# preview (VSCode, Typora, GitHub) — KaTeX renders the math, not LaTeX.
-#
-# Defaults: A4, 1in margins. Body / mono / CJK fonts are picked by the
-# browser from the system font stack defined in assets/style.css; tweak
-# that file (not this script) to change the look.
-
 set -u
 
 if [[ $# -lt 1 ]]; then
@@ -38,6 +23,7 @@ fi
 PAPER="A4"
 MARGIN="1in"
 KEEP_HTML=0
+KATEX_RENDER_WAIT_MILLISECONDS=15000
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -52,11 +38,6 @@ command -v pandoc >/dev/null || {
   echo "error: pandoc not installed (brew install pandoc)" >&2; exit 69
 }
 
-# Resolve a Chrome / Chromium binary. Order:
-#   1. $CHROME_BIN env var (explicit override)
-#   2. macOS system Chrome / Chromium / Edge
-#   3. Puppeteer-bundled Chrome from mermaid-cli's npm install
-#   4. Linux PATH (chromium, google-chrome, chrome)
 find_chrome() {
   local candidates=() puppeteer
   [[ -n "${CHROME_BIN:-}" ]] && candidates+=("$CHROME_BIN")
@@ -65,7 +46,6 @@ find_chrome() {
     "/Applications/Chromium.app/Contents/MacOS/Chromium"
     "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
   )
-  # Most recent puppeteer-bundled Chrome (sorted by version dir mtime).
   # Puppeteer's per-platform layout: chrome-mac-{arm64,x64}/ on macOS,
   # chrome-linux*/ on Linux. The macOS binary lives inside the .app bundle;
   # Linux ships a flat `chrome` binary.
@@ -97,10 +77,17 @@ CHROME="$(find_chrome)" || {
 SKILL_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 STYLESHEET="$SKILL_ROOT/assets/style.css"
 MERMAID_FILTER="$SKILL_ROOT/assets/mermaid-filter.lua"
-TMP_HTML="${OUTPUT%.pdf}.html"
-LOG="${OUTPUT%.pdf}.build.log"
+OUTPUT_DIRECTORY="$(cd "$(dirname "$OUTPUT")" 2>/dev/null && pwd)" || {
+  echo "error: output directory not found: $(dirname "$OUTPUT")" >&2; exit 73
+}
+OUTPUT_STEM="$OUTPUT_DIRECTORY/$(basename "${OUTPUT%.pdf}")"
+TMP_HTML="$OUTPUT_STEM.html"
+PAGE_SETUP_STYLESHEET="$OUTPUT_STEM.page-setup.css"
+LOG="$OUTPUT_STEM.build.log"
 
-# ---------- Step 1: markdown → HTML (KaTeX math) ----------
+printf '@page { size: %s; margin: %s; }\n' "$PAPER" "$MARGIN" > "$PAGE_SETUP_STYLESHEET"
+trap 'rm -f "$PAGE_SETUP_STYLESHEET"' EXIT
+
 PANDOC_ARGS=(
   "$INPUT"
   --from=markdown+tex_math_dollars+pipe_tables+backtick_code_blocks+fenced_code_attributes+footnotes+smart+yaml_metadata_block+raw_html+bracketed_spans+definition_lists+example_lists+task_lists+strikeout+subscript+superscript
@@ -108,12 +95,12 @@ PANDOC_ARGS=(
   --standalone
   --katex
   --css="$STYLESHEET"
+  --css="$PAGE_SETUP_STYLESHEET"
   --embed-resources
   --highlight-style=tango
   -o "$TMP_HTML"
 )
 
-# Mermaid: only when mmdc is installed; otherwise plain code blocks survive.
 if command -v mmdc >/dev/null 2>&1; then
   PANDOC_ARGS+=(--lua-filter="$MERMAID_FILTER")
 elif grep -qE '^[[:space:]]*```[[:space:]]*mermaid' "$INPUT" 2>/dev/null; then
@@ -131,12 +118,6 @@ if ! pandoc "${PANDOC_ARGS[@]}" 2> "$LOG"; then
   exit "$RC"
 fi
 
-# ---------- Step 2: HTML → PDF (headless Chrome) ----------
-# CSS @page rules in style.css control paper size and margins. Flags here
-# are only the runtime knobs Chrome exposes via the command line.
-#
-# --virtual-time-budget=15000 → wait up to 15s for KaTeX/JS to finish
-#                                rendering before snapshotting to PDF.
 echo "→ chrome → $OUTPUT" >&2
 CHROME_RC=0
 "$CHROME" \
@@ -145,7 +126,7 @@ CHROME_RC=0
   --no-pdf-header-footer \
   --no-sandbox \
   --hide-scrollbars \
-  --virtual-time-budget=15000 \
+  --virtual-time-budget="$KATEX_RENDER_WAIT_MILLISECONDS" \
   --print-to-pdf="$OUTPUT" \
   "file://$TMP_HTML" 2>>"$LOG" || CHROME_RC=$?
 

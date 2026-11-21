@@ -1,44 +1,29 @@
 #!/usr/bin/env bash
-# solo-ralph loop driver.
-#
-# Spawns a fresh non-interactive agent subprocess (`claude -p` or `codex exec`)
-# per iteration. No conversation history carries across iterations; all state
-# lives on disk in the project directory (prompt file, repo, git, logs).
-#
-# The loop is dumb on purpose. It exits only on: the stop file, a signal,
-# N consecutive non-zero exits, or the optional --max / --max-minutes caps.
-# "Are we done?" logic lives in the prompt file, never here.
-#
 # Written for bash 3.2 (macOS default), so no namerefs and guarded empty arrays.
 
 set -uo pipefail
 
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
-# Runtime files, always relative to the project directory, never the skill folder.
-PID_FILE=".ralph.pid"     # loop driver PID; doubles as the start lock
-OUT_FILE=".ralph.out"     # stdout/stderr of the detached driver and every runner call (append-only)
+LOCK_AND_PID_FILE=".ralph.pid"
+OUT_FILE=".ralph.out"
 
-# Seconds `start` waits before checking the detached loop is still alive.
-# Long enough to catch a bad flag or missing prompt, short enough not to stall the host.
 STARTUP_CHECK_SECONDS=1
-# Seconds `cancel` waits for a clean exit after creating the stop file, before
-# killing the process tree. A clean exit only happens between iterations.
 CANCEL_GRACE_SECONDS=5
-# Seconds `cancel` waits after SIGTERM before sending SIGKILL to survivors.
-KILL_GRACE_SECONDS=5
+SIGTERM_TO_SIGKILL_GRACE_SECONDS=5
 
-# Defaults for options.
 PROJECT_DIR="$PWD"
 PROMPT="PROMPT.md"
-MAX=0                         # 0 = no iteration cap
+MAX=0
 STOP_FILE=".ralph-stop"
-RUNNER="${RALPH_RUNNER:-}"    # empty = auto-detect
+RUNNER="${RALPH_RUNNER:-}"
 LOG=".ralph-progress.log"
 DRY_RUN=0
-MAX_CONSECUTIVE_FAILURES=3    # broken-loop detector, not a budget cap; 0 disables
-MAX_MINUTES=0                 # 0 = no wall-time cap
+MAX_CONSECUTIVE_FAILURES=3
+MAX_MINUTES=0
 SOFT_CANCEL=0
+LOCK_HELD_BY_START=0
+DRY_RUN_DEFAULT_MAX_ITERATIONS=1
 EXTRA_ARGS=()
 
 usage() {
@@ -70,6 +55,8 @@ Options:
                        after its current iteration finishes
       --dry-run        start: print the launch command only. run: print each runner
                        command instead of invoking it (stops after 1 iteration unless -n)
+      --lock-held-by-start
+                       run only, internal: `start` already took the lock for this run
   -h, --help           Show this help
 
 Runner invocations (prompt file on stdin):
@@ -107,14 +94,11 @@ need_value() {
   [[ $# -ge 2 && -n "$2" ]] || usage_error "$1 needs a value"
 }
 
-# ---------- argument parsing ----------
-
 COMMAND=""
 if [[ $# -gt 0 ]]; then
   case "$1" in
     start|run|status|cancel) COMMAND=$1; shift ;;
     help) usage; exit 0 ;;
-    -*) COMMAND="run" ;;   # old form: `ralph-loop.sh -p PROMPT.md` runs the loop in the foreground
     *) usage_error "unknown command: $1" ;;
   esac
 else
@@ -125,7 +109,7 @@ fi
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -C|--dir)                      need_value "$@"; PROJECT_DIR=$2; shift 2 ;;
-    -r|--runner|-c|--cmd)          need_value "$@"; RUNNER=$2; shift 2 ;;
+    -r|--runner)                   need_value "$@"; RUNNER=$2; shift 2 ;;
     -p|--prompt)                   need_value "$@"; PROMPT=$2; shift 2 ;;
     -n|--max)                      need_value "$@"; MAX=$2; shift 2 ;;
     -s|--stop-file)                need_value "$@"; STOP_FILE=$2; shift 2 ;;
@@ -134,7 +118,7 @@ while [[ $# -gt 0 ]]; do
     -t|--max-minutes)              need_value "$@"; MAX_MINUTES=$2; shift 2 ;;
     --soft)                        SOFT_CANCEL=1; shift ;;
     --dry-run)                     DRY_RUN=1; shift ;;
-    --cancel)                      COMMAND="cancel"; SOFT_CANCEL=1; shift ;;  # old form
+    --lock-held-by-start)          LOCK_HELD_BY_START=1; shift ;;
     -h|--help)                     usage; exit 0 ;;
     --)                            shift; EXTRA_ARGS=("$@"); break ;;
     *)                             usage_error "unknown option: $1" ;;
@@ -149,9 +133,6 @@ check_non_negative_int --max-minutes "$MAX_MINUTES"
 cd "$PROJECT_DIR" || die "cannot cd into project directory: $PROJECT_DIR"
 PROJECT_DIR="$PWD"
 
-# ---------- helpers ----------
-
-# Pick the runner: explicit flag/env wins; otherwise the first CLI found in PATH.
 resolve_runner() {
   if [[ -z "$RUNNER" ]]; then
     if command -v claude >/dev/null 2>&1; then
@@ -174,8 +155,6 @@ resolve_runner() {
   fi
 }
 
-# Runner command line, without the stdin redirect. Prompt goes on stdin for both
-# so a long prompt never hits the argv length limit.
 runner_command() {
   case "$RUNNER" in
     claude) RUNNER_CMD=(claude -p --dangerously-skip-permissions) ;;
@@ -190,31 +169,31 @@ runner_command() {
   fi
 }
 
-# Atomic lock: noclobber create fails if the file exists, so two starts cannot both win.
+create_lock_file_atomically() {
+  ( set -o noclobber; printf 'INIT\n' > "$LOCK_AND_PID_FILE" ) 2>/dev/null
+}
+
 acquire_lock() {
-  if ( set -o noclobber; printf 'INIT\n' > "$PID_FILE" ) 2>/dev/null; then
+  if create_lock_file_atomically; then
     return 0
   fi
   local holder
-  holder=$(cat "$PID_FILE" 2>/dev/null)
+  holder=$(cat "$LOCK_AND_PID_FILE" 2>/dev/null)
   if [[ "$holder" == "INIT" ]] || { [[ "$holder" =~ ^[0-9]+$ ]] && kill -0 "$holder" 2>/dev/null; }; then
     die "a loop is already running or starting in $PROJECT_DIR (pid=$holder); run 'ralph-loop.sh cancel' first"
   fi
-  rm -f "$PID_FILE"   # stale: the recorded process is dead
-  if ! ( set -o noclobber; printf 'INIT\n' > "$PID_FILE" ) 2>/dev/null; then
+  rm -f "$LOCK_AND_PID_FILE"
+  if ! create_lock_file_atomically; then
     die "another start took the lock at the same moment; retry"
   fi
 }
 
-# Remove the PID file only if it still names this process.
 release_lock() {
-  if [[ "$(cat "$PID_FILE" 2>/dev/null)" == "$$" ]]; then
-    rm -f "$PID_FILE"
+  if [[ "$(cat "$LOCK_AND_PID_FILE" 2>/dev/null)" == "$$" ]]; then
+    rm -f "$LOCK_AND_PID_FILE"
   fi
 }
 
-# Print the PID and every descendant, children before parents (post-order), so
-# killing in this order never leaves a live runner orphaned behind a dead driver.
 list_tree_post_order() {
   local parent=$1 child
   for child in $(pgrep -P "$parent" 2>/dev/null); do
@@ -232,42 +211,43 @@ wait_for_exit() {
   ! kill -0 "$pid" 2>/dev/null
 }
 
+clear_stop_file_left_by_earlier_cancel() {
+  rm -f "$STOP_FILE"
+}
+
 last_iteration_line() {
   if [[ -f "$LOG" ]]; then
     grep '^=== ralph iter ' "$LOG" | tail -n 1
   fi
 }
 
-# ---------- commands ----------
-
 cmd_start() {
   [[ -f "$PROMPT" ]] || die "prompt file not found: $PROJECT_DIR/$PROMPT"
   resolve_runner
 
-  local child_args=(run -C "$PROJECT_DIR" -r "$RUNNER" -p "$PROMPT" -n "$MAX" -s "$STOP_FILE"
+  local child_args=(run --lock-held-by-start -C "$PROJECT_DIR" -r "$RUNNER" -p "$PROMPT" -n "$MAX" -s "$STOP_FILE"
                     -l "$LOG" -f "$MAX_CONSECUTIVE_FAILURES" -t "$MAX_MINUTES")
   if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then
     child_args=("${child_args[@]}" -- "${EXTRA_ARGS[@]}")
   fi
 
   if [[ $DRY_RUN -eq 1 ]]; then
-    echo "[dry-run] would take lock $PROJECT_DIR/$PID_FILE and launch:"
+    echo "[dry-run] would take lock $PROJECT_DIR/$LOCK_AND_PID_FILE and launch:"
     echo "[dry-run] nohup bash $SCRIPT_PATH ${child_args[*]} >> $OUT_FILE 2>&1 &"
     return 0
   fi
 
   acquire_lock
-  # A stop file left behind by a hard cancel would end the new loop at iteration 1.
-  rm -f "$STOP_FILE"
+  clear_stop_file_left_by_earlier_cancel
 
-  RALPH_LOCK_HELD=1 nohup bash "$SCRIPT_PATH" "${child_args[@]}" >> "$OUT_FILE" 2>&1 < /dev/null &
+  nohup bash "$SCRIPT_PATH" "${child_args[@]}" >> "$OUT_FILE" 2>&1 < /dev/null &
   local pid=$!
-  printf '%s\n' "$pid" > "$PID_FILE"
+  printf '%s\n' "$pid" > "$LOCK_AND_PID_FILE"
   disown "$pid" 2>/dev/null || true
 
   sleep "$STARTUP_CHECK_SECONDS"
   if ! kill -0 "$pid" 2>/dev/null; then
-    rm -f "$PID_FILE"
+    rm -f "$LOCK_AND_PID_FILE"
     echo "ralph-loop: loop exited within ${STARTUP_CHECK_SECONDS}s of starting; last output from $OUT_FILE:" >&2
     tail -n 20 "$OUT_FILE" >&2
     exit 1
@@ -288,14 +268,13 @@ cmd_run() {
   runner_command
 
   if [[ $DRY_RUN -eq 1 ]]; then
-    LOG=/dev/null                  # keep dry runs out of the real progress log
-    [[ $MAX -eq 0 ]] && MAX=1      # a dry run never fails, so without a cap it would spin forever
+    LOG=/dev/null
+    [[ $MAX -eq 0 ]] && MAX=$DRY_RUN_DEFAULT_MAX_ITERATIONS
   fi
 
-  # `start` already holds the lock for us; a direct foreground run takes it itself.
-  if [[ $DRY_RUN -eq 0 && "${RALPH_LOCK_HELD:-0}" != "1" ]]; then
+  if [[ $DRY_RUN -eq 0 && $LOCK_HELD_BY_START -eq 0 ]]; then
     acquire_lock
-    printf '%s\n' "$$" > "$PID_FILE"
+    printf '%s\n' "$$" > "$LOCK_AND_PID_FILE"
   fi
   trap 'release_lock' EXIT
 
@@ -360,9 +339,9 @@ cmd_run() {
 
 cmd_status() {
   echo "=== process ($PROJECT_DIR) ==="
-  if [[ -f "$PID_FILE" ]]; then
+  if [[ -f "$LOCK_AND_PID_FILE" ]]; then
     local pid
-    pid=$(cat "$PID_FILE" 2>/dev/null)
+    pid=$(cat "$LOCK_AND_PID_FILE" 2>/dev/null)
     if [[ "$pid" == "INIT" ]]; then
       echo "lock held by a starting loop (pid not written yet); if this persists, run cancel to clear it"
     elif [[ "$pid" =~ ^[0-9]+$ ]] && kill -0 "$pid" 2>/dev/null; then
@@ -371,7 +350,7 @@ cmd_status() {
       echo "stale pid file (pid=$pid is not running)"
     fi
   else
-    echo "not running (no $PID_FILE)"
+    echo "not running (no $LOCK_AND_PID_FILE)"
   fi
   [[ -f "$STOP_FILE" ]] && echo "stop file present: loop will exit after the current iteration"
 
@@ -392,16 +371,16 @@ cmd_cancel() {
     return 0
   fi
 
-  if [[ ! -f "$PID_FILE" ]]; then
+  if [[ ! -f "$LOCK_AND_PID_FILE" ]]; then
     rm -f "$STOP_FILE"
-    echo "no $PID_FILE: no loop running in $PROJECT_DIR"
+    echo "no $LOCK_AND_PID_FILE: no loop running in $PROJECT_DIR"
     return 0
   fi
 
   local pid
-  pid=$(cat "$PID_FILE" 2>/dev/null)
+  pid=$(cat "$LOCK_AND_PID_FILE" 2>/dev/null)
   if ! [[ "$pid" =~ ^[0-9]+$ ]] || ! kill -0 "$pid" 2>/dev/null; then
-    rm -f "$PID_FILE" "$STOP_FILE"
+    rm -f "$LOCK_AND_PID_FILE" "$STOP_FILE"
     echo "cleared stale lock (pid=$pid was not running)"
     return 0
   fi
@@ -415,7 +394,7 @@ cmd_cancel() {
     for member in $tree; do
       kill -TERM "$member" 2>/dev/null || true
     done
-    wait_for_exit "$pid" "$KILL_GRACE_SECONDS" >/dev/null
+    wait_for_exit "$pid" "$SIGTERM_TO_SIGKILL_GRACE_SECONDS" >/dev/null
     for member in $tree; do
       if kill -0 "$member" 2>/dev/null; then
         kill -KILL "$member" 2>/dev/null || true
@@ -430,7 +409,7 @@ cmd_cancel() {
     done
   fi
 
-  rm -f "$PID_FILE" "$STOP_FILE"
+  rm -f "$LOCK_AND_PID_FILE" "$STOP_FILE"
   local last
   last=$(last_iteration_line)
   echo "last iteration: ${last:-none recorded in $LOG}"

@@ -1,35 +1,15 @@
 #!/usr/bin/env bash
-# freshwater-doctor: diagnostic check for the local math research stack.
-#
-# Probes Lean toolchain, Mathlib presence, Wolfram (optional), MCP servers in
-# every agent CLI found (Claude Code, Codex), the optional lean4-skills Claude
-# Code plugin, and core glue (uv, python, an agent CLI). Writes a plain
-# checklist to stdout — one component per line — and a final RECOMMENDATION.
-#
-# Output markers:
-#   [OK]  component working as expected
-#   [--]  component missing
-#   [!!]  component present but problematic (outdated, misconfigured, etc.)
-#
-# Exit code is always 0; the report itself conveys status. This script
-# performs only read-only checks — it does not install or modify anything.
-
 set -uo pipefail
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 print_status() {
-  # $1 = marker ("OK" | "--" | "!!"), $2 = component, $3 = detail
-  printf "[%s] %-32s %s\n" "$1" "$2" "$3"
+  local marker=$1 component=$2 detail=$3
+  printf "[%s] %-32s %s\n" "$marker" "$component" "$detail"
 }
 
 has_command() {
   command -v "$1" >/dev/null 2>&1
 }
 
-# Track blockers vs optional missing for the recommendation engine
 BLOCKER_MISSING=()
 OPTIONAL_MISSING=()
 WARNINGS=()
@@ -40,10 +20,6 @@ mark_warning() { WARNINGS+=("$1"); }
 
 echo "freshwater-doctor: scanning local environment..."
 echo
-
-# ---------------------------------------------------------------------------
-# 1. Core glue
-# ---------------------------------------------------------------------------
 
 echo "== Core glue =="
 
@@ -67,7 +43,6 @@ else
   mark_blocker_missing "python3"
 fi
 
-# Agent CLIs whose MCP config we can inspect. At least one is needed.
 AGENT_CLIS=()
 for agent_cli in claude codex; do
   if has_command "$agent_cli"; then
@@ -82,10 +57,6 @@ if [[ ${#AGENT_CLIS[@]} -eq 0 ]]; then
 fi
 
 echo
-
-# ---------------------------------------------------------------------------
-# 2. Lean toolchain
-# ---------------------------------------------------------------------------
 
 echo "== Lean toolchain =="
 
@@ -116,10 +87,6 @@ fi
 
 echo
 
-# ---------------------------------------------------------------------------
-# 3. Mathlib-bearing project
-# ---------------------------------------------------------------------------
-
 echo "== Mathlib project =="
 
 SEARCH_ROOTS=(
@@ -129,27 +96,38 @@ SEARCH_ROOTS=(
   "$HOME"
 )
 
-FOUND_LAKEFILES=()
-for root in "${SEARCH_ROOTS[@]}"; do
-  [[ -d "$root" ]] || continue
-  while IFS= read -r lf; do
-    FOUND_LAKEFILES+=("$lf")
-  done < <(find "$root" -maxdepth 4 \( -name 'lakefile.toml' -o -name 'lakefile.lean' \) -not -path '*/.lake/*' 2>/dev/null)
-done
+list_lakefiles_under_search_roots() {
+  local root
+  for root in "${SEARCH_ROOTS[@]}"; do
+    [[ -d "$root" ]] || continue
+    find "$root" -maxdepth 4 \( -name 'lakefile.toml' -o -name 'lakefile.lean' \) -not -path '*/.lake/*' 2>/dev/null
+  done
+}
 
-# $HOME overlaps the other roots, and a project can have both lakefile kinds,
-# so keep one entry per project directory.
-DEDUPED_LAKEFILES=()
-SEEN_PROJECT_DIRS=" "
-for lf in "${FOUND_LAKEFILES[@]+"${FOUND_LAKEFILES[@]}"}"; do
-  project_dir="$(dirname "$lf")"
-  case "$SEEN_PROJECT_DIRS" in
-    *" $project_dir "*) continue ;;
-  esac
-  SEEN_PROJECT_DIRS+="$project_dir "
-  DEDUPED_LAKEFILES+=("$lf")
-done
-FOUND_LAKEFILES=("${DEDUPED_LAKEFILES[@]+"${DEDUPED_LAKEFILES[@]}"}")
+keep_first_lakefile_per_project_directory() {
+  local lakefile project_directory seen_project_directories=" "
+  while IFS= read -r lakefile; do
+    project_directory="$(dirname "$lakefile")"
+    case "$seen_project_directories" in
+      *" $project_directory "*) continue ;;
+    esac
+    seen_project_directories+="$project_directory "
+    printf '%s\n' "$lakefile"
+  done
+}
+
+project_declares_mathlib() {
+  local project_directory=$1 lakefile=$2
+  if [[ -f "$project_directory/lake-manifest.json" ]] && grep -q '"name": "mathlib"' "$project_directory/lake-manifest.json" 2>/dev/null; then
+    return 0
+  fi
+  grep -q -i 'mathlib' "$lakefile" 2>/dev/null
+}
+
+FOUND_LAKEFILES=()
+while IFS= read -r lakefile; do
+  FOUND_LAKEFILES+=("$lakefile")
+done < <(list_lakefiles_under_search_roots | keep_first_lakefile_per_project_directory)
 
 if [[ ${#FOUND_LAKEFILES[@]} -eq 0 ]]; then
   print_status -- "Mathlib project" "no Lake project found under \$HOME/workplace, \$HOME/math-workspace, \$HOME/lean-projects, or \$HOME"
@@ -158,16 +136,7 @@ else
   MATHLIB_PROJECT_FOUND=0
   for lf in "${FOUND_LAKEFILES[@]}"; do
     PROJ_DIR="$(dirname "$lf")"
-    # Detect Mathlib via lake-manifest.json (after `lake update`) or by
-    # grepping the lakefile for the dependency declaration.
-    HAS_MATHLIB=0
-    if [[ -f "$PROJ_DIR/lake-manifest.json" ]] && grep -q '"name": "mathlib"' "$PROJ_DIR/lake-manifest.json" 2>/dev/null; then
-      HAS_MATHLIB=1
-    elif grep -q -i 'mathlib' "$lf" 2>/dev/null; then
-      HAS_MATHLIB=1
-    fi
-
-    if [[ $HAS_MATHLIB -eq 1 ]]; then
+    if project_declares_mathlib "$PROJ_DIR" "$lf"; then
       MATHLIB_PROJECT_FOUND=1
       BUILT="not yet built"
       if [[ -d "$PROJ_DIR/.lake/build" ]]; then
@@ -185,10 +154,6 @@ else
 fi
 
 echo
-
-# ---------------------------------------------------------------------------
-# 4. Wolfram (optional)
-# ---------------------------------------------------------------------------
 
 echo "== Wolfram (optional) =="
 
@@ -212,29 +177,23 @@ fi
 
 echo
 
-# ---------------------------------------------------------------------------
-# 5. MCP servers
-# ---------------------------------------------------------------------------
-
 echo "== MCP servers =="
 
-# Concatenate `mcp list` output from every agent CLI, each line prefixed with
-# the CLI name, so one grep covers all hosts and the report says where.
-MCP_LIST=""
-for agent_cli in "${AGENT_CLIS[@]}"; do
-  MCP_LIST+="$("$agent_cli" mcp list 2>&1 | sed "s/^/$agent_cli: /" || true)"$'\n'
+MCP_LIST_LINES_PREFIXED_WITH_AGENT_CLI=""
+for agent_cli in "${AGENT_CLIS[@]+"${AGENT_CLIS[@]}"}"; do
+  MCP_LIST_LINES_PREFIXED_WITH_AGENT_CLI+="$("$agent_cli" mcp list 2>&1 | sed "s/^/$agent_cli: /" || true)"$'\n'
 done
 
-hosts_with() {
-  # Print the agent CLIs whose MCP list mentions $1 (extended regex), comma-separated.
-  echo "$MCP_LIST" | grep -Ei "$1" | cut -d: -f1 | sort -u | paste -sd, -
+agent_clis_whose_mcp_list_matches() {
+  local server_pattern=$1
+  echo "$MCP_LIST_LINES_PREFIXED_WITH_AGENT_CLI" | grep -Ei "$server_pattern" | cut -d: -f1 | sort -u | paste -sd, -
 }
 
 if [[ ${#AGENT_CLIS[@]} -gt 0 ]]; then
   for server in lean-lsp lean-explore; do
-    found_in="$(hosts_with "$server")"
+    found_in="$(agent_clis_whose_mcp_list_matches "$server")"
     if [[ -n "$found_in" ]]; then
-      if echo "$MCP_LIST" | grep -i "$server" | grep -qi 'fail\|error\|unhealthy'; then
+      if echo "$MCP_LIST_LINES_PREFIXED_WITH_AGENT_CLI" | grep -i "$server" | grep -qi 'fail\|error\|unhealthy'; then
         print_status !! "$server MCP" "configured in $found_in but reports failure"
         mark_warning "$server MCP unhealthy"
       else
@@ -247,7 +206,7 @@ if [[ ${#AGENT_CLIS[@]} -gt 0 ]]; then
   done
 
   # Wolfram MCP: match either the official paclet or the community python one
-  found_in="$(hosts_with 'wolfram|mathematica')"
+  found_in="$(agent_clis_whose_mcp_list_matches 'wolfram|mathematica')"
   if [[ -n "$found_in" ]]; then
     print_status OK "wolfram/mathematica MCP" "configured in $found_in"
   else
@@ -260,10 +219,6 @@ else
 fi
 
 echo
-
-# ---------------------------------------------------------------------------
-# 6. Claude Code plugins (only relevant when Claude Code is installed)
-# ---------------------------------------------------------------------------
 
 echo "== Claude Code plugins =="
 
@@ -281,10 +236,6 @@ fi
 
 echo
 
-# ---------------------------------------------------------------------------
-# 7. Disk
-# ---------------------------------------------------------------------------
-
 echo "== Disk =="
 
 FREE_GB="$(df -g "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')"
@@ -301,10 +252,6 @@ fi
 
 echo
 
-# ---------------------------------------------------------------------------
-# Recommendation
-# ---------------------------------------------------------------------------
-
 echo "== Summary =="
 
 if [[ ${#BLOCKER_MISSING[@]} -eq 0 && ${#WARNINGS[@]} -eq 0 ]]; then
@@ -316,10 +263,11 @@ if [[ ${#BLOCKER_MISSING[@]} -eq 0 && ${#WARNINGS[@]} -eq 0 ]]; then
   exit 0
 fi
 
-# Pick the smallest-step recommendation by walking blockers in dependency order.
+BLOCKERS_IN_DEPENDENCY_ORDER=("uv" "python3" "agent CLI" "elan" "Mathlib project" "lean-lsp MCP" "lean-explore MCP")
+
 RECOMMEND=""
-for need in "uv" "python3" "agent CLI" "elan" "Mathlib project" "lean-lsp MCP" "lean-explore MCP"; do
-  for got in "${BLOCKER_MISSING[@]}"; do
+for need in "${BLOCKERS_IN_DEPENDENCY_ORDER[@]}"; do
+  for got in "${BLOCKER_MISSING[@]+"${BLOCKER_MISSING[@]}"}"; do
     if [[ "$got" == "$need" ]]; then
       RECOMMEND="$need"
       break 2

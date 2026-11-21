@@ -1,16 +1,3 @@
-/* style.css — modern web look for markdown-to-pdf via headless Chrome.
- *
- * Loaded into the intermediate HTML pandoc emits before Chrome prints it.
- * Replaces the XeLaTeX preamble of the previous LaTeX-based pipeline.
- * Math styling is delegated to KaTeX (loaded by pandoc --katex), so the
- * rendered formulae match what the user sees in VSCode markdown preview.
- */
-
-@page {
-  size: A4;
-  margin: 1in;
-}
-
 :root {
   --heading-ink: #111827;
   --body-ink: #1F2937;
@@ -35,7 +22,6 @@ body {
   padding: 0;
 }
 
-/* ---- Title block (pandoc --metadata title:...) ----------------------- */
 header#title-block-header {
   text-align: center;
   margin-bottom: 2em;
@@ -52,7 +38,6 @@ p.author, p.date {
 }
 p.date { font-size: 0.9em; }
 
-/* ---- Headings -------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
   color: var(--heading-ink);
   font-weight: 700;
@@ -67,7 +52,6 @@ h3 { font-size: 1.25em; }
 h4 { font-size: 1.1em;  }
 h5, h6 { font-size: 1em; color: var(--muted-ink); }
 
-/* ---- Paragraphs / inline ---------------------------------------------- */
 p {
   margin: 0.7em 0;
   orphans: 3;
@@ -82,7 +66,6 @@ a:hover { text-decoration: underline; }
 
 strong { color: var(--heading-ink); }
 
-/* ---- Code: inline ---------------------------------------------------- */
 code {
   font-family: Menlo, "SF Mono", Monaco, Consolas, "Liberation Mono",
                "DejaVu Sans Mono", monospace;
@@ -90,13 +73,10 @@ code {
   background: var(--code-bg);
   padding: 0.15em 0.4em;
   border-radius: 4px;
-  /* Long unbroken tokens (URLs, fully-qualified identifiers) must wrap
-     instead of overflowing the print margin. */
   word-break: break-word;
   overflow-wrap: anywhere;
 }
 
-/* ---- Code: block ----------------------------------------------------- */
 pre {
   background: var(--code-bg);
   border-radius: 6px;
@@ -112,13 +92,11 @@ pre code {
   padding: 0;
   border-radius: 0;
   font-size: inherit;
-  /* allow long lines to wrap inside print */
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
 
-/* ---- Tables ---------------------------------------------------------- */
 table {
   border-collapse: collapse;
   margin: 1em 0;
@@ -139,12 +117,10 @@ th {
 }
 tbody tr:nth-child(even) { background: var(--zebra-bg); }
 
-/* ---- Lists ----------------------------------------------------------- */
 ul, ol { padding-left: 1.6em; margin: 0.6em 0; }
 li { margin: 0.25em 0; }
 li > p { margin: 0.3em 0; }
 
-/* ---- Blockquotes ----------------------------------------------------- */
 blockquote {
   border-left: 4px solid var(--code-rule);
   margin: 1em 0;
@@ -154,14 +130,12 @@ blockquote {
 blockquote > p:first-child { margin-top: 0; }
 blockquote > p:last-child { margin-bottom: 0; }
 
-/* ---- Horizontal rules ------------------------------------------------ */
 hr {
   border: none;
   border-top: 1px solid var(--code-rule);
   margin: 2em 0;
 }
 
-/* ---- Images / figures ------------------------------------------------ */
 img {
   max-width: 100%;
   height: auto;
@@ -177,10 +151,8 @@ figcaption {
   margin-top: 0.4em;
 }
 
-/* Mermaid diagrams render to SVG — keep them comfortably sized */
-img[src$=".svg"] { max-width: 85%; }
+img.mermaid-diagram { max-width: 85%; }
 
-/* ---- Footnotes ------------------------------------------------------- */
 .footnotes {
   font-size: 0.88em;
   border-top: 1px solid var(--code-rule);
@@ -190,7 +162,6 @@ img[src$=".svg"] { max-width: 85%; }
 }
 .footnotes hr { display: none; }
 
-/* ---- KaTeX tweaks ---------------------------------------------------- */
 /* Match KaTeX font size to body so inline math doesn't tower over text. */
 .katex { font-size: 1em; }
 .katex-display {
@@ -201,7 +172,6 @@ img[src$=".svg"] { max-width: 85%; }
   overflow-y: hidden;
 }
 
-/* ---- Print-specific tightening --------------------------------------- */
 @media print {
   body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   pre, blockquote, table, figure { break-inside: avoid; }
