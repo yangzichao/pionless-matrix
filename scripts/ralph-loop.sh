@@ -1,1 +1,0 @@
-../plugins/solo-ralph/scripts/ralph-loop.sh

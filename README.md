@@ -1,248 +1,61 @@
 # pionless-matrix
 
-`pionless-matrix` is a cross-platform agent monorepo that publishes two separate plugins for Claude Code and OpenAI Codex, plus a **dual-agent code review CLI** that orchestrates Claude Code and Codex CLI together.
+My personal [Agent Skills](https://agentskills.io) library. Every skill is a plain `SKILL.md` folder, so the same files work in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, and any other host that reads the format. There is no build step.
 
-## Plugins
+## Skills
 
-| Plugin | What it ships |
-|--------|---------------|
-| **`pionless-agent`** | Coding-workflow agents: `hoah-coder` (focused coder + built-in reviewer loop), `parallel-fix` (batch fixer with isolated worktree workers), `socratic-tutor`, `freshwater-doctor`. |
-| **`pionless-deep-research`** | Research package: `deep-research` orchestrator + leaf agents (worker, verifier, drafter, writer), 6 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do, tutorial), and a `markdown-to-pdf` pipeline. |
+| Skill | Bucket | What it does |
+|---|---|---|
+| [deep-research](skills/research/deep-research/SKILL.md) | research | Plan-board research loop: parallel evidence gathering, adversarial claim checks, and a cited report in one of six styles. |
+| [markdown-to-pdf](skills/research/markdown-to-pdf/SKILL.md) | research | Markdown to PDF through Pandoc and headless Chrome, with KaTeX math, mermaid, and citations matching the editor preview. |
+| [hoah-coder](skills/coding/hoah-coder/SKILL.md) | coding | One focused coding task, driven through clarify, implement, self-check, and an independent reviewer loop until clean. |
+| [parallel-fix](skills/coding/parallel-fix/SKILL.md) | coding | Scan for a class of issues, fix each one in its own git worktree in parallel, merge back, run a final check. |
+| [solo-ralph](skills/coding/solo-ralph/SKILL.md) | coding | Turn a vague goal into a spec and todo, then run a detached loop of fresh agent processes until the todo is done. |
+| [socratic-tutor](skills/learning/socratic-tutor/SKILL.md) | learning | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
+| [onepoint3acres-interview-scraper](skills/career/onepoint3acres-interview-scraper/SKILL.md) | career | Scrape 一亩三分地 面经 for a company and role, filter, cross-check, and cluster them into a 题库. |
+| [freshwater-doctor](skills/setup/freshwater-doctor/SKILL.md) | setup | Read-only check of the Lean 4 + Mathlib + Wolfram + MCP math stack, with the next install step. |
 
-This repository contains:
+Skills that split work across subagents (deep-research, hoah-coder, parallel-fix) keep the subagent prompts in their own `roles/` folder. On a host without subagents, the agent runs each role itself as a separate pass.
 
-- a single source tree in `src/` (agents, skills, plugin membership manifest)
-- per-plugin platform manifests under `platforms/<platform>/<plugin>/`
-- two committed plugin packages under `plugins/pionless-agent/` and `plugins/pionless-deep-research/` (serve both platforms)
-- a Claude marketplace in `.claude-plugin/marketplace.json` exposing both plugins
-- `.agents/plugins/marketplace.json` so Codex can discover the plugins from this repo
-- `build.sh` to regenerate every plugin from `src/`
-- install scripts under `scripts/`
-- **`packages/review-agent/`** — pip-installable dual-agent code review tool
+## Install
 
-## Structure
+Pick one method per host.
+
+Local symlinks, for working on this repo. `git pull` updates every host:
+
+```bash
+bash scripts/link-skills.sh
+```
+
+This links every skill into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex and other hosts that read the shared folder). Set `SKILL_LINK_DESTS` to choose other folders. `--unlink` removes the links.
+
+Any agent, through the [skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+npx skills add yangzichao/pionless-matrix -g
+```
+
+Claude Code plugin (skills are namespaced `pionless-matrix:<skill>`):
 
 ```text
-src/                          # single source of truth for every plugin
-  agents/                     # agent definitions (.md) — all plugins
-  skills/                     # skill packages (SKILL.md + references/assets/scripts) — all plugins
-  plugins.json                # plugin membership: which agents/skills belong to which plugin
-platforms/
-  claude-code/
-    <plugin>/.claude-plugin/plugin.json   # per-plugin Claude manifest
-    agents/                               # generated per-agent files (gitignored)
-  codex/
-    <plugin>/.codex-plugin/plugin.json    # per-plugin Codex manifest
-    agents/                               # generated per-agent files (gitignored)
-shared/skills/                # expanded skills (generated, gitignored)
-plugins/
-  pionless-agent/             # committed plugin (marketplace target)
-  pionless-deep-research/     # committed plugin (marketplace target)
-dist/
-  <plugin>/claude-plugin/     # publish-ready Claude package (generated)
-  <plugin>/codex-plugin/      # publish-ready Codex  package (generated)
-packages/
-  review-agent/               # dual-agent code review CLI (Python)
-build.sh
+/plugin marketplace add yangzichao/pionless-matrix
+/plugin install pionless-matrix@pionless-matrix-marketplace
 ```
 
-## Build
+## Layout
+
+```text
+skills/<bucket>/<skill-name>/   SKILL.md + optional references/ roles/ assets/ scripts/
+.claude-plugin/                 Claude Code marketplace + plugin manifest
+scripts/validate-skills.py      checks every skill (also runs in CI)
+scripts/link-skills.sh          local symlink install
+docs/authoring/                 how to write a skill for this repo
+```
+
+## Contributing a skill
+
+Read [docs/authoring/README.md](docs/authoring/README.md), then run:
 
 ```bash
-bash build.sh
-```
-
-For every plugin listed in `src/plugins.json`, this generates:
-
-- `dist/<plugin>/claude-plugin/` — publish-ready Claude Code package
-- `dist/<plugin>/codex-plugin/` — publish-ready Codex package
-- `plugins/<plugin>/` — committed repo plugin (serves both platforms)
-
-`build.sh` also validates that every `src/agents/*.md` and `src/skills/<skill>/` is claimed by exactly one plugin.
-
-Agent packaging differs by platform:
-
-- Claude Code can load plugin-shipped subagents from `agents/`.
-- Codex custom agents live under `.codex/agents/` or `~/.codex/agents/`, so each plugin ships templates in `agent-templates/` and the installer copies them into `~/.codex/agents/`.
-
-## Install From GitHub
-
-Repository:
-
-- [https://github.com/yangzichao/pionless-agent](https://github.com/yangzichao/pionless-agent)
-
-### Claude Code
-
-True GitHub marketplace install is supported. Install either plugin (or both) from the same marketplace:
-
-```bash
-/plugin marketplace add yangzichao/pionless-agent
-/plugin install pionless-agent@pionless-agent-marketplace
-/plugin install pionless-deep-research@pionless-agent-marketplace
-```
-
-This works because the repo publishes a marketplace at `.claude-plugin/marketplace.json` that points at `./plugins/pionless-agent` and `./plugins/pionless-deep-research`.
-
-### Codex
-
-Direct GitHub marketplace install is not documented in current Codex plugin docs. The supported paths today are:
-
-1. Clone the repo and run the installer:
-
-```bash
-git clone https://github.com/yangzichao/pionless-agent.git
-cd pionless-agent
-bash scripts/install-codex.sh
-```
-
-This installs:
-
-- the Codex plugin under `~/.codex/plugins/pionless-agent`
-- custom research agents under `~/.codex/agents/`
-
-2. Or open the cloned repo in Codex and use the repo marketplace at `.agents/plugins/marketplace.json`, which exposes `pionless-agent` from `./plugins/pionless-agent`. In that mode you still need to copy `platforms/codex/agents/*.toml` into `.codex/agents/` or `~/.codex/agents/` if you want the named orchestrator agents.
-
-## Test
-
-Claude Code (pick the plugin you want to load):
-
-```bash
-claude --plugin-dir dist/pionless-agent/claude-plugin
-claude --plugin-dir dist/pionless-deep-research/claude-plugin
-```
-
-Codex:
-
-1. Run `bash scripts/install-codex.sh`, or
-2. Open this repo in Codex and use the repo marketplace.
-
-## Agent Model
-
-The intended entrypoints are agents, not bare skills:
-
-- `deep-research`: orchestrator agent for substantial research jobs
-- `deep-research-pro`: orchestrator agent for exhaustive investigations
-- `quick-research`: lightweight standalone fast-research agent
-- `deep-research-worker`: bonded worker for focused subquestions, spawned by the deep-research orchestrators
-- `deep-research-verifier`: bonded worker for contradiction-seeking and claim verification, spawned by the deep-research orchestrators
-- `parallel-fix-worker`: bonded worker for one-issue verify-fix-self-check cycles, spawned by hosts running the parallel-fix skill
-
-The shared `skills/` directory exists to keep the operating procedure reusable across Claude and Codex. It is not meant to be the only user-facing surface.
-
-### Orchestrator fan-out requirements
-
-Orchestrator agents (`deep-research`, `deep-research-pro`) spawn `deep-research-worker` and `deep-research-verifier` as named subagents. This requires the orchestrator to run as the **main session agent**, not as a delegated subagent, because subagents cannot spawn other subagents on either platform.
-
-**Claude Code**: Launch the orchestrator as the session agent:
-
-```bash
-claude --agent pionless-agent:deep-research
-# or
-claude --agent pionless-agent:deep-research-pro
-```
-
-If you install the plugin and invoke the skill from a normal session (e.g. `/deep-research`), the skill runs inside the main Claude thread and can use the Agent tool to spawn workers — but only if Claude itself is the main agent. If `deep-research` is auto-delegated as a subagent, it will **not** be able to fan out.
-
-**Codex**: Fan-out works in interactive CLI sessions where Codex resolves custom agent names from `~/.codex/agents/`. It does **not** work in tool-backed or API sessions — custom agent name resolution is not yet supported there (see [openai/codex#15250](https://github.com/openai/codex/issues/15250)). The `agents.max_depth` config (default 1) also prevents workers from spawning grandchildren.
-
-## Source Notes
-
-- Claude GitHub marketplace install is documented by Anthropic via `/plugin marketplace add owner/repo`.
-- Claude also documents plugin-distributed subagents via plugin `agents/`.
-- Codex currently documents plugins for skills/apps/MCP plus project or user custom agents under `.codex/agents/` and `~/.codex/agents/`; public plugin support for shipping custom agents as first-class plugin components is not documented.
-
-## Local Commands
-
-```bash
-make build
-make install-claude
-make install-codex
-```
-
-## review-agent — Dual-Agent Code Review
-
-A pip-installable CLI that orchestrates Claude Code and Codex CLI for collaborative code review.
-
-### Install
-
-```bash
-cd packages/review-agent
-pip install -e .
-```
-
-### How It Works
-
-```
-Phase 1: Independent Review (parallel)
-  Claude Code ──review──> claude review
-  Codex CLI   ──review──> codex review
-
-Phase 2: Cross-Verification (parallel × N rounds)
-  Claude receives Codex's review, verifies each finding
-  Codex receives Claude's review, verifies each finding
-
-Phase 3: Consensus Synthesis
-  All findings merged into a single unified review (FINAL.md)
-```
-
-### Usage
-
-```bash
-# Review uncommitted changes
-review-agent
-
-# Review last 3 commits, security focus
-review-agent --last 3 --focus security
-
-# Review a directory, high-level architecture focus
-review-agent --dir src/ --focus high-level
-
-# Review branch diff with custom instructions
-review-agent --branch main --system-prompt "Focus on database migration safety"
-
-# Review specific files
-review-agent --files foo.py bar.py
-
-# Full repo review (agents explore via tools)
-review-agent --repo
-
-# Multi-round cross-verification
-review-agent --last 5 --rounds 2
-
-# Dry run (mock agents, inspect prompts)
-review-agent --dry-run --dir src/ -v
-```
-
-### Source Options
-
-| Flag | What it reviews |
-|------|----------------|
-| `--diff` | Uncommitted changes — staged + unstaged (default) |
-| `--branch BASE` | Changes compared to a base branch |
-| `--commit REF` | A specific commit or range |
-| `--last N` | The last N commits (log + diff) |
-| `--files PATH...` | Full content of specific files |
-| `--dir PATH` | All files under a directory |
-| `--repo` | Full repository (file tree; agents explore via tools) |
-
-### Focus Modes
-
-| Mode | Description |
-|------|-------------|
-| `balanced` | Correctness, design, security, performance (default) |
-| `high-level` | Architecture, API design, module boundaries |
-| `low-level` | Logic bugs, edge cases, off-by-one errors |
-| `security` | OWASP Top 10, injection, auth, input validation |
-| `performance` | Complexity, N+1 queries, memory leaks, caching |
-
-### Output
-
-Each run creates a timestamped folder in `code-review/`:
-
-```
-code-review/2026-04-11-1522/
-  FINAL.md      ← unified consensus review
-  claude.md     ← Claude's full review + verification notes
-  codex.md      ← Codex's full review + verification notes
-  debug/        ← (only with --dry-run or -v)
+python3 scripts/validate-skills.py
 ```

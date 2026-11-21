@@ -5,28 +5,13 @@
     "url": "https://github.com/yangzichao"
   },
   "metadata": {
-    "description": "Cross-platform Claude Code and Codex plugin marketplace. Publishes pionless-agent (coding-workflow agents), pionless-deep-research (research orchestrator + leaf agents + report-style skills), and pionless-job-skillset (job-hunt / interview-prep workflows)."
+    "description": "Zichao Yang's personal Agent Skills library, packaged as one Claude Code plugin. Other agents install the same skills with `npx skills add yangzichao/pionless-matrix`."
   },
   "plugins": [
     {
-      "name": "pionless-agent",
-      "source": "./plugins/pionless-agent",
-      "description": "Coding-workflow agents: hoah-coder (focused coder with built-in reviewer loop), parallel-fix (batch issue fixer with isolated worktree workers), socratic-tutor, freshwater-doctor."
-    },
-    {
-      "name": "pionless-deep-research",
-      "source": "./plugins/pionless-deep-research",
-      "description": "Deep-research orchestrator (skill-shell) with leaf craft agents (worker, verifier, drafter, writer), 6 report-style skills (technical-paper, position-paper, executive-briefing, landscape-scan, design-to-do, tutorial), and a markdown-to-PDF pipeline."
-    },
-    {
-      "name": "solo-ralph",
-      "source": "./plugins/solo-ralph",
-      "description": "Self-driving Ralph Loop: one command drives a vague goal through hard-req → spec → todo, then launches a fresh-subprocess loop that executes the todo until done. Loop survives session exit via nohup+disown."
-    },
-    {
-      "name": "pionless-job-skillset",
-      "source": "./plugins/pionless-job-skillset",
-      "description": "Job-hunt / interview-prep skill set. Ships onepoint3acres-interview-scraper: a 7-stage pipeline that scrapes 一亩三分地 面经 for a target company + job profile (SWE / MLE / RS / DS / etc), filters by user-defined preferences, clusters posts by underlying problem, and surfaces cross-source conflicts as ⚠️ annotations."
+      "name": "pionless-matrix",
+      "source": "./",
+      "description": "All skills in this repo: research, coding, learning, career, setup."
     }
   ]
 }

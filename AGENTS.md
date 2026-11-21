@@ -1,36 +1,16 @@
-# pionless-agent
+# pionless-matrix
 
-This repository maintains a cross-platform research agent package for Claude Code and OpenAI Codex.
+A personal Agent Skills library. Skills live in `skills/<bucket>/<skill-name>/SKILL.md` and are read as-is by every host. There is no build step and nothing is generated.
 
-## Architecture
+## Rules
 
-Agents are the brains (orchestration logic, turn protocol, Ralph loop enforcement). Skills are reference material (research rules, writing rules, report templates).
+- Follow `docs/authoring/` on every skill change. `skill-anatomy.md` and `subagent-roles.md` are binding.
+- Skills must be host-neutral: no host-specific agent definitions, tool names, or model choices. Subagent work goes in the skill's own `roles/<role>.md` with a fallback for hosts without subagents.
+- A skill folder is self-contained. No paths outside it; to use another skill, say "call the skill named X".
+- Adding, renaming or removing a skill means updating, in the same change: the bucket `README.md`, the `skills` array in `.claude-plugin/plugin.json`, and the table in the top-level `README.md`.
+- Bump `metadata.version` in the skill's frontmatter: patch for behavior fixes, minor for new capabilities. Bump `.claude-plugin/plugin.json` `version` when releasing. Versions are manual.
+- Before reporting done, run `python3 scripts/validate-skills.py` and `bash -n` on any changed shell script. After touching `.claude-plugin/`, also run `claude plugin validate .` if the Claude Code CLI is installed.
 
-## Single Source of Truth
+## Research output
 
-All agent definitions live in `src/agents/` as Claude-format .md files. Build.sh generates both platforms:
-
-- `platforms/claude-code/agents/*.md` — Claude Code agents
-- `platforms/codex/agents/*.toml` — Codex agents (converted format)
-
-## Modular Skills
-
-Skill content is decomposed into small modules in `src/skills/includes/`. Source SKILL.md files use `<!-- include: includes/filename.md -->` markers that build.sh expands at build time.
-
-## Working Rules
-
-- Edit agents in `src/agents/` — never hand-edit `platforms/claude-code/agents/` or `platforms/codex/agents/`
-- Edit skill modules in `src/skills/includes/` — never hand-edit `shared/skills/`
-- Run `bash build.sh` to assemble all outputs
-- All research output goes to `deep-research/` using `YYYY-MM-DD-HHMM-topic.md` naming
-
-## Agents
-
-| Agent | Role | Claude Model |
-|-------|------|--------------|
-| deep-research | Orchestrator (standard) | opus |
-| deep-research-pro | Orchestrator (exhaustive) | opus |
-| quick-research | Standalone lightweight; also reusable as a worker | sonnet |
-| deep-research-worker | Bonded evidence-gathering worker for deep-research | sonnet |
-| deep-research-verifier | Bonded contradiction-seeking worker for deep-research | sonnet |
-| parallel-fix-worker | Bonded single-fix worker for the parallel-fix skill | sonnet |
+When running research in this repo, write reports to `deep-research/` at the repo root (gitignored), named `YYYY-MM-DD-HHMM-topic.md`, with workspace files using the same prefix (`YYYY-MM-DD-HHMM-topic.workspace.md`).

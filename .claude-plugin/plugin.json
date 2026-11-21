@@ -1,0 +1,22 @@
+{
+  "name": "pionless-matrix",
+  "version": "1.0.0",
+  "description": "Zichao Yang's personal skill library: deep research with verified citations, markdown-to-PDF, focused coding with a review loop, parallel batch fixes, Ralph loops, Socratic tutoring, 1point3acres interview scraping, and a Lean/Wolfram stack doctor.",
+  "author": {
+    "name": "Zichao Yang",
+    "url": "https://github.com/yangzichao"
+  },
+  "repository": "https://github.com/yangzichao/pionless-matrix",
+  "license": "MIT",
+  "keywords": ["skills", "agent-skills", "research", "coding", "learning"],
+  "skills": [
+    "./skills/career/onepoint3acres-interview-scraper",
+    "./skills/coding/hoah-coder",
+    "./skills/coding/parallel-fix",
+    "./skills/coding/solo-ralph",
+    "./skills/learning/socratic-tutor",
+    "./skills/research/deep-research",
+    "./skills/research/markdown-to-pdf",
+    "./skills/setup/freshwater-doctor"
+  ]
+}
