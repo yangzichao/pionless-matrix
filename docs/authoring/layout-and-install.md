@@ -19,7 +19,7 @@ AGENTS.md                # instructions for agents working in this repo (CLAUDE.
 
 There is no build step. The files under `skills/` are what every host reads.
 
-Buckets group skills by area (`research/`, `coding/`, `learning/`, `career/`, `setup/`). Skill names must stay unique across all buckets, because hosts install skills into one flat folder.
+Buckets group skills by area (`research/`, `coding/`, `writing/`, `learning/`, `career/`, `setup/`). Skill names must stay unique across all buckets, because hosts install skills into one flat folder.
 
 ## Adding or renaming a skill
 
