@@ -12,6 +12,7 @@ My personal [Agent Skills](https://agentskills.io) library. Every skill is a pla
 | [writing-ai-tells](skills/writing-ai-tells/SKILL.md) | Rewrite AI-sounding prose so it reads like the writer without changing what it says. From blader/humanizer, with the plain-style rules of pstack's unslop merged in. |
 | [writing-logic](skills/writing-logic/SKILL.md) | Write or restructure prose with strong, blunt logic: one of four paragraph types per paragraph (answer, argument, explanation, critique), one main claim per document, answer-first or guided (step-by-step) shape, plain scientific sentences, a logic skeleton shown before and after drafting, a counted length budget (one claim plus at most three sentences per paragraph), then a logic-critic pass. |
 | [socratic-tutor](skills/socratic-tutor/SKILL.md) | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
+| [underlying-question](skills/underlying-question/SKILL.md) | Read the questions raised across a long discussion (or the assumptions inside one question) and name the one deeper question the user keeps circling, with their own words as evidence. |
 
 Skills that split work across subagents (deep-research, no-comments, writing-logic) keep the subagent prompts in their own `roles/` folder. On a host without subagents, the agent runs each role itself as a separate pass.
 
