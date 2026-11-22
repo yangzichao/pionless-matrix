@@ -43,6 +43,19 @@ Host-specific fields (`disable-model-invocation`, `allowed-tools`, `model` and s
 - Point one level deep. `SKILL.md` names every file the host should open. A reference file should not send the host on to a third file.
 - Use relative paths from the skill root with forward slashes.
 
+## Prose
+
+Every sentence in a skill becomes an instruction the host follows, so the bar is higher than for docs a person reads.
+
+- When in doubt, delete. Keep a sentence only if it changes what the host does.
+- Say what to do. Give the reason only when the rule is confusing without one.
+- Write a rule in one line when it fits. Move examples and long explanations into `references/`.
+- Don't restate what a file in the folder already says, such as a template, schema, or script. Point at it.
+- Don't restate another skill. Call it by name.
+- When you write the same rule a second time, turn it into a script or a validator check instead of more prose.
+
+Adapted from the authoring-a-skill playbook in pstack (backnotprop/pstack).
+
 ## Host-neutral wording
 
 The goal is format portability: any host that reads Agent Skills can load the folder and follow it. Identical behaviour across hosts is not a goal. Behaviour is checked on Claude Code and Codex only, so test there, and accept that other hosts may route, trigger, or run subagents differently.
