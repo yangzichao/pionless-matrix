@@ -1,8 +1,8 @@
 ---
 name: underlying-question
-description: "Check whether the user is asking the right question, and replace it with a better one. Four directions: down (many surface questions circle one deeper question never asked), up (one vague question needs a series of concrete ones), back (the user already holds an answer, so recover the question it answers and check that question is worth answering), and reverse (the questions the assistant should have asked the user). Use when the user asks \"among everything we discussed, is there a deeper question I keep circling\", \"what am I really asking\", \"am I asking the wrong question\", \"this question is too vague, break it down\", \"what problem does this solution actually solve\", \"what should you ask me\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", \"这个问题太虚了\", or when the user asks the same thing several ways without progress, asks something too broad to answer, or keeps asking how to apply a solution nobody has justified."
+description: "Check whether a question in this conversation is the right one, and hand back a better one. Four directions: down (many surface questions circle one deeper question never asked), up (one vague question becomes a short series of concrete ones), back (a solution the user already holds is traced to the problem it solves, to check they have it), and reverse (audit the assumptions the assistant made in its own answers without asking). Stops once the user confirms the better question; it does not go on to answer it. Use only when the user asks for this, for example: \"is there a deeper question I keep circling\", \"what am I really asking\", \"am I asking the wrong question\", \"this question is too vague, break it down\", \"what problem does this solution actually solve\", \"what have you been assuming about me\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", \"这个问题太虚了\", \"我是不是问错了\", \"你一直在假设什么\"."
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Underlying Question
@@ -13,10 +13,20 @@ A question can be wrong in four ways, and each needs a different fix:
 |---|---|---|
 | Down | Many surface questions orbit a deeper one nobody asked | One deeper question |
 | Up | One question is too vague to answer | A short, ordered series of concrete questions |
-| Back | The user already holds an answer and asks how to apply it | The question that answer answers, and whether it is worth answering |
-| Reverse | The assistant has been answering on guesses | The questions the assistant should ask the user |
+| Back | The user already holds an answer and asks how to apply it | The question that answer answers, and whether the user has it |
+| Reverse | The assistant's earlier answers rest on assumptions the user never confirmed | Those assumptions, as questions for the user |
 
-This skill finds the right question first and answers second. It does not run a long interview to settle every decision in a plan; once the right question is found and a whole plan needs settling, call the skill named grilling if it is available.
+## Scope
+
+This skill does one thing: it checks whether a question is the right one and hands back a better one. It ends when the user confirms the better question (or says none fits). The conversation then carries on as normal.
+
+It does not:
+
+- answer the better question, or work through it with the user;
+- settle every decision in a plan, one round after another;
+- teach a concept;
+- research a topic and write a report;
+- gather requirements before starting a task. A question too vague to start on is Up; Reverse only looks back at answers already given.
 
 ## Step 1: Collect the material
 
@@ -26,16 +36,14 @@ Do not invent a history you cannot see. If the material is too thin for the dire
 
 ## Step 2: Pick the direction
 
-Read the material for these signals:
+If the user names a direction, use it. Otherwise read the material for these signals:
 
 - **Down.** The user asked several questions that feel related, or asked the same thing in new words without progress. Or a single specific question that rests on a shaky premise.
 - **Up.** One broad question that any direct answer would turn into generic advice: "how should I plan my career", "is this architecture good", "how do I get better at English".
 - **Back.** The questions name a solution and ask how to use it, compare it, or sell it to others ("Redis or Memcached", "how do I convince my team to adopt Kubernetes"), but nobody has said what problem it fixes.
-- **Reverse.** Your answers so far depend on facts only the user knows (goals, constraints, taste, deadlines), and you have been guessing them. Or the user asks what you should ask them.
+- **Reverse.** The user's questions were concrete, but your own earlier answers quietly assumed things only the user knows (their goal, audience, constraints, taste), and you never asked.
 
-Pick one primary direction. If a second one clearly applies too, run the primary and name the second in one line at the end. Up often ends in Reverse, because some concrete questions can only be answered by the user; that is part of Up, not a second direction.
-
-If the user explicitly asks for a direction, use it.
+Pick one primary direction. If a second one clearly applies too, run the primary and name the second in one line at the end. Some of Up's concrete questions can only be answered by the user; asking them is part of Up, not Reverse.
 
 ## Step 3: Run the direction
 
@@ -44,7 +52,7 @@ Read the matching reference before you start, and follow it:
 - Down: read references/down-many-questions-to-one.md
 - Up: read references/up-vague-question-to-concrete-ones.md
 - Back: read references/back-answer-to-its-question.md
-- Reverse: read references/reverse-what-to-ask-the-user.md
+- Reverse: read references/reverse-audit-assistant-assumptions.md
 
 Each reference has its procedure, its output shape, and worked examples, including cases where the direction finds nothing.
 
@@ -52,22 +60,18 @@ Each reference has its procedure, its output shape, and worked examples, includi
 
 Every question you hand the user must pass these, whatever the direction:
 
-1. **Evidenced.** You can point to the user's own words, or to a concrete assumption in their question, that leads to it.
+1. **Evidenced.** You can point to the user's own words, or to a concrete assumption in their question or your answers, that leads to it.
 2. **Workable.** It is a question the user can act on soon (profile this, write that sentence, decide between two named options), not a verdict on the user ("you are afraid of failure") and not a line that fits anyone ("what do you really want in life").
 3. **Not already answered.** The user has not already asked and settled it. If they have, the gap is elsewhere.
 4. **Facts are yours, decisions are theirs.** Never ask the user for something you could look up yourself (a file, a schema, a doc, a log). Look it up first. Ask only what only the user can decide or knows.
 
 Drop what fails. If nothing passes, say so plainly: maybe the questions are simply separate, or the vague question is fine as asked. That is a useful finding.
 
-## Step 5: Answer
+## Step 5: Hand it back and stop
 
 Reply in the user's language, in short prose, in the output shape the reference gives. Lead with the result (the question, or the list), then the evidence. Mark inferences as your reading ("I read this as..."), not as fact.
 
-Then check with the user whether it lands. They know their situation better than the transcript does.
-
-## Step 6: Work on the better question
-
-Once the user accepts the result, answer it or help them work through it. This is the "answer not as asked" move: address the better question even though nobody asked it in those words. If it is a concept the user wants to work out themselves, call the skill named socratic-tutor if it is available.
+Ask whether it lands. They know their situation better than the transcript does. If they reject it, offer the runner-up or say nothing else fits. Once they confirm, the skill is done: do not go on to answer the better question unless the user asks for that as a new request.
 
 ## Rules
 
