@@ -9,7 +9,7 @@ The user already holds an answer, usually a solution, a tool, or a decision, and
 2. **Recover the question it answers.** State the problem this answer is the standard solution to, without using the answer's name. "Kubernetes" answers roughly "how do we deploy, scale, and heal many services across many machines". If you cannot state the question without the solution's name, you have not recovered it yet.
 
 3. **Check the user against that question.** Does the user have this problem, at this size, now? Look for evidence in the material, and look up facts yourself where you can (the code, the config, the metrics). Three outcomes:
-   - **Yes.** The answer fits. Say so briefly and go back to the user's original how-to questions.
+   - **Yes.** The answer fits. Say so briefly; the user's original questions stand as asked.
    - **No, or not yet.** The answer solves a problem the user does not have. Name the problem they do have, if the material shows it.
    - **Unknown.** The deciding fact is something only the user knows. Ask that one question.
 

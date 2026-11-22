@@ -15,7 +15,7 @@ The user asked a question so broad that any direct answer would be generic advic
 
 3. **Split facts from decisions.** For each question, ask who can answer it.
    - If you can find the answer yourself (in the code, files, docs, or a quick search), find it now and fill it in. Do not hand it to the user.
-   - If only the user can answer (goals, taste, constraints, priorities), it stays on the list. These are the questions you should be asking the user, which is the Reverse direction folded into this one.
+   - If only the user can answer (goals, taste, constraints, priorities), it stays on the list.
 
 4. **Order by dependency.** Put first the questions whose answers change what the later questions should even be. Usually the goal or criterion comes first.
 
@@ -25,9 +25,7 @@ The user asked a question so broad that any direct answer would be generic advic
 
 1. **Why the question cannot be answered as asked.** One sentence naming the gap ("'good' has no criterion here").
 2. **The concrete questions, numbered, in order.** For each one the user must answer, give your recommended or most likely answer, so they can just say yes. Mark the ones you already answered from the material, with the answer.
-3. **Ask the first one, or the first round.** Ask only the questions that do not depend on unanswered ones. Wait for the answers before the next round.
-
-When enough is answered, go back and answer the original vague question, now concretely.
+Then stop. Answering the concrete questions, or the original question once they are settled, is a new request.
 
 ## Examples
 
@@ -58,6 +56,15 @@ When enough is answered, go back and answer the original vague question, now con
   1. Better for what: meetings, papers, interviews, daily life?
   2. Where does it break now: listening, speaking, writing, vocabulary?
   3. How many hours a week can you actually spend?
+
+### "Optimize this SQL query"
+
+- **Gap:** "optimized" has no target.
+- **Facts to check yourself, not ask:** the schema, existing indexes, the query plan (run EXPLAIN if you can), the database version.
+- **Concrete questions:**
+  1. What counts as fast enough? (Recommended: under 100 ms at today's data size.)
+  2. Can the table structure change, or only the query?
+  3. Does this run once a day or on every page load?
 
 ### Nothing to break down
 
