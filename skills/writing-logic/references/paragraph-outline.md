@@ -24,7 +24,7 @@ Use prose when the point is a chain: A, therefore B, therefore C. In a list, nes
 - **Two to five bullets per level.** More than five usually mixes kinds; regroup them under a new level or split the paragraph.
 - **Nesting means "because" or "for example".** Any other relation must be written out. A sub-bullet that limits its parent starts with "but" or "except"; one that follows from its parent starts with "so".
 - **Bold labels are optional and short.** A bullet may open with a bold label of one to four words, followed by the full sentence. The label names the part; the sentence still carries the point.
-- **Same budget as prose.** An outline paragraph counts every word of its lead, bullets, and closing against the paragraph budget in `references/length-budget.md`. If it runs over, split it into two outline paragraphs or make each top-level bullet its own paragraph.
+- **Same word budget as prose.** An outline paragraph is held to the word budget in `references/length-budget.md` (75 English words or 200 Chinese characters, counting the lead, bullets, and closing), not to the sentence count, because its bullets are short. If it runs over, split it into two outline paragraphs or make each top-level bullet its own paragraph.
 - **One outline does not follow another.** Two outline paragraphs in a row read like slides. Put a prose paragraph, or at least a prose lead that links back, between them.
 
 ## Check

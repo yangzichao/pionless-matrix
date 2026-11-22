@@ -14,7 +14,7 @@ description: |
   point", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.7.1"
+  version: "0.7.2"
 ---
 
 # Writing logic
