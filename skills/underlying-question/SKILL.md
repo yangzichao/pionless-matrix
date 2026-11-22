@@ -1,80 +1,77 @@
 ---
 name: underlying-question
-description: "Find the underlying question the user keeps circling but has not asked: read the questions they raised across a long conversation (or the assumptions inside one question), find what they share, and name the one deeper question that, once answered, settles or reshapes the surface ones. Use when the user asks \"among everything we discussed, is there a deeper question I keep circling\", \"what am I really asking\", \"what's the question behind my questions\", \"am I asking the wrong question\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", or when the user has asked the same thing several ways without progress."
+description: "Check whether the user is asking the right question, and replace it with a better one. Four directions: down (many surface questions circle one deeper question never asked), up (one vague question needs a series of concrete ones), back (the user already holds an answer, so recover the question it answers and check that question is worth answering), and reverse (the questions the assistant should have asked the user). Use when the user asks \"among everything we discussed, is there a deeper question I keep circling\", \"what am I really asking\", \"am I asking the wrong question\", \"this question is too vague, break it down\", \"what problem does this solution actually solve\", \"what should you ask me\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", \"这个问题太虚了\", or when the user asks the same thing several ways without progress, asks something too broad to answer, or keeps asking how to apply a solution nobody has justified."
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Underlying Question
 
-People often ask surface questions that orbit a deeper one they have not put into words. The more precisely you answer each surface question, the less it helps with the deeper one. This skill finds that deeper question, shows the evidence for it, and only then answers.
+A question can be wrong in four ways, and each needs a different fix:
 
-The output is one question, stated plainly, backed by the user's own words. Not a personality reading, not a pep talk.
+| Direction | What is wrong | What you produce |
+|---|---|---|
+| Down | Many surface questions orbit a deeper one nobody asked | One deeper question |
+| Up | One question is too vague to answer | A short, ordered series of concrete questions |
+| Back | The user already holds an answer and asks how to apply it | The question that answer answers, and whether it is worth answering |
+| Reverse | The assistant has been answering on guesses | The questions the assistant should ask the user |
 
-## Step 1: Pick the mode and collect material
+This skill finds the right question first and answers second. It does not run a long interview to settle every decision in a plan; once the right question is found and a whole plan needs settling, call the skill named grilling if it is available.
 
-Two modes. Pick by what the user gives you.
+## Step 1: Collect the material
 
-- **Across many questions.** The user points at a long discussion: this conversation, past conversations the host can show you, notes, a journal, an issue thread. Use everything you can actually read. If your host keeps memory of past sessions, use it, and say that you did.
-- **Behind one question.** The user brings a single question, like "Can an irrational number be a denominator?". The material is that question and the assumptions it carries.
+Use everything you can actually read: this conversation, past conversations or memory the host can show you, notes or files the user points at. Say which sources you used. If the user brings a single question, that question and the assumptions inside it are the material.
 
-If the user asks for the many-questions mode but you can see fewer than three related questions, say so. Ask them to paste or list the questions they keep coming back to. Do not invent a history you cannot see.
+Do not invent a history you cannot see. If the material is too thin for the direction you pick (for example, fewer than three related questions for Down), say so and ask the user to paste or list what they have been asking.
 
-## Step 2: List the surface questions
+## Step 2: Pick the direction
 
-Write down each question or worry the user raised, in their own words, short. Keep a pointer to where it came from (a quote or "turn about X"). Include questions they implied but did not phrase as questions ("I still don't get why...", "maybe I should just...").
+Read the material for these signals:
 
-In the one-question mode, list instead what the question takes for granted: the terms it uses, the rule it assumes exists, the goal it serves.
+- **Down.** The user asked several questions that feel related, or asked the same thing in new words without progress. Or a single specific question that rests on a shaky premise.
+- **Up.** One broad question that any direct answer would turn into generic advice: "how should I plan my career", "is this architecture good", "how do I get better at English".
+- **Back.** The questions name a solution and ask how to use it, compare it, or sell it to others ("Redis or Memcached", "how do I convince my team to adopt Kubernetes"), but nobody has said what problem it fixes.
+- **Reverse.** Your answers so far depend on facts only the user knows (goals, constraints, taste, deadlines), and you have been guessing them. Or the user asks what you should ask them.
 
-Keep this list internal unless the user asks to see it. Step 5 quotes the parts that matter.
+Pick one primary direction. If a second one clearly applies too, run the primary and name the second in one line at the end. Up often ends in Reverse, because some concrete questions can only be answered by the user; that is part of Up, not a second direction.
 
-## Step 3: Look for what they share
+If the user explicitly asks for a direction, use it.
 
-Read the list for patterns. The common ones:
+## Step 3: Run the direction
 
-- **Same question, new words.** Several questions are one question asked from different angles.
-- **An assumption never examined.** Every question takes the same premise for granted, and that premise is the weak part.
-- **"How" before "whether".** The user keeps asking how to do something while it is still open whether they should, or what for.
-- **A missing criterion.** The user compares options but never says what "better" means for them.
-- **A decision being deferred.** The questions gather information that cannot settle anything, because the real blocker is a choice.
-- **A concept never pinned down.** In learning, a surface confusion often traces to one definition the user never had clearly ("a fraction is a ratio of integers" behind the denominator question).
-- **A conflict between two goals.** The questions swing between two aims that cannot both be met.
+Read the matching reference before you start, and follow it:
 
-Most cases match one or two. Do not force a pattern that is not there.
+- Down: read references/down-many-questions-to-one.md
+- Up: read references/up-vague-question-to-concrete-ones.md
+- Back: read references/back-answer-to-its-question.md
+- Reverse: read references/reverse-what-to-ask-the-user.md
 
-## Step 4: Draft candidates and test them
+Each reference has its procedure, its output shape, and worked examples, including cases where the direction finds nothing.
 
-Read references/examples.md before drafting. It has six worked cases, including one where no underlying question exists.
+## Step 4: Test what you produced
 
-Write one to three candidate underlying questions. Phrase each as a question the user could actually work on. Then test each:
+Every question you hand the user must pass these, whatever the direction:
 
-1. **Explains.** If the user answered it, would most surface questions be settled, or turn out not to matter? Count them.
-2. **Evidenced.** Can you point to at least two surface questions (or, in the one-question mode, a concrete assumption) that lead to it?
-3. **Unasked.** Has the user not already asked it directly? If they have, it is not hidden; the real gap is somewhere else.
-4. **Workable.** Is it a question, not a verdict on the user ("you are afraid of failure")? Is it specific to this user's situation, not a line that fits anyone ("what do you really want in life")?
+1. **Evidenced.** You can point to the user's own words, or to a concrete assumption in their question, that leads to it.
+2. **Workable.** It is a question the user can act on soon (profile this, write that sentence, decide between two named options), not a verdict on the user ("you are afraid of failure") and not a line that fits anyone ("what do you really want in life").
+3. **Not already answered.** The user has not already asked and settled it. If they have, the gap is elsewhere.
+4. **Facts are yours, decisions are theirs.** Never ask the user for something you could look up yourself (a file, a schema, a doc, a log). Look it up first. Ask only what only the user can decide or knows.
 
-Drop candidates that fail. Keep the strongest. If none pass, say that plainly: the surface questions may simply be separate, and that is a useful finding too.
+Drop what fails. If nothing passes, say so plainly: maybe the questions are simply separate, or the vague question is fine as asked. That is a useful finding.
 
 ## Step 5: Answer
 
-Reply in the user's language. Use this shape, in prose, short:
-
-1. **The question.** One sentence. Lead with it.
-2. **Why this one.** The two to four surface questions it explains, quoted briefly. Say what links them.
-3. **Why it stayed unasked.** Only if the material shows it (for example, every question assumed X). Mark it as your reading, not a fact.
-4. **What changes if it is answered.** Which surface questions dissolve or change shape.
-5. **Runner-up.** If a second candidate was close, name it in one line, so the user can say "no, it's that one".
+Reply in the user's language, in short prose, in the output shape the reference gives. Lead with the result (the question, or the list), then the evidence. Mark inferences as your reading ("I read this as..."), not as fact.
 
 Then check with the user whether it lands. They know their situation better than the transcript does.
 
-## Step 6: Work on the deeper question
+## Step 6: Work on the better question
 
-Once the user accepts the question (or picks the runner-up), answer it or help them work through it. This is the "answer not as asked" move: address the deeper question even though nobody asked it in those words. If the deeper question is a concept to learn and the user wants to work it out themselves, call the skill named socratic-tutor if it is available.
+Once the user accepts the result, answer it or help them work through it. This is the "answer not as asked" move: address the better question even though nobody asked it in those words. If it is a concept the user wants to work out themselves, call the skill named socratic-tutor if it is available.
 
 ## Rules
 
 - Quote the user's real words as evidence. Never paraphrase a quote into something stronger than what they said.
-- Separate what the material shows from what you infer. Say "I read this as..." for inferences.
 - No psychoanalysis, no flattery, no motivational close.
-- One underlying question, not a list of five. A list means you have not found it yet.
+- Down gives one question, not five. Up and Reverse give a short list, ordered so each question can be answered with what is already settled.
 - If the material is thin, say what you could not see instead of filling the gap.
