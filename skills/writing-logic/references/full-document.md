@@ -4,7 +4,7 @@ A full document is a stack of paragraphs, each of one type, held together by one
 
 ## The main claim
 
-Before outlining, write one sentence that the whole document exists to deliver. For a design proposal it is the decision ("Move session storage from Redis to Postgres by March"). For an architecture doc it is the rule the system keeps and how it keeps it ("Audio never leaves the Mac, because the release build excludes cloud transcription"). For a report it is the finding. For a tutorial it is what the reader will be able to do. It passes the same test as an argument claim: one sentence, takes a position, someone could disagree, no hedge.
+Before outlining, write one sentence that the whole document exists to deliver. For a design proposal it is the decision ("Move session storage from Redis to Postgres by March"). For an architecture doc it is the rule the system keeps and how it keeps it ("Card numbers never reach the app database, because only the payment service holds the decryption key"). For a report it is the finding. For a tutorial it is what the reader will be able to do. It passes the same test as an argument claim: one sentence, takes a position, someone could disagree, no hedge.
 
 If you cannot write it, the document is not ready to draft. Say what is blocking it (a missing fact, an undecided choice) and ask the user.
 
@@ -17,7 +17,7 @@ For a design doc, also read `references/design-doc.md`. It sets the two kinds (p
 - **Every section supports the main claim.** For each section, finish the sentence "This section shows the main claim holds because..." A section that cannot finish it is cut, or moved to an appendix.
 - **Sections do not overlap.** If two sections make the same point with different material, merge them.
 - **Sections leave no obvious hole.** Imagine the most skeptical reader of the main claim. Their first objection must be answered somewhere, usually in an argument or critique section.
-- **Each section relates to the one before it.** Name the relation with the same words as paragraphs: because, therefore, but, for example, then. Sections that each only point back to the main claim read as a list of topics; reorder or merge them until each one follows from, supports, or limits an earlier one. Sibling sections are fine when the text before them announces them as a counted list ("two exits: first ..., second ...").
+- **Each section relates to the one before it.** Name the relation with the same words as paragraphs: because, therefore, but, for example, then. Sections that each only point back to the main claim read as a list of topics; reorder or merge them until each one follows from, supports, or limits an earlier one. Sibling sections are fine when the text before them announces them as a counted list ("two paths: first ..., second ...").
 - **Two to five sections** at the top level. More usually means the main claim is too broad or the sections are at mixed levels of detail. A section can be as long as its point needs.
 - **Each section names its type.** Decide whether it answers, argues, explains, or critiques. A section can hold paragraphs of different types, but its first paragraph says what the section establishes.
 
@@ -31,8 +31,8 @@ For a design doc, also read `references/design-doc.md`. It sets the two kinds (p
 
 ## Headings and first sentences
 
-- A heading states the section's point or the question it answers: "Why audio cannot leave the Mac", not "Dictation pipeline". Avoid topic labels and empty labels like "Overview", "Discussion", "Thoughts".
-- The first sentence of every section states its point and its relation to the section before: "Audio cannot leave the Mac, but text can, through two exits."
+- A heading states the section's point or the question it answers: "Why card numbers never reach the app database", not "Payment pipeline". Avoid topic labels and empty labels like "Overview", "Discussion", "Thoughts".
+- The first sentence of every section states its point and its relation to the section before: "Card numbers never reach the app database, but their last four digits do, through two paths."
 - The first sentence of every paragraph carries its point. Reading only first sentences, top to bottom, should give the whole argument in short form.
 
 ## Detail documents
