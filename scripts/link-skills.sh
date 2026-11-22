@@ -19,12 +19,15 @@ Default destinations:
   ~/.agents/skills  Codex and other Agent Skills hosts that read the shared folder
 Override with SKILL_LINK_DESTS, a colon-separated list of folders.
 
-Each entry is a symlink into this checkout, so `git pull` updates every host.
+Each entry is a symlink into this checkout, so hosts see whatever this checkout
+holds right now, including other branches and unfinished edits. For daily use,
+run scripts/install-stable-copy.sh instead: it links a clean copy kept on main.
 A real (non-symlink) folder with the same name is never replaced; it is reported
 and skipped. Symlinks into this repo whose skill no longer exists are removed.
 EOF
 }
 
+INSTALL_DIR="${PIONLESS_INSTALL_DIR:-$HOME/.local/share/pionless-matrix}"
 MODE="link"
 DRY_RUN=0
 for argument in "$@"; do
@@ -68,6 +71,11 @@ SKILL_FOLDERS=()
 while IFS= read -r skill_md; do
   SKILL_FOLDERS+=("$(dirname "$skill_md")")
 done < <(find "$SKILLS_ROOT" -mindepth 2 -maxdepth 2 -name SKILL.md | sort)
+
+if [[ "$MODE" == "link" && "$REPO_ROOT" != "$(cd "$INSTALL_DIR" 2>/dev/null && pwd)" ]]; then
+  echo "note: linking from $REPO_ROOT, not the install copy; hosts will follow this checkout's branch and edits." >&2
+  echo "      For daily use run scripts/install-stable-copy.sh." >&2
+fi
 
 for destination in "${DESTINATIONS[@]}"; do
   [[ -n "$destination" ]] || continue
