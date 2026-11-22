@@ -20,6 +20,16 @@ Settle the kind before outlining; if the request does not say, ask.
 - **Describe the current design only.** No dated status notes, superseded sections, or history in the body. If past decisions matter, put a short decision log at the end.
 - **Write "none" instead of leaving a topic out.** For a standard topic that does not apply, such as migration, write one line saying why. The reader then knows it was considered.
 
+## Write prose that connects, not slides
+
+A fixed section list, tables, and code blocks make it easy to write a design doc like a slide deck: each part correct alone, nothing saying how one leads to the next. The conventional headings stay; the text between them must still carry the reasoning.
+
+- **Open every section and subsection with a transition.** Its first sentence says what question from the part before it takes up, or what that part left open: "With the goals set, the design starts from what the user sees, because every later choice serves one of these states." A section that opens straight into a list or a table has no transition.
+- **Open a section that has subsections with a map.** Before the first subsection, one sentence names the parts in order and why that order: "The design runs outside in: the card, the request path, the stored data, then failures."
+- **Frame every table, code block, diagram, and list.** Before it, one sentence says what to look at in it. After it, one sentence says what follows from it. "As follows:" is not a frame.
+- **Use a list only for parallel items.** Steps, options, and goals can be lists. Reasoning, where each point depends on the one before, is a paragraph with relation words.
+- **No grab-bag sections.** A section such as "Other" or "Miscellaneous" holding unrelated points means those points have no place in the argument. Give each point a home in the section it affects, or cut it.
+
 ## Proposal structure
 
 Use these top-level sections in this order. Reviewers look for them by name, so plain conventional headings are right here, not a fault. Under Design, each subsection heading states the decision it makes: "The summary is stored on the meeting, not as a separate note."
@@ -64,3 +74,4 @@ A small feature runs one to three pages; a new system can run longer. Give the D
 4. Does every non-obvious choice have its reason and its price beside it, and every chosen number its derivation? Does each remedy fix the cause the text diagnosed, not a nearby one?
 5. For a proposal, find each of these: status block, scope cut, a blocker for each alternative, everyone who bears the cost, the rules it changes, the success measure, the rollback, a plan with verifiable milestones, and numbered decisions with recommendations. Add any that is missing, or say in the text that it is unknown.
 6. Is there any history, dated status note, or superseded text in the body? Move it to the decision log or cut it.
+7. Read only the first sentence of every section and subsection, top to bottom. Does each one connect to the part before it? Is every table, code block, and list framed before and after? Is there a grab-bag section? Fix each failure.
