@@ -6,7 +6,7 @@ The logic skeleton shows the argument of a text without its prose, so the user c
 
 ```markdown
 Main claim: <one sentence>
-Budget: <N> paragraphs, about <N × 75> words
+Budget: <N> paragraphs, about <N × 75> words (or <N × 200> Chinese characters)
 
 1. [<paragraph type>] <the paragraph's point, in one sentence>
 2. [<paragraph type>] (<relation> 1) <point>
@@ -53,6 +53,7 @@ A skeleton that passes:
 - Gives every paragraph one relation from the list. A paragraph that needs "and also" or no relation at all does not belong, or belongs in another place.
 - Has no two points that say the same thing.
 - Leaves no point unconnected to the main claim through some chain of relations.
+- Passes the cut test: removing any one paragraph would leave the main claim less supported. Cut a paragraph whose removal changes nothing before the user sees the skeleton.
 
 ## Example
 
