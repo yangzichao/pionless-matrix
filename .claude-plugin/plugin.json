@@ -1,7 +1,7 @@
 {
   "name": "pionless-matrix",
   "version": "1.0.0",
-  "description": "Zichao Yang's personal skill library: deep research with verified citations, markdown-to-PDF, comment purges, AI-tell removal from prose, argument-first writing, and Socratic tutoring.",
+  "description": "Zichao Yang's personal skill library: deep research with verified citations, markdown-to-PDF, comment purges, AI-tell removal from prose, argument-first writing, Socratic tutoring, and finding the underlying question behind a long discussion.",
   "author": {
     "name": "Zichao Yang",
     "url": "https://github.com/yangzichao"
@@ -14,6 +14,7 @@
     "./skills/markdown-to-pdf",
     "./skills/no-comments",
     "./skills/socratic-tutor",
+    "./skills/underlying-question",
     "./skills/writing-ai-tells",
     "./skills/writing-logic"
   ]
