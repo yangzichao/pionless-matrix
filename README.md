@@ -10,9 +10,10 @@ My personal [Agent Skills](https://agentskills.io) library. Every skill is a pla
 | [markdown-to-pdf](skills/research/markdown-to-pdf/SKILL.md) | research | Markdown to PDF through Pandoc and headless Chrome, with KaTeX math, mermaid, and citations matching the editor preview. |
 | [no-comments](skills/coding/no-comments/SKILL.md) | coding | Delete comments in a diff through an independent Comment Sicko pass, flag the code they excuse, and fix it at the root. Adapted from backnotprop/pstack. |
 | [humanizer](skills/writing/humanizer/SKILL.md) | writing | Rewrite AI-sounding prose so it reads like the writer without changing what it says. From blader/humanizer, with the plain-style rules of pstack's unslop merged in. |
+| [logical-writing](skills/writing/logical-writing/SKILL.md) | writing | Write or restructure prose with strong, blunt logic: one move per paragraph (conclusion, argument, explanation, critique), one top-line claim per document, then a critic pass. |
 | [socratic-tutor](skills/learning/socratic-tutor/SKILL.md) | learning | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
 
-Skills that split work across subagents (deep-research, no-comments) keep the subagent prompts in their own `roles/` folder. On a host without subagents, the agent runs each role itself as a separate pass.
+Skills that split work across subagents (deep-research, no-comments, logical-writing) keep the subagent prompts in their own `roles/` folder. On a host without subagents, the agent runs each role itself as a separate pass.
 
 ## Install
 
