@@ -5,14 +5,16 @@ description: |
   short, in the style of a GRE or TOEFL argument essay without the template.
   Every paragraph is one of four types (answer, argument, explanation,
   critique), each with its own rules; a full document adds one main claim
-  that every section supports. Ends with a self-attack pass and a plain-language
-  pass. Use when drafting or revising a design doc, proposal, PR description,
+  that every section supports. Sentences are plain and exact, like a clear
+  scientific paper. Shows the user a logic skeleton (main claim, each paragraph's
+  point, and how each connects) before and after drafting, and ends with a
+  self-attack pass and a plain-language pass. Use when drafting or revising a design doc, proposal, PR description,
   report, review, reply, or a single paragraph, and when the user says "make the
   logic stronger", "tighten the argument", "this doesn't hold together", "what's
   my point here", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells instead.
 metadata:
-  version: "0.1.2"
+  version: "0.2.0"
 ---
 
 # Writing logic
@@ -26,6 +28,8 @@ Make every paragraph do one job, make every claim carry its evidence, and say it
 - **Every link nameable.** Between any two adjacent sentences you can say which relation holds: because, therefore, but, for example. If you cannot, a step is missing.
 - **Evidence can fail.** Support claims with things the reader could check and that would look different if the claim were false. Never invent evidence; ask for it or drop the claim.
 - **Cut what does not carry weight.** A sentence, paragraph, or section whose removal leaves the point just as supported goes.
+- **Plain, exact sentences.** One claim per sentence, actor in the subject, clauses only for a condition, cause, purpose, or restriction, and no rhetoric. When you announce several reasons or steps, mark each one: first, second, third. Rules in `references/sentence-style.md`.
+- **Logic the user can see.** The user gets a logic skeleton, not only prose, so they can check the argument without reading the whole text. Format in `references/logic-skeleton.md`.
 
 ## The four paragraph types
 
@@ -61,9 +65,11 @@ If you cannot write the point in one sentence, stop and tell the user what is bl
 
 When revising, extract the point the draft actually makes and tag each existing paragraph with its type first. Report where the stated point, the order, or a paragraph's type is wrong before rewriting.
 
+For a document, read `references/logic-skeleton.md` and write the planned skeleton: the main claim and one line per planned paragraph, with its type and relation. Run the check in that file. Show the skeleton to the user and wait for approval before drafting, unless the user asked for a finished text in one go or this skill is embedded in another task. For a single paragraph, the main sentence is the skeleton; do not stop for it.
+
 ### 3. Draft by paragraph type
 
-Write each paragraph against its type file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
+Read `references/sentence-style.md` before writing the first sentence, and write every sentence by it. Write each paragraph against its type file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
 
 ### 4. Attack the draft
 
@@ -72,20 +78,20 @@ Dispatch the logic critic.
 - If you can start subagents: start one with a fresh context (not a fork of this conversation). Give it the full text of `roles/logic-critic.md`, then a task card with the draft, the main claim, and the reader. Ask for read-only work if your host lets you restrict tools.
 - If you cannot: do the review yourself as a separate pass. Re-read `roles/logic-critic.md`, work only from the draft, main claim, and reader, and produce exactly the output it specifies.
 
-Fix every finding marked `breaks` or `weakens`. For each, cut, reorder, narrow the claim, or add a marked evidence gap. If the critic's delivered main claim differs from yours, fix the draft, or change the main claim and tell the user.
+Fix every finding marked `breaks` or `weakens`. For each, cut, reorder, narrow the claim, or add a marked evidence gap. If the critic's delivered main claim differs from yours, fix the draft, or change the main claim and tell the user. Compare the critic's delivered skeleton with your planned one: a paragraph whose point or relation a cold reader read differently is not saying what you planned, so fix its first sentence or its place.
 
 Run one critic round by default. Run a second round, with a fresh critic, only if your fixes changed the structure: the main claim, the section list, or the order of sections. Never run more than two. Findings still open after the last round go to the user with the open evidence gaps in step 6.
 
 ### 5. Plain-language pass
 
-Call the skill named writing-ai-tells in embedded mode on the fixed draft, with an instruction to keep every claim, number, and paragraph order.
+Call the skill named writing-ai-tells in embedded mode on the fixed draft, with an instruction to keep every claim, number, and paragraph order, and to keep sentences plain: one claim each, no rhetoric. Tell it that the enumeration markers (first, second, third, or list numbers) are required by this skill: they are not forced triads or repeated openings, so it must keep them and keep every listed item.
 
 If no skill named writing-ai-tells is available, reread the draft once and fix: long words where a short one works, a thing renamed with synonyms, "not X but Y" contrasts where nobody claimed X, closing lines that repeat the paragraph, triads with no third idea, and filler such as "it is worth noting that".
 
 ### 6. Return
 
-- **Drafting or revising pasted text:** the final text, then a short list of open evidence gaps and unresolved critic findings, then the main claim as one sentence so the user can confirm it.
-- **Editing a file:** read the whole file first, write only the final text, keep code blocks, paths, data, and link targets unchanged, then report the main claim and the open gaps.
+- **Drafting or revising pasted text:** the logic skeleton of the final text, then the final text, then a short list of open evidence gaps and unresolved critic findings. If the final skeleton differs from the one the user approved, say what changed and why.
+- **Editing a file:** read the whole file first, write only the final text, keep code blocks, paths, data, and link targets unchanged, then report the logic skeleton of the final text and the open gaps.
 - **Embedded in another task** (a PR body, a commit message, a section of a larger job): return only the final text.
 
 ## When not to apply

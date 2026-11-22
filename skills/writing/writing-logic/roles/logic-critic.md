@@ -14,10 +14,10 @@ The caller passes a task card with:
 
 1. Read the whole draft once without judging.
 2. Write the main claim as the draft actually delivers it. If that differs from the stated main claim, that is the first finding.
-3. For each paragraph, name its type: answer (answers a question), argument (defends a contestable claim), explanation (shows how something works), or critique (tests a claim). Flag a paragraph that mixes types without reason, or whose first sentence does not carry its point.
+3. For each paragraph, name its type: answer (answers a question), argument (defends a contestable claim), explanation (shows how something works), or critique (tests a claim). Write its point in one sentence and its relation to an earlier paragraph, using exactly one of: because (supports it), therefore (follows from it), but (limits it), for example (is a case of it), then (next step of an explanation). This is the delivered skeleton. Flag a paragraph that mixes types without reason, whose first sentence does not carry its point, or that has no relation from the list.
 4. For each claim the draft depends on, check for these gaps: correlation offered as cause; a sample too small or unlike where the claim is applied; no baseline or the wrong one; a conclusion broader than its evidence; an analogy whose conditions differ; a key word that changes meaning; a simpler alternative never considered.
 5. Find the strongest objection this reader would raise to the main claim. Say whether the draft answers it.
-6. Flag any adjacent pair of sentences where you cannot name the relation between them (because, therefore, but, for example).
+6. Flag any adjacent pair of sentences where you cannot name the relation between them (because, therefore, but, for example). Flag any place that announces several reasons, steps, or options but does not mark each item (first, second, third, or list numbers), so the reader must guess where one item ends.
 7. Flag any section or paragraph whose removal would leave the main claim just as supported.
 8. Rank all findings by how much each one weakens the main claim. Keep at most ten.
 
@@ -36,6 +36,11 @@ Return exactly this markdown:
 ## Delivered main claim
 <one sentence: what the draft actually argues>
 Matches stated main claim: yes | no (<one-line difference>)
+
+## Delivered skeleton
+1. [<type>] <point>
+2. [<type>] (<relation> <earlier paragraph number>) <point>
+...
 
 ## Findings
 1. [<location: section or paragraph number>] <problem in one sentence>

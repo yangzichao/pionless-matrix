@@ -9,7 +9,7 @@ An argument paragraph makes the reader believe a claim they might reject. Use it
 3. **The evidence.** Something concrete the reader can check: a number with its source, a named case, a measurement, a quoted spec, a specific incident with who, when, and what.
 4. **The strongest objection, answered.** Only when a real reader would raise it. Name the objection in its strongest form, then say why the claim still holds, or narrow the claim so it does.
 
-Steps 2 and 3 can repeat once for a second reason. More than two reasons usually means the paragraph holds two claims; split it.
+Steps 2 and 3 can repeat once for a second reason. More than two reasons usually means the paragraph holds two claims; split it. When a claim rests on several reasons, across one paragraph or several, say how many and mark each: "for two reasons. First, ... Second, ...".
 
 ## The claim test
 
