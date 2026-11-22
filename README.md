@@ -1,6 +1,6 @@
 # pionless-matrix
 
-My personal [Agent Skills](https://agentskills.io) library. Every skill is a plain `SKILL.md` folder, so the same files work in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, and any other host that reads the format. There is no build step.
+My personal [Agent Skills](https://agentskills.io) library. Every skill is a plain `SKILL.md` folder, so the same files work in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode, and any other host that reads the format. I check how skills behave only in Claude Code and Codex, the two hosts I use daily. There is no build step.
 
 ## Skills
 
