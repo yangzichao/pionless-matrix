@@ -14,7 +14,7 @@ description: |
   point", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.6.2"
+  version: "0.7.0"
 ---
 
 # Writing logic
@@ -42,6 +42,8 @@ Each paragraph does exactly one of these. Name the type before writing the parag
 | argument | make the reader believe a claim they might reject | "why X", proposals, PR rationale, position papers | `references/paragraph-types/argument.md` |
 | explanation | show how something works so the reader can predict it | "how it works", READMEs, tutorials, concepts | `references/paragraph-types/explanation.md` |
 | critique | test whether a claim holds | reviews, evaluating proposals, risks sections | `references/paragraph-types/critique.md` |
+
+Each type can be written as prose or as an outline: a lead sentence, then bullets and sub-bullets that show the structure directly. Use the outline form when the point is a tree of parallel parts and the reader scans; keep a chain of reasoning in prose. See `references/paragraph-outline.md`.
 
 A document type is a mix of paragraph types. A design proposal opens with an answer (the decision), spends most of its length explaining the design, argues against alternatives, and critiques itself in its risks section.
 
@@ -83,7 +85,7 @@ For a document, read `references/logic-skeleton.md` and `references/length-budge
 
 ### 3. Draft by paragraph type
 
-Read `references/sentence-style.md` before writing the first sentence, and write every sentence by it. Write each paragraph against its type file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
+Read `references/sentence-style.md` before writing the first sentence, and write every sentence by it. Write each paragraph against its type file, and an outline paragraph also against `references/paragraph-outline.md`. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
 
 When the draft is done, count it against the budget in `references/length-budget.md` and fix every overrun before step 4.
 
