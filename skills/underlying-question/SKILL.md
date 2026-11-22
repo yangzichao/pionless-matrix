@@ -2,7 +2,7 @@
 name: underlying-question
 description: "Find the underlying question the user keeps circling but has not asked: read the questions they raised across a long conversation (or the assumptions inside one question), find what they share, and name the one deeper question that, once answered, settles or reshapes the surface ones. Use when the user asks \"among everything we discussed, is there a deeper question I keep circling\", \"what am I really asking\", \"what's the question behind my questions\", \"am I asking the wrong question\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", or when the user has asked the same thing several ways without progress."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Underlying Question
@@ -43,6 +43,8 @@ Read the list for patterns. The common ones:
 Most cases match one or two. Do not force a pattern that is not there.
 
 ## Step 4: Draft candidates and test them
+
+Read references/examples.md before drafting. It has six worked cases, including one where no underlying question exists.
 
 Write one to three candidate underlying questions. Phrase each as a question the user could actually work on. Then test each:
 
