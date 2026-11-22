@@ -22,13 +22,15 @@ Skills that split work across subagents (deep-research, no-comments, writing-log
 
 Pick one method per host.
 
-Local symlinks, for working on this repo. `git pull` updates every host:
+Local symlinks to a stable copy, for daily use on your own machine:
 
 ```bash
-bash scripts/link-skills.sh
+bash scripts/install-stable-copy.sh
 ```
 
-This links every skill into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex and other hosts that read the shared folder). Set `SKILL_LINK_DESTS` to choose other folders. `--unlink` removes the links.
+This keeps a clean clone on `main` at `~/.local/share/pionless-matrix` and links every skill from it into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex and other hosts that read the shared folder). Hosts never read a development checkout, so switching branches or half-finished edits there do not reach them. Re-run it after each merge to `main` to update every host. `PIONLESS_INSTALL_DIR` moves the copy; `SKILL_LINK_DESTS` chooses other link folders.
+
+`bash scripts/link-skills.sh` links straight from the checkout you run it in. Use it only to try a branch in your hosts; `--unlink` removes the links.
 
 Any agent, through the [skills CLI](https://github.com/vercel-labs/skills):
 
@@ -50,7 +52,8 @@ skills/<skill-name>/            SKILL.md + optional references/ roles/ assets/ s
 archive/                        retired skills, kept for reading only, never installed
 .claude-plugin/                 Claude Code marketplace + plugin manifest
 scripts/validate-skills.py      checks every skill (also runs in CI)
-scripts/link-skills.sh          local symlink install
+scripts/install-stable-copy.sh  clean copy on main + local symlink install
+scripts/link-skills.sh          symlinks the skills of the checkout it runs in
 docs/authoring/                 how to write a skill for this repo
 ```
 

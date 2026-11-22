@@ -12,7 +12,8 @@ archive/
   plugin.json            # Claude Code plugin, lists every skill path
 scripts/
   validate-skills.py     # checks every skill against docs/authoring/skill-anatomy.md
-  link-skills.sh         # symlinks every skill into local agent skill folders
+  install-stable-copy.sh # keeps a clean copy on main and links hosts to it
+  link-skills.sh         # symlinks the skills of the checkout it runs in
 docs/authoring/          # how to write a skill for this repo
 AGENTS.md                # instructions for agents working in this repo (CLAUDE.md points here)
 ```
@@ -36,7 +37,8 @@ Move it to `archive/<bucket>/<skill-name>/` and rename its `SKILL.md` to `SKILL.
 
 | How | Command | What it does |
 |---|---|---|
-| Local symlinks (recommended for the owner) | `bash scripts/link-skills.sh` | Symlinks every skill into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex and other Agent Skills hosts). `git pull` updates them. |
+| Stable copy plus symlinks (recommended for the owner) | `bash scripts/install-stable-copy.sh` | Clones or fast-forwards a clean copy on `main` at `~/.local/share/pionless-matrix`, then symlinks every skill from it into `~/.claude/skills` (Claude Code) and `~/.agents/skills` (Codex and other Agent Skills hosts). Re-run after each merge to update. |
+| Symlinks to a checkout (trying a branch) | `bash scripts/link-skills.sh` | Same links, but into the checkout it runs in, so hosts follow that checkout's branch and edits. Re-run `install-stable-copy.sh` to switch back. |
 | skills CLI, any host | `npx skills add yangzichao/pionless-matrix -g` | Copies skills into the folders of every agent it detects. |
 | Claude Code plugin | `/plugin marketplace add yangzichao/pionless-matrix`, then `/plugin install pionless-matrix@pionless-matrix-marketplace` | Installs all skills as one plugin, namespaced `pionless-matrix:<skill>`. |
 
