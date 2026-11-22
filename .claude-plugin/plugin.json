@@ -14,7 +14,7 @@
     "./skills/learning/socratic-tutor",
     "./skills/research/deep-research",
     "./skills/research/markdown-to-pdf",
-    "./skills/writing/humanizer",
-    "./skills/writing/logical-writing"
+    "./skills/writing/writing-ai-tells",
+    "./skills/writing/writing-logic"
   ]
 }

@@ -1,5 +1,5 @@
 ---
-name: humanizer
+name: writing-ai-tells
 description: |
   Rewrite AI-sounding text so it reads like the writer without changing what it says.
   Use when editing or reviewing prose for AI tells: not-X-but-Y contrasts, one-line
@@ -10,10 +10,10 @@ description: |
   "make this read like a person wrote it".
 license: MIT
 metadata:
-  version: "4.1.0"
+  version: "4.1.1"
 ---
 
-# Humanizer: remove AI writing patterns
+# Remove AI writing tells
 
 Rewrite AI-sounding text so it reads like the writer, not a chatbot. Keep what it says.
 

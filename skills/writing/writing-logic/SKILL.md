@@ -1,5 +1,5 @@
 ---
-name: logical-writing
+name: writing-logic
 description: |
   Write or restructure prose so its logic is strong and its claims are blunt and
   short, in the style of a GRE or TOEFL argument essay without the template.
@@ -10,12 +10,12 @@ description: |
   report, review, reply, or a single paragraph, and when the user says "make the
   logic stronger", "tighten the argument", "this doesn't hold together", "what's
   my point here", "be more direct", "answer first", or "write it like a GRE essay".
-  For removing AI-sounding phrasing alone, use the skill named humanizer instead.
+  For removing AI-sounding phrasing alone, use the skill named writing-ai-tells instead.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
-# Logical writing
+# Writing logic
 
 Make every paragraph do one job, make every claim carry its evidence, and say it at the size the evidence supports. Removing AI tells makes prose stop sounding bad; this skill makes it hold up.
 
@@ -78,9 +78,9 @@ Run one critic round by default. Run a second round, with a fresh critic, only i
 
 ### 5. Plain-language pass
 
-Call the skill named humanizer in embedded mode on the fixed draft, with an instruction to keep every claim, number, and paragraph order.
+Call the skill named writing-ai-tells in embedded mode on the fixed draft, with an instruction to keep every claim, number, and paragraph order.
 
-If no skill named humanizer is available, reread the draft once and fix: long words where a short one works, a thing renamed with synonyms, "not X but Y" contrasts where nobody claimed X, closing lines that repeat the paragraph, triads with no third idea, and filler such as "it is worth noting that".
+If no skill named writing-ai-tells is available, reread the draft once and fix: long words where a short one works, a thing renamed with synonyms, "not X but Y" contrasts where nobody claimed X, closing lines that repeat the paragraph, triads with no third idea, and filler such as "it is worth noting that".
 
 ### 6. Return
 
