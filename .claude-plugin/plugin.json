@@ -13,8 +13,8 @@
     "./skills/deep-research",
     "./skills/markdown-to-pdf",
     "./skills/no-comments",
+    "./skills/question-the-question",
     "./skills/socratic-tutor",
-    "./skills/underlying-question",
     "./skills/writing-ai-tells",
     "./skills/writing-logic"
   ]
