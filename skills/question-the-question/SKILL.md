@@ -1,11 +1,11 @@
 ---
-name: underlying-question
+name: question-the-question
 description: "Check whether a question in this conversation is the right one, and hand back a better one. Four directions: down (many surface questions circle one deeper question never asked), up (one vague question becomes a short series of concrete ones), back (a solution the user already holds is traced to the problem it solves, to check they have it), and reverse (audit the assumptions the assistant made in its own answers without asking). Stops once the user confirms the better question; it does not go on to answer it. Use only when the user asks for this, for example: \"is there a deeper question I keep circling\", \"what am I really asking\", \"am I asking the wrong question\", \"this question is too vague, break it down\", \"what problem does this solution actually solve\", \"what have you been assuming about me\", \"在我们反复讨论过的所有问题中，有没有一个更深层次的问题\", \"我真正想问的是什么\", \"这个问题太虚了\", \"我是不是问错了\", \"你一直在假设什么\"."
 metadata:
-  version: "1.1.1"
+  version: "1.1.2"
 ---
 
-# Underlying Question
+# Question the Question
 
 A question can be wrong in four ways, and each needs a different fix:
 
