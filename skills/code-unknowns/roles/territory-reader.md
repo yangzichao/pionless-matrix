@@ -21,6 +21,7 @@ The caller passes a task card with:
 6. List edge cases the plan is silent on and the code makes real: empty input, duplicates, concurrent writers, partial failure, data that already exists, rollback.
 7. If reference code is given, read it and map its behaviour onto the target: for each behaviour, where it lands and where the semantics differ (error handling, ordering, number types, nulls, concurrency).
 8. For before-merge, also list what the diff changed that the plan does not cover, and plan items the diff does not deliver.
+9. Look one step outside the plan's frame, and keep only what you can point to in the repository: other consumers of the data or interface (exports, analytics, other services, support tools named in docs); operations (deploy steps, config, alerts, runbooks); existing data and what happens to it over time; and the premise (if the plan cites an issue, request, or doc, whether the change addresses what it describes, and whether the repository's docs set rules the approach breaks).
 
 ## What you must not do
 
@@ -49,6 +50,9 @@ Return exactly this markdown. Leave out a section only if it is empty, and say i
 ## Semantics map
 | Reference behaviour | Where it lands | Difference |
 |---|---|---|
+
+## Outside the plan's frame
+- <what the plan leaves out> | <file:line or doc> | <what it would change>
 
 ## Plan against diff (before-merge only)
 - In diff, not in plan: <change> | <file:line>
