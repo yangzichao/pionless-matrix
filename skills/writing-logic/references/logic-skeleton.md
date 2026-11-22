@@ -15,7 +15,7 @@ Budget: <N> paragraphs, about <N × 75> words (or <N × 200> Chinese characters)
 ```
 
 - Number every paragraph. For a document with sections, put a section line above its paragraphs, `S2. [<type>] (<relation> S1) <heading>: <the section's point>`, and keep one paragraph numbering through the whole document. The first section's relation points to the opening paragraph.
-- The paragraph type is one of `answer`, `argument`, `explanation`, `critique`.
+- The paragraph type is one of `answer`, `argument`, `explanation`, `critique`. Add `, outline` for a paragraph written in outline form: `[argument, outline]`.
 - The point is the paragraph's first sentence, or a plain one-sentence version of it if the first sentence is long.
 - The relation names how this point connects to an earlier one. Use exactly one of these words:
   - `because`: this point supports the earlier one.
