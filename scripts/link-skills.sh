@@ -67,7 +67,7 @@ remove_repo_links_that_are_stale_or_unlinking() {
 SKILL_FOLDERS=()
 while IFS= read -r skill_md; do
   SKILL_FOLDERS+=("$(dirname "$skill_md")")
-done < <(find "$SKILLS_ROOT" -mindepth 3 -maxdepth 3 -name SKILL.md | sort)
+done < <(find "$SKILLS_ROOT" -mindepth 2 -maxdepth 2 -name SKILL.md | sort)
 
 for destination in "${DESTINATIONS[@]}"; do
   [[ -n "$destination" ]] || continue

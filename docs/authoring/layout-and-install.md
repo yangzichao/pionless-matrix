@@ -4,10 +4,9 @@
 
 ```text
 skills/
-  <bucket>/
-    README.md            # one line per skill in the bucket
-    <skill-name>/SKILL.md
-archive/                 # retired skills, read-only, never installed (see archive/README.md)
+  <skill-name>/SKILL.md  # one folder per skill, flat
+archive/
+  <bucket>/<skill-name>/ # retired skills, read-only, never installed (see archive/README.md)
 .claude-plugin/
   marketplace.json       # Claude Code marketplace, points at this repo root
   plugin.json            # Claude Code plugin, lists every skill path
@@ -20,19 +19,18 @@ AGENTS.md                # instructions for agents working in this repo (CLAUDE.
 
 There is no build step. The files under `skills/` are what every host reads.
 
-Buckets group skills by area (`research/`, `coding/`, `writing/`, `learning/`). Skill names must stay unique across all buckets, because hosts install skills into one flat folder.
+Live skills sit flat under `skills/`, the same way every host installs them into one flat folder. The skill name is the folder name. Only `archive/` groups skills into buckets, to keep retired skills easy to browse.
 
 ## Adding or renaming a skill
 
-1. Create `skills/<bucket>/<skill-name>/SKILL.md`.
-2. Add one line to `skills/<bucket>/README.md`.
-3. Add the path to the `skills` array in `.claude-plugin/plugin.json`.
-4. Add a row to the skill table in the top-level `README.md`.
-5. Run `python3 scripts/validate-skills.py`.
+1. Create `skills/<skill-name>/SKILL.md`.
+2. Add the path to the `skills` array in `.claude-plugin/plugin.json`.
+3. Add a row to the skill table in the top-level `README.md`.
+4. Run `python3 scripts/validate-skills.py`.
 
 ## Retiring a skill
 
-Move it to `archive/<bucket>/<skill-name>/` and rename its `SKILL.md` to `SKILL.archived.md`, then undo steps 2 to 4 above. `archive/README.md` has the exact commands. The rename matters: `npx skills add --full-depth` installs any file named `SKILL.md` anywhere in the repo.
+Move it to `archive/<bucket>/<skill-name>/` and rename its `SKILL.md` to `SKILL.archived.md`, then undo steps 2 and 3 above. `archive/README.md` has the exact commands. The rename matters: `npx skills add --full-depth` installs any file named `SKILL.md` anywhere in the repo.
 
 ## Install paths
 

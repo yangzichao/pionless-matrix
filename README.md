@@ -4,14 +4,14 @@ My personal [Agent Skills](https://agentskills.io) library. Every skill is a pla
 
 ## Skills
 
-| Skill | Bucket | What it does |
-|---|---|---|
-| [deep-research](skills/research/deep-research/SKILL.md) | research | Plan-board research loop: parallel evidence gathering, adversarial claim checks, and a cited report in one of six styles. |
-| [markdown-to-pdf](skills/research/markdown-to-pdf/SKILL.md) | research | Markdown to PDF through Pandoc and headless Chrome, with KaTeX math, mermaid, and citations matching the editor preview. |
-| [no-comments](skills/coding/no-comments/SKILL.md) | coding | Delete comments in a diff through an independent Comment Sicko pass, flag the code they excuse, and fix it at the root. Adapted from backnotprop/pstack. |
-| [writing-ai-tells](skills/writing/writing-ai-tells/SKILL.md) | writing | Rewrite AI-sounding prose so it reads like the writer without changing what it says. From blader/humanizer, with the plain-style rules of pstack's unslop merged in. |
-| [writing-logic](skills/writing/writing-logic/SKILL.md) | writing | Write or restructure prose with strong, blunt logic: one of four paragraph types per paragraph (answer, argument, explanation, critique), one main claim per document, answer-first or guided (step-by-step) shape, plain scientific sentences, a logic skeleton shown before and after drafting, a counted length budget (one claim plus at most three sentences per paragraph), then a logic-critic pass. |
-| [socratic-tutor](skills/learning/socratic-tutor/SKILL.md) | learning | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
+| Skill | What it does |
+|---|---|
+| [deep-research](skills/deep-research/SKILL.md) | Plan-board research loop: parallel evidence gathering, adversarial claim checks, and a cited report in one of six styles. |
+| [markdown-to-pdf](skills/markdown-to-pdf/SKILL.md) | Markdown to PDF through Pandoc and headless Chrome, with KaTeX math, mermaid, and citations matching the editor preview. |
+| [no-comments](skills/no-comments/SKILL.md) | Delete comments in a diff through an independent Comment Sicko pass, flag the code they excuse, and fix it at the root. Adapted from backnotprop/pstack. |
+| [writing-ai-tells](skills/writing-ai-tells/SKILL.md) | Rewrite AI-sounding prose so it reads like the writer without changing what it says. From blader/humanizer, with the plain-style rules of pstack's unslop merged in. |
+| [writing-logic](skills/writing-logic/SKILL.md) | Write or restructure prose with strong, blunt logic: one of four paragraph types per paragraph (answer, argument, explanation, critique), one main claim per document, answer-first or guided (step-by-step) shape, plain scientific sentences, a logic skeleton shown before and after drafting, a counted length budget (one claim plus at most three sentences per paragraph), then a logic-critic pass. |
+| [socratic-tutor](skills/socratic-tutor/SKILL.md) | Teach by guided questioning with controlled depth and periodic zoom-out recaps. |
 
 Skills that split work across subagents (deep-research, no-comments, writing-logic) keep the subagent prompts in their own `roles/` folder. On a host without subagents, the agent runs each role itself as a separate pass.
 
@@ -43,7 +43,7 @@ Claude Code plugin (skills are namespaced `pionless-matrix:<skill>`):
 ## Layout
 
 ```text
-skills/<bucket>/<skill-name>/   SKILL.md + optional references/ roles/ assets/ scripts/
+skills/<skill-name>/            SKILL.md + optional references/ roles/ assets/ scripts/
 archive/                        retired skills, kept for reading only, never installed
 .claude-plugin/                 Claude Code marketplace + plugin manifest
 scripts/validate-skills.py      checks every skill (also runs in CI)

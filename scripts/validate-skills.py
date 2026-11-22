@@ -96,8 +96,8 @@ def find_skill_folders(report):
     skill_folders = []
     for skill_md in sorted(SKILLS_ROOT.rglob("SKILL.md")):
         depth = len(skill_md.relative_to(SKILLS_ROOT).parts)
-        if depth != 3:
-            report.error(relative(skill_md), "SKILL.md must sit at skills/<bucket>/<skill-name>/SKILL.md")
+        if depth != 2:
+            report.error(relative(skill_md), "SKILL.md must sit at skills/<skill-name>/SKILL.md")
             continue
         skill_folders.append(skill_md.parent)
     return skill_folders
@@ -177,18 +177,6 @@ def check_scripts(skill_folder, report):
             report.error(where, "script has no shebang line")
 
 
-def check_bucket_readmes(skill_folders, report):
-    for bucket in sorted({folder.parent for folder in skill_folders}):
-        readme = bucket / "README.md"
-        if not readme.exists():
-            report.error(relative(bucket), "bucket has no README.md")
-            continue
-        readme_text = readme.read_text(encoding="utf-8")
-        for folder in skill_folders:
-            if folder.parent == bucket and f"{folder.name}/SKILL.md" not in readme_text:
-                report.error(relative(readme), f"does not link {folder.name}/SKILL.md")
-
-
 def check_plugin_manifest(skill_folders, report):
     if not PLUGIN_MANIFEST.exists():
         report.error(relative(PLUGIN_MANIFEST), "missing")
@@ -218,7 +206,6 @@ def main():
         check_frontmatter(skill_folder, report, seen_names)
         check_markdown_files(skill_folder, report)
         check_scripts(skill_folder, report)
-    check_bucket_readmes(skill_folders, report)
     check_plugin_manifest(skill_folders, report)
     check_top_readme(skill_folders, report)
 

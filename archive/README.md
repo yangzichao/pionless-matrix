@@ -16,9 +16,9 @@ The rename is what keeps the skill out of every install path. `link-skills.sh` a
 
 ## Archiving a skill
 
-1. `git mv skills/<bucket>/<skill-name> archive/<bucket>/<skill-name>`
+1. `git mv skills/<skill-name> archive/<bucket>/<skill-name>`, picking a bucket that fits (`coding`, `career`, `setup`, or a new one)
 2. `git mv archive/<bucket>/<skill-name>/SKILL.md archive/<bucket>/<skill-name>/SKILL.archived.md`
-3. Remove the skill from `skills/<bucket>/README.md`, the `skills` array in `.claude-plugin/plugin.json`, and the table in the top-level `README.md`.
+3. Remove the skill from the `skills` array in `.claude-plugin/plugin.json` and the table in the top-level `README.md`.
 4. Add a line below.
 5. Run `bash scripts/link-skills.sh` to drop the stale local symlink, then `python3 scripts/validate-skills.py`.
 
