@@ -5,6 +5,7 @@ A personal Agent Skills library. Skills live in `skills/<skill-name>/SKILL.md` a
 ## Rules
 
 - Follow `docs/authoring/` on every skill change. `skill-anatomy.md` and `subagent-roles.md` are binding.
+- Portability means the format, not identical behaviour. Every skill must load and read correctly in any Agent Skills host, but behaviour is only checked on Claude Code and Codex, the hosts in daily use. Do not spend effort making other hosts behave the same.
 - Skills must be host-neutral: no host-specific agent definitions, tool names, or model choices. Subagent work goes in the skill's own `roles/<role>.md` with a fallback for hosts without subagents.
 - A skill folder is self-contained. No paths outside it; to use another skill, say "call the skill named X".
 - Adding, renaming or removing a skill means updating, in the same change: the `skills` array in `.claude-plugin/plugin.json` and the table in the top-level `README.md`.

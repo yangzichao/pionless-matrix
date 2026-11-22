@@ -45,6 +45,8 @@ Host-specific fields (`disable-model-invocation`, `allowed-tools`, `model` and s
 
 ## Host-neutral wording
 
+The goal is format portability: any host that reads Agent Skills can load the folder and follow it. Identical behaviour across hosts is not a goal. Behaviour is checked on Claude Code and Codex only, so test there, and accept that other hosts may route, trigger, or run subagents differently.
+
 Write against capabilities, not product names.
 
 | Write this | Not this |
