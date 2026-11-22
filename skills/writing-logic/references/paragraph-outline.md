@@ -13,7 +13,7 @@ Use prose when the point is a chain: A, therefore B, therefore C. In a list, nes
 
 ## Shape
 
-1. **The lead sentence, as prose.** It states the paragraph's point and how many parts follow: "The summary is stored on the meeting record, for three reasons."
+1. **The lead sentence, as prose.** It states the paragraph's point and how many parts follow: "Sessions live in Postgres, for three reasons."
 2. **Top-level bullets: the parts.** Each is one full sentence that states its part, not a fragment or a topic label. All top-level bullets are the same kind of thing and have the same form.
 3. **Sub-bullets: support for their own parent only.** Evidence, an example, a condition, or a consequence of the bullet directly above. A sub-bullet never refers to a sibling of its parent.
 4. **A closing sentence, as prose, when something follows.** What the list adds up to, or where the next part picks up. Leave it out when the lead already says it.
@@ -35,15 +35,15 @@ Use prose when the point is a chain: A, therefore B, therefore C. In a list, nes
 
 ## Example
 
-Before, as prose that hides a tree: "We store the summary on the meeting record. Reusing the rewritten-text field would avoid a schema change, but two other features read that field first. A note would also avoid a schema change, but deleting the meeting would leave the note behind. The new fields are optional, so old records need no migration step, and deleting a meeting deletes its summary."
+Before, as prose that hides a tree: "We store sessions in Postgres. Redis would be faster, but it is the one service we run without backups, so a restart logs every user out. Signed cookies need no store at all, but the security review requires revoking a stolen session within a minute, and a cookie stays valid until it expires. Postgres has backups and revokes a session by deleting a row; it adds about 2 ms per request."
 
 After, as an outline:
 
-The summary is stored in two new optional fields on the meeting record. Two other places are cheaper but break something:
+Sessions live in Postgres. Two faster options each break a requirement:
 
-- **The rewritten-text field** needs no schema change, but two features read it first and would treat the summary as the transcript.
-  - Paste-last-transcription and agent-access search both prefer that field.
-- **A separate note** needs no schema change either, but it outlives its meeting.
-  - Deleting a meeting would leave the note behind, and the two would disagree.
+- **Redis** answers in under a millisecond, but a restart would log every user out.
+  - It is the one service we run without backups or replicas.
+- **Signed cookies** need no store at all, but a stolen session cannot be revoked before it expires.
+  - The security review requires revoking a stolen session within one minute.
 
-The new fields avoid both problems at the cost of one schema change, which SwiftData handles as an automatic lightweight migration.
+Postgres meets both requirements at a cost of about 2 ms per request, well inside the 50 ms budget.

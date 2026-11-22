@@ -9,15 +9,30 @@ Settle the kind before outlining; if the request does not say, ask. If the chang
 - **Proposal:** the change is not built yet. The main claim is the decision: what to build, chosen over the strongest alternative.
 - **Architecture:** the system is already built. The main claim is the rule the system keeps and how it keeps it.
 
+## Match conventions to the document's job
+
+Published design docs serve different jobs, and each convention they use serves its job. Before borrowing a convention from any example, name what it is for and check that this document has the same need. Settle the job from step 1: the reader, what they must do, and the venue.
+
+- **Decide and build inside a team** (the default). A few reviewers who know the system approve it, then build it. Use the core rules in this file and nothing more.
+- **Win agreement from a wide audience**, as in a public RFC or language proposal. Readers include outside users who do not know the code and may object. Add these:
+  - a summary written so it can be quoted alone;
+  - prior art from other systems;
+  - each strong objection answered by name, after conceding what it gets right;
+  - compatibility for outside users, and the criteria for moving from experimental to stable.
+- **Explore before deciding.** The author does not know the answer yet and wants input. Open with the problem, what input is wanted, and by when. Then the criteria a good answer must meet, the options measured against them, and the recommendation last.
+- **Explain a built system.** Use the architecture structure.
+
+A convention whose purpose this document lacks is cut, not filled. If a section has nothing to say, it was probably borrowed. Write a "none" line only for a topic this reader would look for.
+
 ## What the best design docs do
 
 - **Show the design, do not only argue for it.** The design is the body of the document, usually the longest section, about half of it. "Why", alternatives, and risks support the design; they never replace it.
-- **Start from numbered problem cases.** Before the design, show two to four concrete cases the current system handles badly, each with what happens today: "Problem case 1: a two-hour English meeting". Refer back to them by number. The design shows how it handles each one, and each rejected alternative names the case it fails.
+- **Start from numbered problem cases.** Before the design, show two to four concrete cases the current system handles badly, each with what happens today: "Problem case 1: one tenant sends 10,000 requests in a second". Refer back to them by number. The design shows how it handles each one, and each rejected alternative names the case it fails.
 - **Carry one running example.** Pick one example early and reuse it through the design, the failure handling, and the alternatives, so the reader builds one picture instead of several.
 - **Teach first, then specify.** Explain the design first as if it already exists, mostly through the example: what the user does and sees. Then give the precise rules, limits, and corner cases, tied back to the same example.
 - **Show new shapes, not whole schemas.** Give a short code block for each new field, request, or setting, so the reader sees its shape. Do not paste full schemas, full APIs, or existing code; link them, or move them to a detail document. List every state the user can see, not only the happy path.
 - **Give every choice its reason and its price.** Wherever the design picks one option over another a competent reader might pick, give the choice, the reason, and what it gives up, in one or two sentences, beside the choice itself.
-- **Derive every number you chose.** A limit, price, threshold, or size the design sets shows how it follows from a goal or a measured fact, and which assumption it rests on: "at most 6 actions per summary, so that three summaries leave 80% of the window". A number with no derivation reads as a guess, and the reader cannot tell when to change it.
+- **Derive every number you chose.** A limit, price, threshold, or size the design sets shows how it follows from a goal or a measured fact, and which assumption it rests on: "three replicas, so that one zone can fail and two still form a quorum". A number with no derivation reads as a guess, and the reader cannot tell when to change it.
 - **Mark what changes.** For each component, say whether it is new, changed, or untouched. Mark every point where data crosses a trust boundary, such as device to cloud.
 - **Read in layers.** The summary alone gives the decision. The summary plus the first sentence of each section gives the design. Detail sits below that. A reader can stop at any layer and still have a true picture.
 - **Describe the current design only.** No dated status notes, superseded sections, or history in the body. If past decisions matter, put a short decision log at the end.
@@ -27,8 +42,8 @@ Settle the kind before outlining; if the request does not say, ask. If the chang
 
 A fixed section list, tables, and code blocks make it easy to write a design doc like a slide deck: each part correct alone, nothing saying how one leads to the next. The conventional headings stay; the text between them must still carry the reasoning.
 
-- **Open every section and subsection with a transition.** Its first sentence says what question from the part before it takes up, or what that part left open: "With the goals set, the design starts from what the user sees, because every later choice serves one of these states." A section that opens straight into a list or a table has no transition.
-- **Open a section that has subsections with a map.** Before the first subsection, one sentence names the parts in order and why that order: "The design runs outside in: the card, the request path, the stored data, then failures."
+- **Open every section and subsection with a transition.** Its first sentence says what question from the part before it takes up, or what that part left open: "With the goals set, the design starts from what a limited client receives, because every later choice serves one of those responses." A section that opens straight into a list or a table has no transition.
+- **Open a section that has subsections with a map.** Before the first subsection, one sentence names the parts in order and why that order: "The design runs outside in: the client response, the request path, the stored counters, then failures."
 - **Frame every table, code block, diagram, and list.** Before it, one sentence says what to look at in it. After it, one sentence says what follows from it. "As follows:" is not a frame.
 - **Use a list only for parallel items.** Steps, options, and goals can be lists, and a point that is a tree of parallel parts can be an outline paragraph (see `references/paragraph-outline.md`). Reasoning, where each point depends on the one before, is a prose paragraph with relation words. Use a table only for a true grid, such as states against what the user sees; the best design docs use few.
 - **Repeat a heading pattern for repeated parts.** Problem cases, alternatives, and layers each get one heading form ("Problem case 2: ..."). The repeated form tells the reader where they are without extra transitions.
@@ -36,28 +51,28 @@ A fixed section list, tables, and code blocks make it easy to write a design doc
 
 ## Proposal structure
 
-Use these top-level sections in this order. Reviewers look for them by name, so plain conventional headings are right here, not a fault. Under Design, each subsection heading states the decision it makes: "The summary is stored on the meeting, not as a separate note."
+Use these top-level sections in this order. Reviewers look for them by name, so plain conventional headings are right here, not a fault. Under Design, each subsection heading states the decision it makes: "Sessions live in Postgres, not in a separate cache."
 
-1. **Status block and summary.** One to three lines before the first paragraph: status (proposed, not built), what must happen before work starts, and links to the documents this change alters. Follow the venue's format. Once the change is built, update the status and rewrite the proposal language, so the doc describes the system as it is. Then one answer paragraph: the decision, what this version leaves out, and the main cost. Write it so that someone who reads nothing else can quote it. State the decision plainly ("We propose..."); do not write "please approve". The status block and the closing questions carry the request.
+1. **Status block and summary.** One to three lines before the first paragraph: status (proposed, not built), what must happen before work starts, and links to the documents this change alters. Follow the venue's format. Once the change is built, update the status and rewrite the proposal language, so the doc describes the system as it is. Then one answer paragraph: the decision, what this version leaves out, and the main cost. State the decision plainly ("We propose..."); do not write "please approve". The status block and the closing questions carry the request.
 2. **Context.** The problem in the reader's words, shown as the numbered problem cases; what exists today, as facts only (link the architecture doc rather than retelling it); and why now. Mark each piece of evidence as measured, estimated, or missing; a missing piece is a visible placeholder plus what changes if it never arrives.
-3. **Goals and non-goals.** Numbered goals, each with how you would see it met. Non-goals are things that could reasonably have been goals and are deliberately left out, not the opposite of a goal: "no live summary during the meeting", not "the summary is not wrong".
+3. **Goals and non-goals.** Numbered goals, each with how you would see it met. Non-goals are things that could reasonably have been goals and are deliberately left out, not the opposite of a goal: "no cross-region failover in this version", not "the limiter is not slow".
 4. **Design.** Outside in, teaching before specifying:
    - What the user sees: the main path and every state (empty, in progress, done, failed, blocked), through the running example, and how each problem case comes out.
    - How it flows: one diagram or numbered flow across components, with new, changed, and untouched marked, and trust boundaries shown.
    - What changes in each component: data model and storage, requests and interfaces, settings.
    - What happens when things go wrong: a table of failure, what the user sees, and how it recovers.
-5. **Alternatives considered.** Each system-level alternative, including doing nothing, with a concrete blocker: the problem case it fails, a missing dependency, a broken rule, or a measured cost. "More work" counts only if the work is estimated. State what the alternative does well before rejecting it. Each alternative is shorter than the design and readable on its own; give them one heading pattern, such as "Alternative 2: a local model". Include the simpler alternative the reader will think of, such as a capability the platform already provides.
+5. **Alternatives considered.** Each system-level alternative, including doing nothing, with a concrete blocker: the problem case it fails, a missing dependency, a broken rule, or a measured cost. "More work" counts only if the work is estimated. Say in one clause what the alternative does well before rejecting it. Each alternative is shorter than the design and readable on its own; give them one heading pattern, such as "Alternative 2: a counter on each host". Include the simpler alternative the reader will think of, such as a capability the platform already provides.
 6. **Cross-cutting concerns.** Privacy and security: what data leaves, who keeps it, for how long, and everyone who bears the cost, including people outside the reader and the user. A remedy must reach the harm it answers. Then cost, limits, compatibility, and how success is measured: the number, its threshold or how the threshold will be set, and the limits of the measurement. Name each existing rule or document the change alters and say it must be updated.
 7. **Rollout and rollback.** The steps to ship, the switch that turns it off, checked in the code or runbooks, and what happens to data already created. If no switch exists, say so and make adding one part of the plan.
 8. **Plan.** Milestones in build order. Each can land and be verified on its own, and says what proves it done. Label estimates.
-9. **Open questions.** The decisions the reader owns, numbered, in two groups: those that must be settled before work starts, and those that can wait for implementation. Each is a question, the answer you recommend, and the real reason; if the only reason is convenience, say so. Do not list a question the text already settled. The status block's start condition must match this list. End here, with no summary.
+9. **Open questions.** The decisions the reader owns, numbered. If work can start before all of them are settled, split them into two groups: before work starts, and during implementation. Each is a question, the answer you recommend, and the real reason; if the only reason is convenience, say so. Do not list a question the text already settled. The status block's start condition must match this list. End here, with no summary.
 
 ## Architecture structure
 
 1. **Status block and summary.** Status: describes the code as of a date or commit. Then the rule the system keeps and how it keeps it.
 2. **System overview.** One diagram or numbered flow of the components and the data between them, with trust boundaries shown.
 3. **Components.** Each one's job, what it owns, and how others reach it, with links to files or folders rather than lines, which move. Keep to what changes rarely, so the doc stays true between reviews.
-4. **The rules it keeps.** Each rule, the code that enforces it, and what would break it. Include rules about what does not exist, such as "no code path uploads audio"; they cannot be seen by reading the code.
+4. **The rules it keeps.** Each rule, the code that enforces it, and what would break it. Include rules about what does not exist, such as "no service other than billing reads card numbers"; they cannot be seen by reading the code.
 5. **Failure and operations.** What breaks, what the user sees, and how to recover.
 6. **Where it is weak.** Known gaps, each with its consequence.
 7. **Decision log.** Optional: past decisions that still constrain the design, one line each with a link.
