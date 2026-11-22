@@ -14,7 +14,7 @@ Budget: <N> paragraphs, about <N × 75> words (or <N × 200> Chinese characters)
 ...
 ```
 
-- Number every paragraph. For a document with sections, put the section heading on its own line above its paragraphs and keep one numbering through the whole document.
+- Number every paragraph. For a document with sections, put a section line above its paragraphs, `S2. [<type>] (<relation> S1) <heading>: <the section's point>`, and keep one paragraph numbering through the whole document. The first section's relation points to the opening paragraph.
 - The paragraph type is one of `answer`, `argument`, `explanation`, `critique`.
 - The point is the paragraph's first sentence, or a plain one-sentence version of it if the first sentence is long.
 - The relation names how this point connects to an earlier one. Use exactly one of these words:
@@ -25,6 +25,7 @@ Budget: <N> paragraphs, about <N × 75> words (or <N × 200> Chinese characters)
   - `then`: this point is the next step in an explanation and depends on the earlier one.
 - A relation usually points to the paragraph just before. When it points further back, name that number: `(because 2)`.
 - The first paragraph has no relation; it states or leads straight to the main claim.
+- List proposed detail documents after the paragraphs, one line each: `D1. <title>: <what it covers> (linked from S1)`.
 
 ## Long documents: two levels
 
@@ -50,7 +51,7 @@ The user approves level 1 before any drafting.
 A skeleton that passes:
 
 - Reads as a complete argument with the prose removed.
-- Gives every paragraph one relation from the list. A paragraph that needs "and also" or no relation at all does not belong, or belongs in another place.
+- Gives every section and every paragraph one relation from the list. The section lines alone read as an argument, not as a list of topics. A paragraph that needs "and also" or no relation at all does not belong, or belongs in another place.
 - Has no two points that say the same thing.
 - Leaves no point unconnected to the main claim through some chain of relations.
 - Passes the cut test: removing any one paragraph would leave the main claim less supported. Cut a paragraph whose removal changes nothing before the user sees the skeleton.

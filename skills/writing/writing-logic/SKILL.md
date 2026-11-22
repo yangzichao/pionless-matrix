@@ -14,7 +14,7 @@ description: |
   point", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.4.2"
+  version: "0.5.0"
 ---
 
 # Writing logic
@@ -65,7 +65,7 @@ Work out three things from the request and the conversation. Ask the user only f
 - **Unit:** one paragraph, or a full document.
 - **Reader:** who reads it, what they already know, and what they must do or know after.
 - **Mode:** drafting from notes or an idea, or revising an existing draft.
-- **Shape and length**, for a document: answer-first or guided, and the user's target length if they gave one.
+- **Shape and length**, for a document: answer-first or guided, and the user's target length if they gave one. For a design doc, also whether it proposes something not built yet or explains something already built.
 
 ### 2. Fix the point
 
