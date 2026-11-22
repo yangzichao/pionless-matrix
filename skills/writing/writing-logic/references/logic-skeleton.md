@@ -26,6 +26,25 @@ Budget: <N> paragraphs, about <N × 75> words
 - A relation usually points to the paragraph just before. When it points further back, name that number: `(because 2)`.
 - The first paragraph has no relation; it states or leads straight to the main claim.
 
+## Long documents: two levels
+
+A skeleton with more than 12 paragraph lines is too long to check at a glance. Split it into two levels.
+
+**Level 1, sections.** One line per section, with the same relation words, plus its share of the budget:
+
+```markdown
+Main claim: <one sentence>
+Budget: <total words>, <N> sections
+
+S1. [<type>] <section heading>: <the section's point> (<n> paragraphs, about <w> words)
+S2. [<type>] (<relation> S1) <section heading>: <point> (<n> paragraphs, about <w> words)
+...
+```
+
+The user approves level 1 before any drafting.
+
+**Level 2, paragraphs.** Before drafting a section, write its paragraph lines in the normal format, numbered `S2.1`, `S2.2`, and so on. Run the check below on them. Do not stop for approval of each section; the user sees every level-2 skeleton with the final text.
+
 ## Check
 
 A skeleton that passes:

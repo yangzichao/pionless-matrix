@@ -6,9 +6,13 @@ Write every text against a number, not against the word "concise". Asking a mode
 
 - **Paragraph: one claim sentence plus at most three supporting sentences.** The claim sentence is the paragraph's first sentence, the one that appears in the logic skeleton. A numbered or bulleted list inside a paragraph counts one sentence per item, and each item is one full sentence.
 - **Document: the number of paragraphs in the approved logic skeleton.** Write the budget in the skeleton's first line, for example `Budget: 6 paragraphs, about 450 words`. Estimate words as paragraphs times 75.
+- **Document with a target length from the user: allocate first, then count paragraphs.** Split the target across sections before writing any paragraph lines, so the total is within 10% of the target. Each section then gets its words divided by 75, rounded, as its paragraph count. A section that cannot make its point in its share is a sign the main claim is too broad; say so instead of stretching the total.
+- **Long document: the planned count must earn itself.** The budget only stops overruns; it does not stop a plan that is too big from the start. Every planned paragraph must pass the cut test in the skeleton check before the user sees the skeleton.
 - **Chat reply: at most 150 English words, or 300 Chinese characters,** in at most three paragraphs. Go longer only when the user asks for detail or the reply carries a document they asked for.
 
 Sentences stay complete. The budget comes from cutting, not from dropping articles, verbs, or relation words such as because and therefore.
+
+Code blocks, equations, tables, figures, and quoted source text do not count as sentences or words. Each one needs one prose sentence that says what it shows, and that sentence counts.
 
 ## Count
 
@@ -16,7 +20,7 @@ Count twice: after drafting, and again after fixing the logic critic's findings,
 
 1. Count the sentences in each paragraph. A paragraph over four sentences is over budget.
 2. Count the paragraphs. More than the skeleton planned is over budget.
-3. Count the words, or characters for Chinese. More than the budget by over 20% is over budget.
+3. Count the words, or characters for Chinese. More than the budget by over 20% is over budget. With a user-given target, the limit is 10%, and each section is checked against its own share.
 
 ## Fix an overrun
 

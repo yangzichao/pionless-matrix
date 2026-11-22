@@ -9,6 +9,7 @@ The caller passes a task card with:
 - **Draft:** the full text.
 - **Main claim:** the one sentence the draft exists to deliver. For a single paragraph, its central sentence.
 - **Reader:** who will read it and what they need to do or know after.
+- **Shape:** answer-first (the main claim comes first) or guided (the draft opens with a question, each step answers the question the previous step raises, and the main claim comes at the end).
 
 ## What to do
 
@@ -19,6 +20,7 @@ The caller passes a task card with:
 5. Find the strongest objection this reader would raise to the main claim. Say whether the draft answers it.
 6. Flag any adjacent pair of sentences where you cannot name the relation between them (because, therefore, but, for example). Flag any place that announces several reasons, steps, or options but does not mark each item (first, second, third, or list numbers), so the reader must guess where one item ends.
 7. Flag any section or paragraph whose removal would leave the main claim just as supported.
+   For a guided draft, also check: the last paragraph answers the opening question in words; each step's question arises from the step before; no term is used before the step that teaches it; no question is there only for suspense.
 8. Rank all findings by how much each one weakens the main claim. Keep at most ten.
 
 ## What you must not do

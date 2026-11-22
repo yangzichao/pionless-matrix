@@ -18,7 +18,9 @@ If you cannot write it, the document is not ready to draft. Say what is blocking
 
 ## Order
 
-- The main claim goes first, in the opening paragraph, as an answer paragraph. Exception: a case study, where the case is the subject, may open with the case and state the main claim by the end of the first section.
+- The main claim goes first, in the opening paragraph, as an answer paragraph. This is the answer-first shape, the default. Two exceptions:
+  - A case study, where the case is the subject, may open with the case and state the main claim by the end of the first section.
+  - A guided document, for a reader who cannot understand the claim yet, opens with the question and states the main claim at the end. It has its own rules.
 - Then sections in the order the reader needs them: what they must believe before they can follow the next part comes first. In a design doc that is usually decision, why, how it works, risks.
 - Within a section, the most important paragraph first.
 
