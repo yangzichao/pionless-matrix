@@ -14,7 +14,7 @@ description: |
   my point here", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells instead.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Writing logic
@@ -29,6 +29,7 @@ Make every paragraph do one job, make every claim carry its evidence, and say it
 - **Evidence can fail.** Support claims with things the reader could check and that would look different if the claim were false. Never invent evidence; ask for it or drop the claim.
 - **Cut what does not carry weight.** A sentence, paragraph, or section whose removal leaves the point just as supported goes.
 - **Plain, exact sentences.** One claim per sentence, actor in the subject, clauses only for a condition, cause, purpose, or restriction, and no rhetoric. When you announce several reasons or steps, mark each one: first, second, third. Rules in `references/sentence-style.md`.
+- **A length budget, counted.** Each paragraph is one claim sentence plus at most three supporting sentences, like one slide. A document has the paragraph count of its approved skeleton; a chat reply has at most 150 English words or 300 Chinese characters. Rules in `references/length-budget.md`.
 - **Logic the user can see.** The user gets a logic skeleton, not only prose, so they can check the argument without reading the whole text. Format in `references/logic-skeleton.md`.
 
 ## The four paragraph types
@@ -65,11 +66,13 @@ If you cannot write the point in one sentence, stop and tell the user what is bl
 
 When revising, extract the point the draft actually makes and tag each existing paragraph with its type first. Report where the stated point, the order, or a paragraph's type is wrong before rewriting.
 
-For a document, read `references/logic-skeleton.md` and write the planned skeleton: the main claim and one line per planned paragraph, with its type and relation. Run the check in that file. Show the skeleton to the user and wait for approval before drafting, unless the user asked for a finished text in one go or this skill is embedded in another task. For a single paragraph, the main sentence is the skeleton; do not stop for it.
+For a document, read `references/logic-skeleton.md` and `references/length-budget.md`, and write the planned skeleton: the main claim, the budget line, and one line per planned paragraph, with its type and relation. Run the check in that file. Show the skeleton to the user and wait for approval before drafting, unless the user asked for a finished text in one go or this skill is embedded in another task. For a single paragraph, the main sentence is the skeleton; do not stop for it.
 
 ### 3. Draft by paragraph type
 
 Read `references/sentence-style.md` before writing the first sentence, and write every sentence by it. Write each paragraph against its type file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
+
+When the draft is done, count it against the budget in `references/length-budget.md` and fix every overrun before step 4.
 
 ### 4. Attack the draft
 
@@ -81,6 +84,8 @@ Dispatch the logic critic.
 Fix every finding marked `breaks` or `weakens`. For each, cut, reorder, narrow the claim, or add a marked evidence gap. If the critic's delivered main claim differs from yours, fix the draft, or change the main claim and tell the user. Compare the critic's delivered skeleton with your planned one: a paragraph whose point or relation a cold reader read differently is not saying what you planned, so fix its first sentence or its place.
 
 Run one critic round by default. Run a second round, with a fresh critic, only if your fixes changed the structure: the main claim, the section list, or the order of sections. Never run more than two. Findings still open after the last round go to the user with the open evidence gaps in step 6.
+
+After the fixes, count against the budget again; fixes usually add text.
 
 ### 5. Plain-language pass
 

@@ -6,6 +6,7 @@ The logic skeleton shows the argument of a text without its prose, so the user c
 
 ```markdown
 Main claim: <one sentence>
+Budget: <N> paragraphs, about <N × 75> words
 
 1. [<paragraph type>] <the paragraph's point, in one sentence>
 2. [<paragraph type>] (<relation> 1) <point>
@@ -38,6 +39,7 @@ A skeleton that passes:
 
 ```markdown
 Main claim: Use Postgres for the ledger, not DynamoDB.
+Budget: 5 paragraphs, about 375 words
 
 Why Postgres
 1. [answer] Use Postgres for the ledger.
