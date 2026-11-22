@@ -1,4 +1,4 @@
-# Move: argument
+# Paragraph type: argument
 
 An argument paragraph makes the reader believe a claim they might reject. Use it for "why we chose X", position papers, proposals, PR rationale, and any paragraph a skeptic would push back on. This is the GRE Issue essay shape, kept tight.
 

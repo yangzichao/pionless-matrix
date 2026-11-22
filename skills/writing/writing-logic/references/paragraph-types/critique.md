@@ -1,4 +1,4 @@
-# Move: critique
+# Paragraph type: critique
 
 A critique paragraph tests whether a claim holds, someone else's or your own. Use it for paper and code reviews, evaluating a proposal, and the risks or open-questions section of your own design doc. This is the GRE Argument essay shape: find what the argument assumes and where the evidence stops short of the conclusion.
 

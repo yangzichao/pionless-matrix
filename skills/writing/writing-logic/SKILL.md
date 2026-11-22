@@ -3,8 +3,8 @@ name: writing-logic
 description: |
   Write or restructure prose so its logic is strong and its claims are blunt and
   short, in the style of a GRE or TOEFL argument essay without the template.
-  Every paragraph does one of four moves (conclusion, argument, explanation,
-  critique), each with its own rules; a full document adds one top-line claim
+  Every paragraph is one of four types (answer, argument, explanation,
+  critique), each with its own rules; a full document adds one main claim
   that every section supports. Ends with a self-attack pass and a plain-language
   pass. Use when drafting or revising a design doc, proposal, PR description,
   report, review, reply, or a single paragraph, and when the user says "make the
@@ -12,7 +12,7 @@ description: |
   my point here", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells instead.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Writing logic
@@ -27,18 +27,18 @@ Make every paragraph do one job, make every claim carry its evidence, and say it
 - **Evidence can fail.** Support claims with things the reader could check and that would look different if the claim were false. Never invent evidence; ask for it or drop the claim.
 - **Cut what does not carry weight.** A sentence, paragraph, or section whose removal leaves the point just as supported goes.
 
-## The four moves
+## The four paragraph types
 
-Each paragraph does exactly one of these. Name the move before writing the paragraph, then read its file.
+Each paragraph does exactly one of these. Name the type before writing the paragraph, then read its file.
 
-| Move | Job | Use for | File |
+| Type | Job | Use for | File |
 |---|---|---|---|
-| conclusion | answer the reader's question so they can act | replies, status, diagnoses, decision summaries, document openings | `references/moves/conclusion.md` |
-| argument | make the reader believe a claim they might reject | "why X", proposals, PR rationale, position papers | `references/moves/argument.md` |
-| explanation | show how something works so the reader can predict it | "how it works", READMEs, tutorials, concepts | `references/moves/explanation.md` |
-| critique | test whether a claim holds | reviews, evaluating proposals, risks sections | `references/moves/critique.md` |
+| answer | answer the reader's question so they can act | replies, status, diagnoses, decision summaries, document openings | `references/paragraph-types/answer.md` |
+| argument | make the reader believe a claim they might reject | "why X", proposals, PR rationale, position papers | `references/paragraph-types/argument.md` |
+| explanation | show how something works so the reader can predict it | "how it works", READMEs, tutorials, concepts | `references/paragraph-types/explanation.md` |
+| critique | test whether a claim holds | reviews, evaluating proposals, risks sections | `references/paragraph-types/critique.md` |
 
-A document type is a mix of moves, not one move. A design doc opens with a conclusion (the decision), argues for it against alternatives, explains how it works, and critiques itself in its risks section.
+A document type is a mix of paragraph types. A design doc opens with an answer (the decision), argues for it against alternatives, explains how it works, and critiques itself in its risks section.
 
 ## Workflow
 
@@ -54,27 +54,27 @@ Work out three things from the request and the conversation. Ask the user only f
 
 ### 2. Fix the point
 
-- **Paragraph:** write its one main sentence and name its move.
-- **Document:** read `references/document.md`. Write the top line: one sentence the document exists to deliver, which takes a position someone could dispute. Then list two to five sections, each with its move and the one sentence it adds to the case.
+- **Paragraph:** write its one main sentence and name its type.
+- **Document:** read `references/full-document.md`. Write the main claim: one sentence the document exists to deliver, which takes a position someone could dispute. Then list two to five sections, each with its paragraph type and the one sentence it adds to the case.
 
 If you cannot write the point in one sentence, stop and tell the user what is blocking it: a missing fact, an undecided choice, or a topic with no position yet. Do not draft around a missing point.
 
-When revising, extract the point the draft actually makes and tag each existing paragraph with its move first. Report where the stated point, the order, or a paragraph's move is wrong before rewriting.
+When revising, extract the point the draft actually makes and tag each existing paragraph with its type first. Report where the stated point, the order, or a paragraph's type is wrong before rewriting.
 
-### 3. Draft by move
+### 3. Draft by paragraph type
 
-Write each paragraph against its move file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
+Write each paragraph against its type file. Follow the shape and run the check at the end of that file. Where a claim needs evidence you do not have, leave a marked gap such as `[evidence: p95 before and after]` and keep going; collect the gaps for step 6.
 
 ### 4. Attack the draft
 
-Dispatch the critic.
+Dispatch the logic critic.
 
-- If you can start subagents: start one with a fresh context (not a fork of this conversation). Give it the full text of `roles/critic.md`, then a task card with the draft, the top line, and the reader. Ask for read-only work if your host lets you restrict tools.
-- If you cannot: do the review yourself as a separate pass. Re-read `roles/critic.md`, work only from the draft, top line, and reader, and produce exactly the output it specifies.
+- If you can start subagents: start one with a fresh context (not a fork of this conversation). Give it the full text of `roles/logic-critic.md`, then a task card with the draft, the main claim, and the reader. Ask for read-only work if your host lets you restrict tools.
+- If you cannot: do the review yourself as a separate pass. Re-read `roles/logic-critic.md`, work only from the draft, main claim, and reader, and produce exactly the output it specifies.
 
-Fix every finding marked `breaks` or `weakens`. For each, cut, reorder, narrow the claim, or add a marked evidence gap. If the critic's delivered top line differs from yours, fix the draft, or change the top line and tell the user.
+Fix every finding marked `breaks` or `weakens`. For each, cut, reorder, narrow the claim, or add a marked evidence gap. If the critic's delivered main claim differs from yours, fix the draft, or change the main claim and tell the user.
 
-Run one critic round by default. Run a second round, with a fresh critic, only if your fixes changed the structure: the top line, the section list, or the order of sections. Never run more than two. Findings still open after the last round go to the user with the open evidence gaps in step 6.
+Run one critic round by default. Run a second round, with a fresh critic, only if your fixes changed the structure: the main claim, the section list, or the order of sections. Never run more than two. Findings still open after the last round go to the user with the open evidence gaps in step 6.
 
 ### 5. Plain-language pass
 
@@ -84,8 +84,8 @@ If no skill named writing-ai-tells is available, reread the draft once and fix: 
 
 ### 6. Return
 
-- **Drafting or revising pasted text:** the final text, then a short list of open evidence gaps and unresolved critic findings, then the top line as one sentence so the user can confirm it.
-- **Editing a file:** read the whole file first, write only the final text, keep code blocks, paths, data, and link targets unchanged, then report the top line and the open gaps.
+- **Drafting or revising pasted text:** the final text, then a short list of open evidence gaps and unresolved critic findings, then the main claim as one sentence so the user can confirm it.
+- **Editing a file:** read the whole file first, write only the final text, keep code blocks, paths, data, and link targets unchanged, then report the main claim and the open gaps.
 - **Embedded in another task** (a PR body, a commit message, a section of a larger job): return only the final text.
 
 ## When not to apply

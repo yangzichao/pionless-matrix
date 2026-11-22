@@ -1,4 +1,4 @@
-# Move: explanation
+# Paragraph type: explanation
 
 An explanation paragraph makes the reader understand how something works, so they can predict what it will do. Use it for "how it works" sections, READMEs, tutorials, and concept walkthroughs. The logic here is the order of dependencies, not a claim and its defense.
 

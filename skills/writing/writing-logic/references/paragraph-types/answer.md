@@ -1,6 +1,6 @@
-# Move: conclusion
+# Paragraph type: answer
 
-A conclusion paragraph answers a question the reader has, so they can act. Use it for replies, status updates, bug diagnoses, decision summaries, and the opening of most documents.
+An answer paragraph answers a question the reader has, so they can act. Use it for replies, status updates, bug diagnoses, decision summaries, and the opening of most documents.
 
 ## Shape
 
