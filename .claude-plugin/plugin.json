@@ -10,11 +10,11 @@
   "license": "MIT",
   "keywords": ["skills", "agent-skills", "research", "coding", "writing", "learning"],
   "skills": [
-    "./skills/coding/no-comments",
-    "./skills/learning/socratic-tutor",
-    "./skills/research/deep-research",
-    "./skills/research/markdown-to-pdf",
-    "./skills/writing/writing-ai-tells",
-    "./skills/writing/writing-logic"
+    "./skills/deep-research",
+    "./skills/markdown-to-pdf",
+    "./skills/no-comments",
+    "./skills/socratic-tutor",
+    "./skills/writing-ai-tells",
+    "./skills/writing-logic"
   ]
 }
