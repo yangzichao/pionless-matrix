@@ -11,7 +11,7 @@ After merge, other people inherit the change and its unknowns. This pass checks 
    - changes in the diff the plan does not cover: behaviour changes, new dependencies, migrations, config, deleted code;
    - behaviour that callers will see change.
 
-3. **Name who inherits it.** Other callers, other services, existing data and its migration, operations (flags, environment variables, alerts), and the rollback path. List only what the diff actually reaches.
+3. **Name who inherits it.** Other callers, other services, existing data and its migration, operations (flags, environment variables, alerts), the people who support it, and the rollback path. Look past the plan's frame here too: the territory reader's "Outside the plan's frame" section is the starting list. List only what the diff actually reaches.
 
 4. **Write the quiz.** Four to six questions the user should be able to answer before merging. Test understanding of what changed, not trivia. Cover at least: one behaviour change, one failure path, one deviation from the plan, and how to roll back. Each question points to the file and line its answer comes from. Put all the answers after all the questions, under a separate heading, so the user can answer first.
 

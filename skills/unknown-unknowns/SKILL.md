@@ -1,22 +1,21 @@
 ---
 name: unknown-unknowns
-description: "Find what the user does not know they do not know about a plan, a decision, or an unfamiliar field, outside of code. Holds the user's picture of the task against outside references (how practitioners break the task down, how attempts like this usually fail, what similar cases took) and turns the user's unstated assumptions into either-or choices they can recognise. Returns a short ranked list of gaps, each with evidence and the cheapest way to close it. Use only when the user asks for this, for example: \"what don't I know that I don't know\", \"what am I missing\", \"what are my blind spots\", \"I'm new to this, what should I know first\", \"unknown unknowns\", \"我不知道我不知道什么\", \"我有什么盲点\", \"我漏了什么\", \"刚接触这个领域，我该先知道什么\". For a coding plan about to be built in a codebase, call the skill named code-unknowns instead."
+description: "Find what the user does not know they do not know about a plan, a decision, or an unfamiliar field, outside of code. Names the box the user is thinking inside (field, goal, people, time span, premises) and searches three layers: inside the box (what the field knows and the user does not), outside the box (what the frame itself leaves out, found by stepping across each of its walls), and unknown to everyone (what only contact with reality shows, surfaced by a small early probe and tripwires). Returns a short ranked list of gaps with evidence, either-or questions for unstated assumptions, and one probe. Use only when the user asks for this, for example: \"what don't I know that I don't know\", \"what am I missing\", \"what are my blind spots\", \"think outside the box about this\", \"I'm new to this, what should I know first\", \"unknown unknowns\", \"我不知道我不知道什么\", \"我有什么盲点\", \"我漏了什么\", \"跳出框架想想\". For a coding plan, call the skill named code-unknowns instead."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Unknown Unknowns
 
-Thinking harder does not list unknown unknowns. The user's picture of the task leaves things out, and yours tends to leave out the same things. A gap shows up only when that picture is held against something outside it. This skill makes two moves:
+Thinking harder inside a frame does not reach unknown unknowns. The user thinks inside a box: a field, a goal, the people they have in mind, a time span, and premises they take as given. Your thinking starts inside the same box, because it starts from their words. A gap the field already knows about is the shallowest kind; a checklist finds it. The deeper gaps sit outside the box, or are unknown to everyone until reality shows them.
 
-1. **Contrast.** Compare the user's picture with outside references: how a practitioner breaks the task down, how attempts like this usually fail, what similar cases took. What the references have and the picture lacks is a candidate gap.
-2. **Recognition.** The user cannot list their unstated assumptions, but they recognise one when shown a concrete choice. Turn each assumption into an either-or question, or a small sample they can react to.
-
-| Kind | What it is | How this skill finds it |
+| Layer | What it is | How this skill reaches it |
 |---|---|---|
-| Known unknowns | Open questions the user already named | Not the job here. List them in one line so they are not lost. |
-| Unknown knowns | Things the user knows or assumes but never said | Recognition: either-or questions with a recommended answer |
-| Unknown unknowns | Things neither of you has thought of | Contrast against outside references |
+| 1. Inside the box | The field knows it; the user does not | Contrast the user's picture with insider references |
+| 2. Outside the box | The frame itself leaves it out | Step across each wall of the box on purpose |
+| 3. Unknown to everyone | Nobody can know it until they try | A small early probe, and tripwires that say when to stop and rethink |
+
+Unknown knowns (things the user knows or assumes but never said) show up in all three layers. They come back as either-or questions, because people cannot list their own assumptions but recognise one when shown a concrete choice.
 
 ## Scope
 
@@ -30,9 +29,9 @@ It does not:
 - check whether the user's question is the right one (call the skill named question-the-question if it is available);
 - look for gaps between a coding plan and a codebase (call the skill named code-unknowns).
 
-## Step 1: Write down the user's picture
+## Step 1: Write down the picture and draw the box
 
-From the conversation and anything the user points at, write five short lines, in the user's own words where possible:
+From the conversation and anything the user points at, write the picture in five short lines, in the user's own words where possible:
 
 - **Goal:** what they want to end up with.
 - **Plan:** what they intend to do, or the options they are deciding between.
@@ -40,63 +39,70 @@ From the conversation and anything the user points at, write five short lines, i
 - **Constraints:** time, money, skill, people, anything they cannot change.
 - **Already open:** questions they have named themselves.
 
-Then name the field and the practitioner who does this for a living ("a relocation agent", "a self-published author", "a colorist"). A task can span two fields; name both.
+Then draw the box: its five walls, as the picture implies them.
+
+- **Field:** the field the task is in, and the practitioner who does it for a living.
+- **Goal:** the goal as stated, and what it seems to be for, if the user said.
+- **People:** who the picture includes.
+- **Time:** the span it covers, from where it starts to where it stops.
+- **Premises:** what the plan takes as given without saying so.
 
 If you cannot say what the goal is, ask the user one question and wait. Ask nothing else at this step.
 
-## Step 2: Gather outside references
+## Step 2: Search inside and outside the box
 
-Three probes:
+Dispatch two roles at once if your host allows parallel subagents; otherwise run them one after another. Both work from a task card alone, without your reasoning so far, so neither is anchored on what you already think matters.
 
-- **Insider frame.** How the practitioner breaks the task down: the stages in order, the five to eight terms the work turns on, and what they check before calling it done.
-- **Failure record.** How attempts like this usually go wrong: common mistakes, post-mortems, things people say they wish they had known. First-hand accounts beat listicles.
-- **Base rates.** What similar cases actually took: time, cost, success rate, the usual order of steps.
+- **Outside scout** (`roles/outside-scout.md`), layer 1: how the practitioner breaks the task down, how attempts like this go wrong, what similar cases took, and first-hand accounts of what surprised the people who did it. Needs web search.
+- **Box breaker** (`roles/box-breaker.md`), layer 2: steps across each wall of the box and reports what lies just outside it. Web search helps.
 
-Run all three unless one plainly does not apply, and say which one you skipped.
+For each role:
 
-Dispatch the outside scout. It works from the picture alone, without your reasoning so far, so it is not anchored on what you already think matters.
-
-- If you can start subagents: start one with a fresh context (not a fork of this conversation). Give it the full text of `roles/outside-scout.md`, then a task card with the five lines from step 1, the field and practitioner, any probe to skip, and the user's language. It needs web search and read-only access.
-- If you cannot: run the probes yourself as a separate pass. Re-read `roles/outside-scout.md`, work only from the task card, and produce exactly the output it specifies.
+- If you can start subagents: start one with a fresh context (not a fork of this conversation). Give it the full text of its role file, then a task card with the picture, the box, and the user's language. Ask for read-only work if your host lets you restrict tools.
+- If you cannot: run it yourself as a separate pass. Re-read its role file, work only from the task card, and produce exactly the output it specifies. Run the box breaker before reading the scout's output, so the field's view does not narrow it.
 
 Search the web if you can. If you cannot, say that the references come from your own knowledge only, mark each finding "unsourced", and name one place the user could check.
 
-## Step 3: Hold the picture against the references
+## Step 3: Turn the returns into candidates
 
-Go through the scout's output item by item: each stage, term, done-check, failure, and base rate. For each, ask whether the user's picture covers it (they mentioned it, their plan implies it, or they plainly know it). An item the picture does not cover is a candidate gap. An item the picture contradicts ("two weeks" against a typical three months) is a candidate gap too, usually a strong one.
-
-Then list the unknown knowns: assumptions the plan rests on that the user never stated. Common ones are who it is for, what "done" means, what they will not give up, how much it may cost, and what happens if it fails.
+- From the scout: every item the picture does not cover is a candidate. An item the picture contradicts ("two weeks" against a typical three months) is a candidate too, usually a strong one. A surprise that people who did it report is a strong candidate, because guides rarely say it.
+- From the box breaker: every item it ties to the user's own words or to a source is a candidate. An item that depends on a fact about the user you do not know is not a gap yet; make it an assumption question.
+- Unknown knowns: add the assumptions the plan rests on that the user never stated.
 
 ## Step 4: Keep only the gaps that matter
 
 Every candidate must pass all five:
 
-1. **Evidenced.** It traces to a reference the scout returned, or to the user's own words. When you say something is missing from their picture, quote what they did say.
-2. **Changes something.** If the user knew it, they would change the plan, its order, its budget, or the decision. A gap that is interesting but changes nothing gets dropped.
-3. **Specific.** It would not fit every plan. "Budget extra time" and "consider the risks" are banned.
+1. **Evidenced.** It traces to a source, or to the user's own words. When you say something is missing from their picture, quote what they did say.
+2. **Changes something.** If the user knew it, they would change the plan, its order, its budget, the goal, or the decision. A gap that is interesting but changes nothing gets dropped.
+3. **Specific.** It is about this user's situation and would not fit every plan. "Budget extra time", "consider the risks", and "think about your health" are banned.
 4. **New to the user.** It is not already in their picture. If you are unsure, phrase it as a check: "you may know this already: ...".
 5. **Facts are yours, decisions are theirs.** If a fact can be looked up, look it up. Ask the user only what only they know or decide.
 
-Keep at most seven gaps and at most five assumption questions. Three sharp gaps beat ten padded ones. If nothing passes, say that the picture holds up against the references, name the references you used, and stop. That is a finding, not a failure.
+Keep at most seven gaps, at least one from outside the box if any passed, and at most five assumption questions. Three sharp gaps beat ten padded ones. If nothing passes, say that the picture holds up, name what you checked, and still give the probe from step 5: layer 3 is never empty in advance.
 
-## Step 5: Make each one recognisable
+## Step 5: Design the probe and the tripwires
 
-Read `references/output-and-examples.md` before writing the reply. It has the output shape and worked examples, including one where nothing is found.
+Layer 3 cannot be found by searching. Design one probe: the smallest, cheapest real contact with the task that would surface surprises early. It is a slice of the real thing, done soon: a trial run, a small version, a week living with the constraint, a conversation with someone who did it and stopped. Say what it costs and what it could reveal.
 
-- **Each gap** gets: what the user may not know, in plain words; why it matters for this plan; the evidence; and the cheapest next move to close it (something to read, a question to put to someone named by role, a small test). Do not design a full solution. Knowing the gap comes first.
-- **Each assumption** becomes an either-or question with your recommended answer, so the user can reply with a letter. Put first the question whose answer can change the others.
-- **If the field is new to the user,** add the terms from the insider frame they did not use, each with a one-line meaning and the user's request restated the way a practitioner would say it.
-- **If the open question is how something should look, sound, or behave,** words usually fail. Offer two to four short contrasting versions, or a rough mock if your host can show one, and ask which is closest.
+Add two to four tripwires. Each is a signal the user can observe, and what to reconsider when it appears ("the same pain three days in a row: drop the weekly distance before anything else").
 
 ## Step 6: Hand it back and stop
 
-Reply in the user's language. Lead with the single gap that matters most. Then give the rest, the assumption questions, the terms if any, and one line on what you could not check.
+Read `references/output-and-examples.md` before writing the reply. It has the output shape and worked examples, including one where nothing is found.
+
+- **Each gap:** what the user may not know, in plain words; which layer it is from; why it matters for this plan; the evidence; and the cheapest next move to close it. Do not design a full solution. Knowing the gap comes first.
+- **Each assumption:** an either-or question with your recommended answer, so the user can reply with a letter. Put first the question whose answer can change the others.
+- **If the field is new to the user,** add the terms from the scout they did not use, each with a one-line meaning.
+- **If the open question is how something should look, sound, or behave,** offer two to four short contrasting versions, or a rough mock if your host can show one, and ask which is closest.
+
+Reply in the user's language. Lead with the single gap that matters most, then the rest, the questions, the probe and tripwires, and one line on what you could not check.
 
 Ask which gaps land. They know their situation better than any reference. Then stop: revising the plan or making the decision is a new request.
 
 ## Rules
 
 - Never present your own knowledge as researched. Mark it "unsourced".
+- Leaving the box is not licence to speculate. An outside-the-box gap still needs the user's words or a source behind it.
 - No forced fixes for every gap, no bonus ideas the user did not ask for, no generic risk lists.
-- Gaps are about the task, not the person. No psychoanalysis, no flattery, no pep talk.
-- A short list from a real contrast beats a long list from imagination.
+- Gaps are about the task and the situation, not the person. No psychoanalysis, no flattery, no pep talk.

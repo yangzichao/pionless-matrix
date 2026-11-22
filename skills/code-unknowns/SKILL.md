@@ -1,14 +1,16 @@
 ---
 name: code-unknowns
-description: "Find the gap between a coding plan (a prompt, spec, or plan in the user's head) and the real codebase, at three moments. Before implementation: read the code the plan touches and surface ambiguities, unchecked assumptions, undefined behavior, and the user's unstated decisions, then hand back a plan sorted by what is most likely to change. During implementation: log every place the code forced a departure from the plan. Before merge: check what the diff really changed against the plan, list who inherits it, and quiz the user on it. Use only when the user asks for this, for example: \"what am I missing before I build this\", \"blindspot pass\", \"poke holes in this plan\", \"what would you ask me before coding\", \"log deviations as you go\", \"quiz me before I merge\", \"do I understand this diff\", \"动手前我漏了什么\", \"这个实现有什么盲点\", \"合并前考考我\". For unknowns outside code, call the skill named unknown-unknowns instead."
+description: "Find the gap between a coding plan (a prompt, spec, or plan in the user's head) and the real codebase, at three moments. Before implementation: read the code the plan touches and one step past it, surface ambiguities, unchecked assumptions, undefined behavior, what the plan's frame leaves out, and the user's unstated decisions, run a small spike where reading is not enough, then hand back a plan sorted by what is most likely to change. During implementation: log every place the code forced a departure from the plan. Before merge: check what the diff really changed against the plan, list who inherits it, and quiz the user on it. Use only when the user asks for this, for example: \"what am I missing before I build this\", \"blindspot pass\", \"poke holes in this plan\", \"what would you ask me before coding\", \"log deviations as you go\", \"quiz me before I merge\", \"do I understand this diff\", \"动手前我漏了什么\", \"这个实现有什么盲点\", \"合并前考考我\". For unknowns outside code, call the skill named unknown-unknowns instead."
 compatibility: Needs read access to the repository; shell and git make it much stronger.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Code Unknowns
 
 The plan is a map; the code is the territory. The gap between them is the unknowns. Found before code is written, a gap costs one question. Found after merge, it costs a bug or a rewrite. Gaps are found by reading the code against the plan, not by imagining what might go wrong.
+
+Reading only the files the plan names keeps you inside the plan's box. The deepest gaps sit outside it: in the systems, people, and time the plan never mentions, or in behaviour nobody sees until the code runs. So the reading always goes one step past the plan's frame, and before implementation a small spike touches reality.
 
 | Moment | When | What you produce |
 |---|---|---|
