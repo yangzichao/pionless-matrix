@@ -14,7 +14,7 @@ description: |
   point", "be more direct", "answer first", or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.5.2"
+  version: "0.6.0"
 ---
 
 # Writing logic
@@ -43,13 +43,13 @@ Each paragraph does exactly one of these. Name the type before writing the parag
 | explanation | show how something works so the reader can predict it | "how it works", READMEs, tutorials, concepts | `references/paragraph-types/explanation.md` |
 | critique | test whether a claim holds | reviews, evaluating proposals, risks sections | `references/paragraph-types/critique.md` |
 
-A document type is a mix of paragraph types. A design doc opens with an answer (the decision), argues for it against alternatives, explains how it works, and critiques itself in its risks section.
+A document type is a mix of paragraph types. A design proposal opens with an answer (the decision), spends most of its length explaining the design, argues against alternatives, and critiques itself in its risks section.
 
 ## Two document shapes
 
 | Shape | Order | Use for | File |
 |---|---|---|---|
-| answer-first (default) | main claim first, then support | decisions, design docs, proposals, reports, reviews, status | `references/full-document.md` |
+| answer-first (default) | main claim first, then support | decisions, design docs, proposals, reports, reviews, status | `references/full-document.md`; for a design doc also `references/design-doc.md` |
 | guided | the question first, steps that each answer the next question, main claim last | tutorials, concept explainers, teaching articles, writing for newcomers | `references/full-document.md`, then `references/guided-document.md` |
 
 Pick guided only when this reader cannot understand the main claim if it comes first. When unsure, use answer-first.
@@ -73,7 +73,7 @@ Settle these without asking: the unit (one paragraph or a full document), the mo
 ### 2. Fix the point
 
 - **Paragraph:** write its one main sentence and name its type.
-- **Document:** read `references/full-document.md`, and for the guided shape also `references/guided-document.md`. Write the main claim: one sentence the document exists to deliver, which takes a position someone could dispute. Then list two to five sections, each with its paragraph type and the one sentence it adds to the case.
+- **Document:** read `references/full-document.md`; for a design doc also `references/design-doc.md`, and for the guided shape also `references/guided-document.md`. Write the main claim: one sentence the document exists to deliver, which takes a position someone could dispute. Then list two to five sections, each with its paragraph type and the one sentence it adds to the case; a design doc uses the structure in its reference instead.
 
 If you cannot write the point in one sentence, stop and tell the user what is blocking it: a missing fact, an undecided choice, or a topic with no position yet. Do not draft around a missing point.
 

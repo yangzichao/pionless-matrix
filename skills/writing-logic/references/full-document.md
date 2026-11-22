@@ -8,24 +8,9 @@ Before outlining, write one sentence that the whole document exists to deliver. 
 
 If you cannot write it, the document is not ready to draft. Say what is blocking it (a missing fact, an undecided choice) and ask the user.
 
-## Two kinds of design doc
+## Design docs
 
-A design doc either proposes something not built yet or explains something already built. The two need different content, so settle which one before outlining; if the request does not say, ask.
-
-- **Proposal.** The reader must approve or reject it. The main claim is the decision: what to build, chosen over the strongest alternative. Sections usually cover the problem and why now, the decision and how it will work, the alternatives and why not, and the cost, risks, and rollout. End with the open questions the reader must decide. Most evidence is about the future, so label estimates as estimates. The rules below apply.
-- **Architecture.** The reader must understand the system and keep it working. The main claim is the rule the system keeps. Sections usually cover why the rule holds, with the code as evidence, what the rule costs, and where it is weak today. Step-by-step walkthroughs go to detail documents.
-
-### Writing a proposal
-
-- **State the decision, do not request approval.** Open with what you propose and why, as a plain statement: "We propose a Summarize button on the meeting page that sends one meeting's text through the existing AI Action service." Do not write "please approve". The status line and the closing questions carry the request.
-- **Open with a status line.** Before the first paragraph, give one or two lines: the status (proposed, not built) and what must happen before work starts, plus links to the spec or docs this change alters. Follow the format the venue's other design docs use. The start condition must match the closing decisions: if the text says the work should wait for missing evidence, the timing is one of those decisions.
-- **Say what this version does not do.** Name the nearby features the reader might expect and leave out, in the opening paragraph or right after it.
-- **Reject each alternative with a concrete blocker.** Name the blocker, such as a missing dependency, a broken rule, or a measured cost. "More work" is not a reason unless the work is estimated; if it is not, say so. Check for a simpler alternative the reader will think of, such as a capability the platform already provides.
-- **Name the existing rules it changes.** If the change alters a rule another document states, such as a privacy promise or an architecture rule, say so near the top, link that document, and say it must be updated.
-- **Name everyone who bears the cost.** Include people outside the reader and the user, such as others whose data the change sends, and what the change does about them. A remedy must reach the harm it answers: telling the user does not answer a harm to someone else.
-- **Separate evidence by kind.** Mark each claim as measured, estimated, or missing. An estimate says what it assumes, and the claim is narrowed to where the assumption holds. A missing piece of evidence becomes a visible placeholder, followed by what changes if it never arrives, for example a lower priority.
-- **Say how to tell it worked and how to undo it.** Give the one or two numbers that would show success, the limits of how they are measured, and the threshold or how it will be set. Give the rollback, checked in the code or the runbooks. If you still do not know one of these, say so; do not leave it out.
-- **End with the decisions the reader owns, each with a recommendation.** Number them. Write each as a question followed by the answer you recommend and its real reason, so the reader can agree in one word; if the only reason is convenience, say so. Do not list a question the text already settled. Do not end with a summary.
+For a design doc, also read `references/design-doc.md`. It sets the two kinds (proposal and architecture), the section structure, and the concrete content a design doc needs. Where it differs from this file, such as on headings, section count, and what stays out of detail documents, it wins.
 
 ## Sections
 
@@ -41,7 +26,7 @@ A design doc either proposes something not built yet or explains something alrea
 - The main claim goes first, in the opening paragraph, as an answer paragraph. This is the answer-first shape, the default. Two exceptions:
   - A case study, where the case is the subject, may open with the case and state the main claim by the end of the first section.
   - A guided document, for a reader who cannot understand the claim yet, opens with the question and states the main claim at the end. It has its own rules.
-- Then sections in the order the reader needs them: what they must believe before they can follow the next part comes first. In a design proposal that is usually decision, why, how it works, risks.
+- Then sections in the order the reader needs them: what they must believe before they can follow the next part comes first.
 - Within a section, the most important paragraph first.
 
 ## Headings and first sentences
@@ -69,4 +54,3 @@ Technical detail that a reader needs to work on the system, but not to accept th
 2. For each section, name its type and the sentence it adds to the case. Any section without one goes.
 3. For each section after the first, name its relation to an earlier section. If you can only say "also about the main claim", reorder, merge, or announce the siblings as a counted list.
 4. Find any paragraph that a reader needs only to change the code, not to accept the main claim. Move it to a detail document.
-5. For a proposal, find each of these: the status line, what this version does not do, a blocker for each rejected alternative, the rules it changes, everyone who bears the cost, the success measure, the rollback, and the numbered decisions with recommendations. Add any that is missing, or say in the text that it is unknown.
