@@ -14,6 +14,7 @@ Settle the kind before outlining; if the request does not say, ask.
 - **Show the design, do not only argue for it.** The design is the body of the document, usually the longest section, about half of it. "Why", alternatives, and risks support the design; they never replace it.
 - **Make it concrete.** Show one worked example end to end: a real input, what the system does with it, and the output the user gets. Show the shape of every new request, record, or setting in a code block. List every state the user can see, not only the happy path.
 - **Give every choice its reason and its price.** Wherever the design picks one option over another a competent reader might pick, give the choice, the reason, and what it gives up, in one or two sentences, beside the choice itself.
+- **Derive every number you chose.** A limit, price, threshold, or size the design sets shows how it follows from a goal or a measured fact, and which assumption it rests on: "at most 6 actions per summary, so that three summaries leave 80% of the window". A number with no derivation reads as a guess, and the reader cannot tell when to change it.
 - **Mark what changes.** For each component, say whether it is new, changed, or untouched. Mark every point where data crosses a trust boundary, such as device to cloud.
 - **Read in layers.** The summary alone gives the decision. The summary plus the first sentence of each section gives the design. Detail sits below that. A reader can stop at any layer and still have a true picture.
 - **Describe the current design only.** No dated status notes, superseded sections, or history in the body. If past decisions matter, put a short decision log at the end.
@@ -60,6 +61,6 @@ A small feature runs one to three pages; a new system can run longer. Give the D
 1. Read only the summary. Does it give the decision, the scope cut, and the main cost?
 2. Could an engineer start building from the Design section alone, apart from the open questions? If not, find what is missing: a state, a data shape, or a failure.
 3. Is there one worked example end to end?
-4. Does every non-obvious choice have its reason and its price beside it?
+4. Does every non-obvious choice have its reason and its price beside it, and every chosen number its derivation? Does each remedy fix the cause the text diagnosed, not a nearby one?
 5. For a proposal, find each of these: status block, scope cut, a blocker for each alternative, everyone who bears the cost, the rules it changes, the success measure, the rollback, a plan with verifiable milestones, and numbered decisions with recommendations. Add any that is missing, or say in the text that it is unknown.
 6. Is there any history, dated status note, or superseded text in the body? Move it to the decision log or cut it.
