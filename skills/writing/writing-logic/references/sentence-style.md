@@ -11,6 +11,7 @@ Write sentences the way a clear scientific paper explains a method: plain, exact
 - **No rhetoric.** No metaphors, similes, rhetorical questions, dramatic fragments, parallel phrasing used for rhythm, or emphasis words such as "truly", "really", "crucially". Established technical terms that started as metaphors (a test harness, a memory leak) are fine. One exception for questions: in a guided document, a step may open with the one question it answers, asked plainly, when it is a question the reader would really have at that point.
 - **One name per thing.** Define a term the first time it appears, then use exactly that term every time. A new word tells the reader it is a new thing.
 - **Exact quantities.** Give numbers with units and, when it matters, the source. Replace vague quantifiers with counts or ranges: "3 of 40 runs" instead of "sometimes", "under 5 ms" instead of "fast".
+- **Describe behavior in the reader's words; link the code.** Say what happens in words the reader already has: who triggers it, what happens, and where the data goes. Do not make class names, function names, file paths, or flags the subject or object of a sentence. When the reader may want the code, make the plain words a Markdown link to the file. Keep an identifier in the text only when the reader must type or search for it, such as a command or a flag they will change. Cut implementation details the point does not need.
 - **Plain words.** Prefer the short common word when it means the same thing: use, start, show, need, about. Keep the technical term when it is more exact.
 - **Number what you announce.** When a sentence says there are several reasons, steps, causes, or options, give the count and mark each item explicitly: "There are three reasons. First, ... Second, ... Third, ...", or a numbered list when each item is short. Do not leave the reader to infer where one item ends and the next begins. Keep the markers even when the items are long, and use the same marker style for the whole list. Repeating the noun ("The first reason is ... The second reason is ...") is good: it reminds the reader which list they are in, and clear structure is worth the repetition.
 - **Active voice by default.** Use the passive only when the actor is unknown or does not matter: "The file is deleted after 30 days."
@@ -28,6 +29,7 @@ Read each sentence and ask:
 3. Does each clause give a condition, cause, purpose, or restriction? If not, cut it or make it a sentence.
 4. Is any word there for effect rather than meaning? Cut it.
 5. Did a sentence announce several items? Check that each one starts with its marker (first, second, third, or a list number).
+6. Does the reader need to know a code name to understand the sentence? If so, describe the behavior instead and move the name into a link.
 
 ## Example
 
