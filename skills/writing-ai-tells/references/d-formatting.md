@@ -4,7 +4,7 @@ Templates and visual editors also produce clean formatting. The tell is decorati
 
 ## 19. Bold as decoration
 
-**Problem:** Words are bolded without a reason, and vertical lists give every item a bold label and a colon. Remove the bold. Turn a labeled list into prose when the labels carry no information of their own.
+**Problem:** Words are bolded without a reason, and vertical lists give every item a bold label and a colon. Remove the bold. Turn a labeled list into prose when the labels carry no information of their own. Bold on a term where it is first defined, or on a UI label the reader must find, is fine.
 
 **Before:**
 > It blends **OKRs (Objectives and Key Results)**, **KPIs (Key Performance Indicators)**, and visual strategy tools such as the **Business Model Canvas (BMC)** and **Balanced Scorecard (BSC)**.
@@ -22,7 +22,7 @@ Templates and visual editors also produce clean formatting. The tell is decorati
 
 ## 20. Decorative headings
 
-**Problem:** Headings capitalize every main word, and headings or list items carry emojis or arrows (→) as decoration. A horizontal rule sits between every section, or the document opens with a top-level heading that repeats its own title. A heading written for effect ("The decision, on one screen") should name what the section holds ("How the six options compare"). Use sentence case, remove the decoration and the rules, and let the title stand once.
+**Problem:** Headings capitalize every main word, and headings or list items carry emojis or arrows (→) as decoration. A horizontal rule sits between every section, or the document opens with a top-level heading that repeats its own title. A heading written for effect ("The decision, on one screen") should name what the section holds ("How the six options compare"), except in a blog post or essay where the writer's humor is part of the voice. Remove the decoration and the rules, and let the title stand once. Title case alone is a house style many publications use; match the publication, and change it only together with other decoration.
 
 **Before:**
 > ## Strategic Negotiations And Global Partnerships
