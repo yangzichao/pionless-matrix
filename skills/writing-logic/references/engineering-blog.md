@@ -93,10 +93,10 @@ These refine `references/sentence-style.md` for blog posts.
 
 ## Reviewing a published or finished post
 
-A blind test ran this skill on 50 posts: 25 of the best pre-2023 engineering posts, 15 weak ones, and 10 from 2023 on. Applied literally, the general rules flagged the best posts as often as the weak ones. The findings that separated them were about evidence and argument, not form. When reviewing, apply these overrides and this order.
+Blind tests ran this skill on 122 posts: the best pre-2023 engineering posts, weak ones, and posts from 2023 on. Applied literally, the general rules flagged the best posts as often as the weak ones. The findings that separated them were about evidence and argument, not form, and only the ones that break the post: findings that merely weaken it showed up two to four times in nearly every post, good or weak. When reviewing, apply these overrides and this order.
 
-- **First check whether the blog rules apply.** They fit how-we-built posts, migrations, incident write-ups, how-it-works explainers, and research summaries. A personal story, an opinion or forecast essay, a funding, hiring, grant, or award announcement, a policy notice, or a product launch is something else. For those, say so and review only the evidence and the claims: unsupported or wrong facts, claims broader than their evidence, and adjectives where a reader would expect a measurement. A launch with a real how-it-works section gets that section reviewed as an explainer.
-- **Lead with the findings that separate good posts from weak ones,** in this order: a fact that does not check out (a wrong code output, arithmetic that does not add up); a key number with no baseline or reading; an adjective where a measurement should be; the strongest objection or the obvious alternative left unanswered; a conclusion broader than its evidence; an opening that explains the mechanism or the mission before the problem, or an ending with no argument. A hook (an analogy, a scene, the end state) is fine when the problem follows within the first screen. A "Limitations" section counts as stating limits.
+- **First check whether the blog rules apply.** They fit how-we-built posts, migrations, incident write-ups, how-it-works explainers, and research summaries. A personal story, an opinion or forecast essay, a funding, hiring, grant, or award announcement, a policy notice, or a product launch is something else. For those, say so and review only the evidence and the claims: unsupported or wrong facts, claims broader than their evidence, and adjectives where a reader would expect a measurement. A launch with a real how-it-works section gets that section reviewed as an explainer. A post that mixes genres gets the blog rules for its engineering sections only. Saying the blog rules do not apply is a note, not a finding.
+- **Lead with the findings that separate good posts from weak ones,** in this order: a fact that does not check out (a wrong code output, arithmetic that does not add up); a key number with no baseline or reading; an adjective where a measurement should be; the strongest objection or the obvious alternative left unanswered; a conclusion broader than its evidence; an opening that explains the mechanism or the mission before the problem, or an ending with no argument. A hook (an analogy, a scene, the end state) is fine when the problem follows within the first screen. A "Limitations" section counts as stating limits. A key number is one the main claim rests on; numbers in background, side notes, and examples are not findings. An adjective is a finding only when the claim is central and measurable; a benefit that resists measurement (safer, clearer) is not. Time, cost, speed, and size can be measured, so "saves a tremendous amount of time" is a finding when the post depends on it. A post in a series may end on what the next part covers. A how-to or demo with no result to measure is not missing evidence; review its steps and claims.
 - **Do not report these as findings in a blog post.** They fired on almost every good post:
   - headings that are topic labels ("Background", "How it works"), and more than five sections;
   - a paragraph longer than four sentences, unless it carries two points;
@@ -105,11 +105,16 @@ A blind test ran this skill on 50 posts: 25 of the best pre-2023 engineering pos
   - questions, asides, humor, and first person (see Voice above);
   - a single word from the avoid list, or one word repeated;
   - code names as subjects when the post is about that code;
-  - other wording and sentence rules from `references/sentence-style.md`, unless a reader would misread the sentence. List wording fixes separately as optional.
-- **Grade the verdict by what the reader would lose.**
-  - Publish as is: no finding changes what a reader believes or can check. A typo-level factual fix (a wrong expansion of an acronym) and optional wording go in a short fix list.
-  - Light revision: one or more findings from the ordered list, each fixable by adding a sentence, a number, or a caveat.
-  - Heavy revision: the main claim is unsupported, a key fact or result is wrong, or the reader never learns what problem the post solves.
+  - other wording and sentence rules from `references/sentence-style.md`, unless a reader would misread the sentence. List wording fixes separately as optional;
+  - the Shape templates (such as impact first in an incident write-up), the anti-moves, the Check list below, and the critic's cut test and sentence-relation check, unless the problem also matches an item in the ordered list above. They are for drafting.
+- **Grade each finding by what the reader would lose, then grade the post by its worst finding.**
+  - `breaks`: a reader would believe something false, or could not check the main result. A wrong fact or wrong arithmetic in a result the post relies on, a claim the main result depends on with no evidence, or a headline number with no baseline at all.
+  - `weakens`: a supporting claim or a secondary number lacks support, but the main claim still stands. A wrong fact outside the main result (a date, a side example) is `weakens`, or `minor` when it is typo-level. Three or more wrong facts together are `breaks`: the reader can no longer trust the rest.
+  - `minor`: wording and polish.
+- **Verdict:**
+  - Publish as is: no finding breaks anything. List up to three `weakens` findings as "would strengthen", and wording fixes as optional. Most good posts land here.
+  - Light revision: one or two `breaks` findings, each fixable by adding a sentence, a number, or a caveat.
+  - Heavy revision: the main claim is unsupported, a key result is wrong in a way that changes the conclusion, the reader never learns what problem the post solves, or there are three or more `breaks` findings.
 
 ## Anti-moves
 
