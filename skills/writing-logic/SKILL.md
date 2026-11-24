@@ -16,7 +16,7 @@ description: |
   briefing, use the skill named deep-research; for AI-sounding phrasing alone,
   the skill named writing-ai-tells.
 metadata:
-  version: "0.10.4"
+  version: "0.10.5"
 ---
 
 # Writing logic
