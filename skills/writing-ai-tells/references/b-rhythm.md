@@ -30,9 +30,9 @@ Shapes and punctuation applied everywhere, whether or not the meaning asks for t
 
 ## 8. Dashes as the universal connector
 
-**Rule:** The final rewrite must not contain em dashes (—) or en dashes (–) unless the writer's sample uses them; then match the sample's rate. Replace each dash with a period, comma, colon, or parentheses, or rewrite the sentence. Most dashes become a period or a comma; do not swap every dash for parentheses. This includes spaced dashes and double hyphens (` -- `) used as dashes. Leave dashes and hyphens inside code blocks, inline code, commands, paths, and URLs alone.
+**Rule:** Dashes are *weak alone*. In a study of 2,000 company engineering posts, about half of the best pre-2023 posts used em dashes, and they used them more than weak posts did. What separates AI drafts is the rate: more than 5 dashes per 1,000 words in 8% of the best posts against 35% of AI-lab posts from 2023 on. Act when the text passes that rate, or when a dash stages a reveal ("It worked — mostly."). With a writer's sample, match the sample's rate. When you act, replace a dash with a period, comma, colon, or parentheses, or rewrite the sentence. Most dashes become a period or a comma; do not swap every dash for parentheses. This includes spaced dashes and double hyphens (` -- `) used as dashes. Leave dashes and hyphens inside code blocks, inline code, commands, paths, and URLs alone, and never change an en dash in a number or date range (2010–2012, 20–40 hours).
 
-**Problem:** A dash lets the writer skip choosing how two clauses relate, so a model reaches for it everywhere. Many editors and journalists also use dashes, so one dash is *weak alone*; a text full of them is not.
+**Problem:** A dash lets the writer skip choosing how two clauses relate, so a model reaches for it everywhere. Many editors, journalists, and engineers also use dashes, so a few dashes are not a tell; a text full of them is.
 
 **Before:**
 > The new policy — announced without warning — affects thousands of workers. The changes -- long overdue according to critics -- will take effect immediately.

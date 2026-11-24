@@ -30,7 +30,7 @@ These are the strongest and most frequent tells in current model prose. Act on o
 
 **Watch for:** a one-sentence paragraph that restates the paragraph before it; "That is the real win."; "That distinction matters."; "Read that again."; "Let that sink in."; the same closer after several sections; a sentence after an example, scene, or number that names what it showed ("This shows the importance of...", "The message was clear:", "It was a lesson in patience."); a row of fragments ("No aesthetic prior. No nostalgia."); one word in ALL CAPS or with periods between words (every. single. day.); a closing "Overall" or "Ultimately" sentence that restates a verdict the paragraph already gave.
 
-**Problem:** The line asks the reader to pause on a claim instead of adding to it. One short sentence can carry emphasis when it carries a new fact. Cut a closer that repeats, including one that explains an example the reader just saw. Keep it when it adds a fact or consequence the example does not show. Merge a row of fragments into a sentence with a specific claim.
+**Problem:** The line asks the reader to pause on a claim instead of adding to it. One short sentence can carry emphasis when it carries a new fact. Cut a closer that repeats, including one that explains an example the reader just saw. Keep it when it adds a fact or consequence the example does not show. Merge a row of fragments into a sentence with a specific claim. A short sentence that moves a story forward ("This slowed us down.", "This poses a problem.") is ordinary narration, not a closer.
 
 **Before:**
 > Then AlphaEvolve arrived. It had no preference for symmetry. No aesthetic prior. No nostalgia for human taste. The old rules were gone.
@@ -72,9 +72,9 @@ These are the strongest and most frequent tells in current model prose. Act on o
 
 ## 4. Staged run-up before the point
 
-**Watch for:** Let's dive in, let's explore, let's break this down, here's what you need to know, now let's look at, without further ado, heads up, quick note, Honestly?, Look, Here's the thing, The thing is, Let's be honest, Real talk, and casual versions such as "one thing that bit me, so pay attention"; "the part" in place of a named thing: the hard part is, the new part is that, the part that matters is, the part worth X
+**Watch for:** Let's dive in, let's explore, let's break this down, here's what you need to know, without further ado, heads up, quick note, Honestly?, Look, Here's the thing, The thing is, Let's be honest, Real talk, and casual versions such as "one thing that bit me, so pay attention"; "the part" in place of a named thing: the hard part is, the new part is that, the part that matters is, the part worth X
 
-**Problem:** The writer announces the point or stages a moment of candor instead of making the point. Remove the run-up, not just its tone. "Honestly" or "look" inside a casual sentence is ordinary; the tell is the standalone opener before a routine claim. "The part" does the same work: "the hard part is X" stages X, and "the part worth sharing" points at something the text never names. Name the thing, or state X directly. Leave a literal part alone, such as one part of a multipart upload.
+**Problem:** The writer announces the point or stages a moment of candor instead of making the point. Remove the run-up, not just its tone. A tutorial step such as "Let's look at the source" or "Let's start with an example" that goes straight into the thing is not a run-up; leave it. "Honestly" or "look" inside a casual sentence is ordinary; the tell is the standalone opener before a routine claim. "The part" does the same work: "the hard part is X" stages X, and "the part worth sharing" points at something the text never names. Name the thing, or state X directly. Leave a literal part alone, such as one part of a multipart upload.
 
 **Before:**
 > Let's dive into how caching works in Next.js. Here's what you need to know.

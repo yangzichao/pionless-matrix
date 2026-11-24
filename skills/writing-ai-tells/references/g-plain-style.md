@@ -4,7 +4,7 @@ People break these rules too, but model drafts break them constantly, and each o
 
 ## 27. Fancy words, filler, and empty adverbs
 
-**Watch for:** utilize, leverage, facilitate, commence, endeavor, in order to, due to the fact that, the fact that, at this point in time, it is important to note that, it is worth noting that, very, really, extremely, significantly, dramatically
+**Watch for:** utilize, leverage, facilitate, commence, endeavor, due to the fact that, the fact that, at this point in time, it is important to note that, it is worth noting that; significantly and dramatically where the text has the number. "Very", "really", and "in order to" are not tells: the best pre-2023 engineering posts use them more often than AI drafts do. Cut them only when they add nothing in a sentence you are already rewriting.
 
 **Problem:** A long word or a filler phrase costs the reader more for the same meaning. Use the plain word: *use*, *help*, *start*, *try*, *to*, *because*, *now*. Cut the adverb, use a stronger verb, or give the number the adverb stands for when the text has it. *Significantly* keeps its statistical sense.
 
@@ -16,7 +16,7 @@ People break these rules too, but model drafts break them constantly, and each o
 
 ## 28. Metaphor nouns and figurative verbs
 
-**Watch for:** substrate, wedge, nexus, scaffolding, paradigm, ratchet, north star, flywheel, lever, and vector, primitive, harness, or surface used figuratively; unlock, unleash, supercharge, empower; code that "wants", "knows", "decides", "fights", or "lies"
+**Watch for:** substrate, wedge, nexus, scaffolding, paradigm, ratchet, north star, flywheel, lever, and vector, primitive, harness, or surface used figuratively; unlock, unleash, supercharge, empower; code that "fights" or "lies". Everyday technical phrasing such as a network that "knows" a route or a tool that "surfaces" errors is fine.
 
 **Problem:** The metaphor names the thing indirectly, so the reader has to translate it back. Use the concrete word, and say what the code does instead of what it feels. Keep established technical terms: a math vector, a test harness, an API's attack surface.
 
@@ -74,7 +74,7 @@ People break these rules too, but model drafts break them constantly, and each o
 
 **Watch for:** dropped articles and verbs ("Config loaded, cache warm, ready"), arrows used as verbs (A → B), unexplained abbreviations (w/, b/c, impl, cfg), and slash pairs standing in for a relationship (read/write path)
 
-**Problem:** The text is notes the drafter wrote for themselves. Write whole sentences with their articles and verbs, and spell out arrows and abbreviations. Leave fragments where the format expects them: commit subjects, table cells, changelogs, and informal chat.
+**Problem:** The text is notes the drafter wrote for themselves. Write whole sentences with their articles and verbs, and spell out arrows and abbreviations. Leave fragments where the format expects them: commit subjects, table cells, changelogs, tutorial step lists, and informal chat.
 
 **Before:**
 > Auth → token svc, cfg w/ env vars b/c secrets.
