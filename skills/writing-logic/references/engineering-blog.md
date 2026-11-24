@@ -84,11 +84,32 @@ These refine `references/sentence-style.md` for blog posts.
 - **Known before new, measured.** In the easiest posts, about seven in ten sentences have a subject the reader has already met: the previous sentence's result, a name planted earlier, or "this" plus a noun. A paragraph's first sentence picks up what the previous paragraph left.
 - **Actions as verbs.** Write "we sharded the table", not "the sharding of the table was performed". The hardest posts used about 40% more nominalizations (-tion, -ment, -ity) than the easiest.
 - **"We" for what the team did, "you" for what the reader can do.** Use "I" only for a personal account.
-- **Plain words.** Prefer to get, try, easy, hard to, make sure, can't. Avoid the words that mark weaker recent posts: enhanced, advanced, evolve, proactive, driven, tailored, foundational, crucial, broader, a range of, seamless, leverage.
+- **Plain words.** Prefer to get, try, easy, hard to, make sure, can't. When drafting, avoid the words that mark weaker recent posts: enhanced, advanced, evolve, proactive, driven, tailored, foundational, crucial, broader, a range of, seamless, leverage. When reviewing, one of them is not a finding; flag two in one paragraph, or about 3 per 1,000 words. Technical terms (advanced persistent threat) are never findings.
 - **One analogy, if it carries weight.** An everyday analogy is allowed when it is set up once, reused, and its limit is stated where it would mislead; this overrides the no-metaphor rule. Jokes and pop-culture references never carry an explanation.
+- **Voice is allowed.** A question that voices the reader's next question, a short aside, light humor, and first person are normal in good posts and override the no-rhetoric rule. Flag rhetoric only when it stands in for a claim or for evidence.
 - **Question headings are fine** when they are the question this reader has at that point and the section's first sentence answers it.
 - **Every number gets a reading.** A number without a baseline, a threshold, or a sentence saying what it means does not count as evidence.
 - **Do not chase short sentences.** Good posts sit around 19 words per sentence, with real variation. What makes them easy is the order of information, not the length.
+
+## Reviewing a published or finished post
+
+A blind test ran this skill on 50 posts: 25 of the best pre-2023 engineering posts, 15 weak ones, and 10 from 2023 on. Applied literally, the general rules flagged the best posts as often as the weak ones. The findings that separated them were about evidence and argument, not form. When reviewing, apply these overrides and this order.
+
+- **First check whether the blog rules apply.** They fit how-we-built posts, migrations, incident write-ups, how-it-works explainers, and research summaries. A personal story, an opinion or forecast essay, a funding, hiring, grant, or award announcement, a policy notice, or a product launch is something else. For those, say so and review only the evidence and the claims: unsupported or wrong facts, claims broader than their evidence, and adjectives where a reader would expect a measurement. A launch with a real how-it-works section gets that section reviewed as an explainer.
+- **Lead with the findings that separate good posts from weak ones,** in this order: a fact that does not check out (a wrong code output, arithmetic that does not add up); a key number with no baseline or reading; an adjective where a measurement should be; the strongest objection or the obvious alternative left unanswered; a conclusion broader than its evidence; an opening that explains the mechanism or the mission before the problem, or an ending with no argument. A hook (an analogy, a scene, the end state) is fine when the problem follows within the first screen. A "Limitations" section counts as stating limits.
+- **Do not report these as findings in a blog post.** They fired on almost every good post:
+  - headings that are topic labels ("Background", "How it works"), and more than five sections;
+  - a paragraph longer than four sentences, unless it carries two points;
+  - list items longer than one sentence, and step lists over the outline word budget;
+  - announced items without "first, second, third" (wrong or mismatched markers are still a finding);
+  - questions, asides, humor, and first person (see Voice above);
+  - a single word from the avoid list, or one word repeated;
+  - code names as subjects when the post is about that code;
+  - other wording and sentence rules from `references/sentence-style.md`, unless a reader would misread the sentence. List wording fixes separately as optional.
+- **Grade the verdict by what the reader would lose.**
+  - Publish as is: no finding changes what a reader believes or can check. A typo-level factual fix (a wrong expansion of an acronym) and optional wording go in a short fix list.
+  - Light revision: one or more findings from the ordered list, each fixable by adding a sentence, a number, or a caveat.
+  - Heavy revision: the main claim is unsupported, a key fact or result is wrong, or the reader never learns what problem the post solves.
 
 ## Anti-moves
 
