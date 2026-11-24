@@ -11,10 +11,11 @@ description: |
   design doc, proposal, PR description, report, review, engineering blog post,
   tutorial, explainer, reply, or a single paragraph, or when the user says "make the logic
   stronger", "tighten the argument", "this doesn't hold together", "what's my
-  point", "be more direct", "answer first", or "write it like a GRE essay".
+  point", "I don't know what I want to say", "be more direct", "answer first",
+  or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.8.0"
+  version: "0.9.0"
 ---
 
 # Writing logic
@@ -66,7 +67,7 @@ Work out these five from the request and the conversation first. Ask only for wh
 
 1. **Reader:** who reads it and what they already know. This sets the shape and which terms need defining.
 2. **Action:** what the reader must do after reading: approve, build, maintain, or decide. This sets the document kind (for a design doc, a proposal or an architecture doc) and whether the main claim is a decision or a rule.
-3. **Point:** the one sentence the user wants the reader to believe. If the user has none, step 2 says what to do.
+3. **Point:** the one sentence the user wants the reader to believe. Do not offer a guess here; if the user has none, step 2 says how to help them find it.
 4. **Evidence:** where the facts come from (code, data, existing docs) and which numbers must be real. Missing evidence becomes a marked gap, never an invented value. For an engineering blog post, gather the raw material before the skeleton with the inventory in `references/engineering-blog.md`: look up what you can check yourself, then ask the person who did the work for the rest.
 5. **Venue and length:** where the text will be published and how long it should be, as a word count or a reading time.
 
@@ -77,7 +78,7 @@ Settle these without asking: the unit (one paragraph or a full document), the mo
 - **Paragraph:** write its one main sentence and name its type.
 - **Document:** read `references/full-document.md`; for a design doc also `references/design-doc.md`, for an engineering blog post also `references/engineering-blog.md`, and for the guided shape also `references/guided-document.md`. Write the main claim: one sentence the document exists to deliver, which takes a position someone could dispute. Then list two to five sections, each with its paragraph type and the one sentence it adds to the case; a design doc uses the structure in its reference instead.
 
-If you cannot write the point in one sentence, stop and tell the user what is blocking it: a missing fact, an undecided choice, or a topic with no position yet. Do not draft around a missing point.
+If the user has no point, or one too vague to write as one sentence, help them find it before anything else: read `references/finding-the-point.md` and question the author until they say it themselves. If that ends with no point, stop and tell the user what is blocking it: a missing fact, an undecided choice, or a topic with no position yet. Do not draft around a missing point.
 
 When revising, extract the point the draft actually makes and tag each existing paragraph with its type first. Report where the stated point, the order, or a paragraph's type is wrong before rewriting.
 

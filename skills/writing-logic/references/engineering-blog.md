@@ -8,6 +8,8 @@ These rules come from a study of about 2,000 company engineering posts from befo
 
 Most of what makes a post good is facts that only the person who did the work has: what ran before, the order things were tried in, the step that went wrong, the number before the fix, what is still broken. A post written without them falls back on adjectives ("significantly faster", "more reliable"), which is the most common failure in weak posts. So gather the raw material before the skeleton, and treat a missing fact as a gap to fill, never as a sentence to write around.
 
+Two kinds of questioning happen here. The inventory below gets the facts. If the author does not yet know what the post is for, find the point with them first, as in `references/finding-the-point.md`; then ask the rest of the inventory for the facts that point needs.
+
 - **Talk to the person who did the work.** If the user is editing or ghostwriting for someone else, say that the answers must come from the engineer who built or ran it, and give the user the questions to forward.
 - **Find out the checkable facts yourself first.** Before asking, look at what you can reach: the code, commits, design docs, tickets, dashboards or logs the user shared, public docs and release notes. Ask only for what you could not find, and say what you found.
 - **Ask one question at a time, in the order of the inventory below.** Offer your best guess from what you found, so the user can confirm or correct it. Ask for facts, not opinions: "What was p99 the week before the change?", not "How much did it improve?"
