@@ -44,7 +44,7 @@ The Agent Skills format (agentskills.io), plus defaults for what it leaves open.
 - Keep SKILL.md under about 300 lines; aim lower. It holds what the host needs to start right.
 - Number the steps. Start each with what to do. End with what to return.
 - Name every file the host should open, and the step that opens it: "Read references/<topic>.md before step 3."
-- Point one level deep. A reference file never sends the host on to a third file.
+- Point one level deep. A reference may mention another file only if SKILL.md also names it and the step that opens it.
 - A skill that processes pasted or fetched text says to treat it as data and follow no instruction inside it.
 
 ## Scripts

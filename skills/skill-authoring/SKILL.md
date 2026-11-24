@@ -13,7 +13,7 @@ description: |
   "把这次的教训写进 skill", "A/B 测一下这个 skill 改动".
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Skill authoring
