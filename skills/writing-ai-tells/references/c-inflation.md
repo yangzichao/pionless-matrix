@@ -4,7 +4,7 @@ The fact underneath is usually sound. Keep it and remove the dressing.
 
 ## 12. Overused AI words
 
-**Watch for:** Actually, additionally, align with, bolstered, crucial, deep dive, delve, enduring, enhance, garner, gate/gated/gating (figurative; keep technical uses), highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), meticulous/meticulously, pivotal, quietly, robust (figurative; keep technical uses), showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
+**Watch for:** additionally, align with, bolstered, crucial, deep dive, delve, enduring, enhance, garner, gate/gated/gating (figurative; keep technical uses), highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), meticulous/meticulously, pivotal, quietly, robust (figurative; keep technical uses), showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
 
 **Problem:** Models use these words far more often than people do, especially in clusters. One of them in plain, specific text is not a tell: a quarter of the best pre-2023 engineering posts contain one. Act on clusters: two in one paragraph, or about 3 per 1,000 words across the text. At that rate the words appear in 6% of the best posts and in about half of the AI-lab posts. Keep technical terms (advanced persistent threat, threat landscape, a key-value store). A formal word outside these lists is not a tell by itself.
 
