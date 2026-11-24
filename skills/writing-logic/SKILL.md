@@ -15,7 +15,7 @@ description: |
   or "write it like a GRE essay".
   For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
 metadata:
-  version: "0.10.2"
+  version: "0.10.3"
 ---
 
 # Writing logic
