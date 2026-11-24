@@ -14,6 +14,8 @@ scripts/
   validate-skills.py     # checks every skill against docs/authoring/skill-anatomy.md
   install-stable-copy.sh # keeps a clean copy on main and links hosts to it
   link-skills.sh         # symlinks the skills of the checkout it runs in
+evals/
+  trigger-probe/         # checks which skill each host loads per prompt, with dated baselines
 docs/authoring/          # how to write a skill for this repo
 AGENTS.md                # instructions for agents working in this repo (CLAUDE.md points here)
 ```

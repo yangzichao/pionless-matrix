@@ -12,6 +12,7 @@ A personal Agent Skills library. Skills live in `skills/<skill-name>/SKILL.md` a
 - Retiring a skill means moving it to `archive/<bucket>/<skill-name>/` with `SKILL.md` renamed to `SKILL.archived.md`, and removing it from the same two places. Live skills sit flat under `skills/`; only `archive/` groups skills into buckets. Follow `archive/README.md`. Never edit archived skills; they are for reading only.
 - Bump `metadata.version` in the skill's frontmatter: patch for behavior fixes, minor for new capabilities. Bump `.claude-plugin/plugin.json` `version` when releasing. Versions are manual.
 - Agent hosts on the owner's machine read skills from the install copy at `~/.local/share/pionless-matrix`, never from a development checkout. After merging to `main`, run `bash scripts/install-stable-copy.sh` so the hosts pick up the change. Never edit the install copy, and never run `scripts/link-skills.sh` from a development checkout except to try a branch on purpose.
+- After changing a skill's `description`, or after a model or host CLI upgrade, re-run `evals/trigger-probe/` and compare with its latest baseline. Add a prompt there when a skill misroutes in real use. See `evals/trigger-probe/README.md`.
 - Before reporting done, run `python3 scripts/validate-skills.py` and `bash -n` on any changed shell script. After touching `.claude-plugin/`, also run `claude plugin validate .` if the Claude Code CLI is installed.
 
 ## Research output

@@ -55,6 +55,7 @@ archive/                        retired skills, kept for reading only, never ins
 scripts/validate-skills.py      checks every skill (also runs in CI)
 scripts/install-stable-copy.sh  clean copy on main + local symlink install
 scripts/link-skills.sh          symlinks the skills of the checkout it runs in
+evals/trigger-probe/            checks Claude Code and Codex load the right skill per prompt
 docs/authoring/                 how to write a skill for this repo
 ```
 
