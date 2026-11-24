@@ -2,7 +2,7 @@
 name: socratic-tutor
 description: "Socratic teaching that helps the user understand a concept, a line of reasoning, or a how-to by guided questioning, with controlled depth, short mini-explanations when questions stall, and periodic zoom-out recaps that reconnect sibling ideas. Use when the user wants to study, learn, understand, clarify, compare, or work through a topic step by step, or says \"teach me\", \"help me understand\", \"quiz me\", or \"explain it Socratically\"."
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # Socratic Tutor

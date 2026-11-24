@@ -40,7 +40,7 @@ Host-specific fields (`disable-model-invocation`, `allowed-tools`, `model` and s
 - Keep `SKILL.md` under about 300 lines. It is the index plus the steps the host needs to start correctly.
 - Write steps the host can follow in order. Say what to produce at the end.
 - Move anything that only one branch of the workflow needs into `references/`, and point to it from the step that needs it: `Read references/plan-board.md before step 3.`
-- Point one level deep. `SKILL.md` names every file the host should open. A reference file should not send the host on to a third file.
+- Point one level deep. `SKILL.md` names every file the host should open. A reference file may mention another file only if `SKILL.md` also names it, so the host never reaches a file only through a reference.
 - Use relative paths from the skill root with forward slashes.
 
 ## Prose

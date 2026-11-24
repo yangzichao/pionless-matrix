@@ -91,7 +91,14 @@ def check_frontmatter(skill_folder, skill_text, report):
         report.warn(where, f"{line_count} lines; move detail one step needs into references/")
 
 
-def check_markdown_file(skill_folder, markdown_file, report):
+def skill_md_names(skill_text, path_text):
+    if path_text in skill_text:
+        return True
+    placeholder_prefixes = PLACEHOLDER_PATH_PATTERN.findall(skill_text)
+    return any(path_text.startswith(prefix.rstrip("/")) for prefix in placeholder_prefixes)
+
+
+def check_markdown_file(skill_folder, markdown_file, skill_text, report):
     where = str(markdown_file.relative_to(skill_folder))
     text = markdown_file.read_text(encoding="utf-8")
     is_reference = markdown_file.parent.name == "references"
@@ -103,8 +110,8 @@ def check_markdown_file(skill_folder, markdown_file, report):
             continue
         if not (skill_folder / path_text.rstrip(".")).exists():
             report.error(where, f"points at '{path_text}', which does not exist in this skill")
-        elif is_reference and path_text.startswith("references/"):
-            report.warn(where, f"points at '{path_text}'; references should not chain to other references")
+        elif is_reference and path_text.startswith("references/") and not skill_md_names(skill_text, path_text):
+            report.warn(where, f"points at '{path_text}', which SKILL.md never names; the host reaches it only through this reference")
     for link in MARKDOWN_LINK_PATTERN.findall(text):
         if re.match(r"^[a-z]+:", link) or link.startswith("#"):
             continue
@@ -160,7 +167,7 @@ def check_skill(skill_folder):
     skill_text = skill_md.read_text(encoding="utf-8")
     check_frontmatter(skill_folder, skill_text, report)
     for markdown_file in sorted(skill_folder.rglob("*.md")):
-        check_markdown_file(skill_folder, markdown_file, report)
+        check_markdown_file(skill_folder, markdown_file, skill_text, report)
     if len(list(skill_folder.rglob("SKILL.md"))) > 1:
         report.error(str(skill_folder), "more than one SKILL.md")
     check_support_files_are_named(skill_folder, skill_text, report)
