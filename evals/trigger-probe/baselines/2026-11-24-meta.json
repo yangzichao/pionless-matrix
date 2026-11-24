@@ -1,0 +1,13 @@
+{
+  "started": "2026-11-24T02:56-05:00",
+  "runs": 3,
+  "cli_versions": {
+    "claude-code": "2.1.331 (Claude Code)",
+    "codex": "codex-cli 0.171.0-alpha.13"
+  },
+  "models": {
+    "claude-code": "claude-opus-5-5 (from the stream init event)",
+    "codex": "gpt-6.2-sol, reasoning high (from ~/.codex/config.toml; Codex events do not report the model)"
+  },
+  "environment": "Claude Code desktop app session on the owner's Mac; both hosts read skills from the install copy at aac3c79"
+}
