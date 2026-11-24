@@ -1,16 +1,19 @@
 ---
 name: writing-ai-tells
 description: |
-  Rewrite AI-sounding text so it reads like the writer without changing what it says.
-  Use when editing or reviewing prose for AI tells: not-X-but-Y contrasts, one-line
-  closers, staged openers, forced triads, dashes everywhere, inflated claims, sales
-  language, stock AI words, bold labels, or filler. Also covers plain style: fancy
-  words, metaphor nouns, rotating synonyms, false ranges, overloaded or telegraphic
-  sentences, and generic lines. Use for "humanize", "unslop", "de-AI this", or
-  "make this read like a person wrote it".
+  Rewrite AI-sounding text so it reads like the writer without changing what it
+  says. Use whenever the user asks to remove AI-sounding phrasing, humanize,
+  unslop, or de-AI text, even a single sentence, or says it reads like ChatGPT
+  wrote it; also "去 AI 味", "太像 AI 写的", "改得像人写的". Also use when the user asks to
+  edit or review prose for AI tells: not-X-but-Y contrasts, one-line closers,
+  staged openers, forced triads, dashes everywhere, inflated claims, sales
+  language, stock AI words, bold labels, or filler. Also covers plain-style fixes
+  such as fancy words, metaphor nouns, and rotating synonyms. Not for translation
+  or a grammar-only fix; for logic or structure, use the skill named
+  writing-logic.
 license: MIT
 metadata:
-  version: "4.2.1"
+  version: "4.2.2"
 ---
 
 # Remove AI writing tells

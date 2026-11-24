@@ -1,21 +1,22 @@
 ---
 name: writing-logic
 description: |
-  Write or restructure prose with strong logic, blunt short claims, and plain
-  scientific sentences, like a GRE argument essay without the template. Each
-  paragraph is one of four types (answer, argument, explanation, critique); a
-  document has one main claim, a counted length budget, and one of two shapes:
-  answer-first (default) or guided, which leads a newcomer step by step to the
-  claim. Shows the user a logic skeleton before and after drafting, then runs a
-  self-attack pass and a plain-language pass. Use when drafting or revising a
-  design doc, proposal, PR description, report, review, engineering blog post,
-  tutorial, explainer, reply, or a single paragraph, or when the user says "make the logic
-  stronger", "tighten the argument", "this doesn't hold together", "what's my
-  point", "I don't know what I want to say", "be more direct", "answer first",
-  or "write it like a GRE essay".
-  For removing AI-sounding phrasing alone, use the skill named writing-ai-tells.
+  Draft or revise a design doc, proposal, PR description, written report,
+  document review, engineering blog post, tutorial, explainer, or a reply for
+  the user to send, so its logic holds: the point first, one job per paragraph,
+  every claim backed by evidence, plain short sentences. For a document, shows a
+  logic skeleton and attacks the draft before handing it over. Use whenever the
+  user asks to write or restructure one of these, even a short one such as a PR
+  description; do not draft it ad hoc. Also use when the user says "make the
+  logic stronger", "tighten the argument", "what's my point", "I don't know
+  what I want to say", "be more direct", "answer first", "写 PR 描述",
+  "写设计文档", "结论先行", "逻辑更强一点", "这段逻辑不通", or "我想说什么" about such a
+  text. Not for the assistant's own chat answers, translation, a one-line commit
+  message, or a grammar-only fix. For a source-backed research report or
+  briefing, use the skill named deep-research; for AI-sounding phrasing alone,
+  the skill named writing-ai-tells.
 metadata:
-  version: "0.10.2"
+  version: "0.10.3"
 ---
 
 # Writing logic

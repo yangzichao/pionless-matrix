@@ -17,12 +17,20 @@ That sends every prompt to both hosts 3 times, 4 at a time. `--runs`, `--hosts`,
 Compare a run with the baseline:
 
 ```bash
-python3 evals/trigger-probe/summarize_results.py <new results.jsonl> evals/trigger-probe/baselines/2026-11-24-results.jsonl
+python3 evals/trigger-probe/summarize_results.py <new results.jsonl> evals/trigger-probe/baselines/2026-11-24-r2-results.jsonl
 ```
 
 Re-run after a model upgrade, a host CLI upgrade, or a change to any skill's `description`. When a result is accepted as the new normal, copy its `results.jsonl` into `baselines/` with the date, and write a `-meta.json` beside it.
 
-## Baseline 2026-11-24
+## Baseline 2026-11-24-r2 (latest)
+
+Both hosts passed 63 of 63 runs on 21 prompts, after the writing-logic 0.10.3 and writing-ai-tells 4.2.2 descriptions. Those descriptions now lead with the task, say to load the skill even for a short text, list Chinese trigger phrases, and name what they are not for: the assistant's own chat answers, translation, a one-line commit message, a grammar-only fix, and a research briefing.
+
+Six prompts were added for this change. `wl-explicit-4` and `wat-explicit-1` were held out: they were not used to tune the wording, and before the change Claude Code passed them 0 of 3 and 1 of 3. `wl-nearmiss-3`, `wl-nearmiss-4` and `wat-nearmiss-1` guard against the wider wording over-triggering. `wat-explicit-2` reuses the `wl-nearmiss-2` prompt to check that writing-ai-tells loads.
+
+An unchanged prompt can still move between runs. `wl-nearmiss-2`'s prompt loaded writing-ai-tells 0 of 3 times on Claude Code in the first baseline and 3 of 3 times hours later as `wat-explicit-2`, with the same description. Treat a one-run difference as noise.
+
+## Baseline 2026-11-24 (first)
 
 Claude Code (claude-opus-5-5) passed 41 of 45 runs, and Codex (gpt-6.2-sol) passed 45 of 45. No near-miss prompt loaded its skill on either host. Versions and the install commit are in `baselines/2026-11-24-meta.json`.
 
