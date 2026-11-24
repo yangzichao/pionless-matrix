@@ -10,7 +10,7 @@ description: |
   "make this read like a person wrote it".
 license: MIT
 metadata:
-  version: "4.2.0"
+  version: "4.2.1"
 ---
 
 # Remove AI writing tells
@@ -66,7 +66,7 @@ Fixes and examples: `references/b-rhythm.md`.
 
 6. Don't force ideas, examples, or short facts into threes. Keep three when the meaning has three.
 7. Don't start several sentences in a row with the same subject. Merge or vary them.
-8. Dashes (em dash, spaced en dash, ` -- `) are *weak alone*: half of the best human engineering posts use them. Act when the body prose (not titles, headings, captions, references, code, or the dash after a list label) has clearly more than 5 per 1,000 words, or a dash stages a reveal; most become a period or a comma. With a sample, match its rate. Never change an en dash in a range (2010–2012), or dashes in code, paths, and URLs.
+8. Dashes (em dash, spaced en dash, ` -- `, and a spaced hyphen used as a dash) are *weak alone*: half of the best human engineering posts use them. Act when the body prose (not titles, headings, captions, references, code, or the dash after a list label) has clearly more than 5 per 1,000 words, or a dash stages a reveal; most become a period or a comma. With a sample, match its rate. Never change an en dash in a range (2010–2012), or dashes in code, paths, and URLs.
 9. No stacked qualifiers ("could potentially", "might arguably"). Keep a hedge the source supports. *Weak alone.*
 10. Hyphenate a compound before the noun, not after it ("the report is high quality"). *Weak alone.*
 11. Name the actor; prefer active voice. *Weak alone.*
